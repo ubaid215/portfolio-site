@@ -229,7 +229,7 @@ export function Hero() {
             </motion.span>
           </Link>
 
-          <Link href="/resume.pdf" target="_blank" style={{ textDecoration: "none" }}>
+          <Link href="/Ubaidullah_Resume.pdf" target="_blank" style={{ textDecoration: "none" }}>
             <motion.span
               className="cta-secondary"
               style={{

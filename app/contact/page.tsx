@@ -67,13 +67,23 @@ export default function ContactPage() {
     setFormState((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const handleSubmit = async (e: React.MouseEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    await new Promise((r) => setTimeout(r, 1200))
-    setLoading(false)
+ const handleSubmit = async (e: React.MouseEvent) => {
+  e.preventDefault()
+  setLoading(true)
+  try {
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formState),
+    })
+    if (!res.ok) throw new Error()
     setSubmitted(true)
+  } catch {
+    alert("Something went wrong. Email me directly at ubaidtech274@gmail.com")
+  } finally {
+    setLoading(false)
   }
+}
 
   return (
     <>
@@ -336,8 +346,8 @@ export default function ContactPage() {
                 <p style={{ fontSize: "0.9375rem", color: "var(--fg-muted)", lineHeight: 1.7 }}>
                   I&apos;ll be in touch within 24 hours. If it&apos;s urgent,
                   reach me directly at{" "}
-                  <a href="mailto:hi@ubaid.dev" style={{ color: "var(--accent)", fontWeight: 500 }}>
-                    hi@ubaid.dev
+                  <a href="mailto:ubaidtech274@gmail.com" style={{ color: "var(--accent)", fontWeight: 500 }}>
+                    ubaidtech274@gmail.com
                   </a>
                   .
                 </p>

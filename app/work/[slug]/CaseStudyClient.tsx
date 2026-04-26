@@ -500,7 +500,7 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                   letterSpacing: "0.04em",
                 }}
               >
-                // Replace with real screenshots — /public/images/{project.slug}/
+                {/* // Replace with real screenshots — /public/images/{project.slug}/ */}
               </p>
             </Section>
           </div>
@@ -871,3 +871,16 @@ export function CaseStudyClient({ project, adjacent }: Props) {
     </main>
   )
 }
+
+
+
+// import Image from "next/image"
+
+// // Replace the placeholder div with:
+// <Image
+//   src="/images/ecommerce-platform/screenshot-1.png"
+//   alt="E-Commerce Platform screenshot"
+//   fill
+//   style={{ objectFit: "cover" }}
+//   sizes="(max-width: 768px) 100vw, 50vw"
+// />
