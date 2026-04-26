@@ -1,26 +1,1092 @@
+/* ============================================================
+   PORTFOLIO — GLOBAL DESIGN SYSTEM
+   Muhammad Ubaidullah | ubaid.dev
+   
+   Stack: Next.js 16 · Tailwind CSS v4 · motion v12 · next-themes
+   
+   Architecture:
+   1. Tailwind v4 @import
+   2. @theme {} — all design tokens (Tailwind reads these)
+   3. CSS custom properties — runtime theming (light/dark)
+   4. Base reset & html/body
+   5. Smooth scroll (Lenis-compatible + CSS fallback)
+   6. Typography
+   7. Theme transition (luxury framer-motion-ready)
+   8. Scrollbar
+   9. Selection
+   10. Utility classes
+   11. Animation keyframes
+   ============================================================ */
+
+
+/* ─────────────────────────────────────────────
+   1. TAILWIND V4 IMPORT
+   ───────────────────────────────────────────── */
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ── Tailwind v4: teach dark: utilities to read data-theme="dark" ── */
+/* Without this, Tailwind's dark: classes never activate because      */
+/* next-themes sets data-theme="dark" on <html>, not class="dark".   */
+@variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+
+/* ─────────────────────────────────────────────
+   2. @THEME — TAILWIND V4 DESIGN TOKENS
+   All tw utilities (bg-*, text-*, etc.) come from here.
+   ───────────────────────────────────────────── */
+@theme {
+
+  /* ── Fonts ───────────────────────────────── */
+  --font-display:    "Instrument Serif", Georgia, serif;
+  --font-body:       "Geist", "DM Sans", system-ui, sans-serif;
+  --font-mono:       "Geist Mono", "JetBrains Mono", monospace;
+
+  /* ── Brand Palette ───────────────────────── */
+
+  /* Accent — Electric Jade (10%) */
+  --color-accent:          #00D9A6;
+  --color-accent-bright:   #00F0B8;
+  --color-accent-deep:     #007A60;
+  --color-accent-tint:     #D4F5EE;
+  --color-accent-muted:    rgba(0, 217, 166, 0.12);
+
+  /* Dark Base (60% in dark mode) */
+  --color-abyss:    #0A0E1A;
+  --color-void:     #111827;
+  --color-slate:    #1C2333;
+  --color-dusk:     #374151;
+
+  /* Light Base (60% in light mode) */
+  --color-parchment: #F8F7F4;
+  --color-linen:     #EEECEA;
+  --color-ivory:     #E8E4DC;
+
+  /* Neutrals (30%) */
+  --color-mist:    #9CA3AF;
+  --color-fog:     #6B7280;
+  --color-ash:     #4B5563;
+
+  /* ── Semantic — Light Mode ───────────────── */
+  --color-bg-primary-light:    #F8F7F4;
+  --color-bg-secondary-light:  #EEECEA;
+  --color-bg-card-light:       #E8E4DC;
+  --color-text-primary-light:  #0A0E1A;
+  --color-text-secondary-light:#374151;
+  --color-text-muted-light:    #6B7280;
+  --color-border-light:        rgba(10, 14, 26, 0.10);
+  --color-border-strong-light: rgba(10, 14, 26, 0.20);
+
+  /* ── Semantic — Dark Mode ────────────────── */
+  --color-bg-primary-dark:     #0A0E1A;
+  --color-bg-secondary-dark:   #111827;
+  --color-bg-card-dark:        #1C2333;
+  --color-text-primary-dark:   #F8F7F4;
+  --color-text-secondary-dark: #9CA3AF;
+  --color-text-muted-dark:     #6B7280;
+  --color-border-dark:         rgba(248, 247, 244, 0.08);
+  --color-border-strong-dark:  rgba(248, 247, 244, 0.16);
+
+  /* ── Spacing Scale ───────────────────────── */
+  --spacing-px:    1px;
+  --spacing-0:     0px;
+  --spacing-1:     0.25rem;
+  --spacing-2:     0.5rem;
+  --spacing-3:     0.75rem;
+  --spacing-4:     1rem;
+  --spacing-5:     1.25rem;
+  --spacing-6:     1.5rem;
+  --spacing-8:     2rem;
+  --spacing-10:    2.5rem;
+  --spacing-12:    3rem;
+  --spacing-16:    4rem;
+  --spacing-20:    5rem;
+  --spacing-24:    6rem;
+  --spacing-32:    8rem;
+  --spacing-40:    10rem;
+  --spacing-48:    12rem;
+  --spacing-section: 7rem;
+
+  /* ── Border Radius ───────────────────────── */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-2xl:  24px;
+  --radius-full: 9999px;
+
+  /* ── Type Scale ──────────────────────────── */
+  --text-xs:    0.75rem;
+  --text-sm:    0.875rem;
+  --text-base:  1rem;
+  --text-lg:    1.125rem;
+  --text-xl:    1.25rem;
+  --text-2xl:   1.5rem;
+  --text-3xl:   1.875rem;
+  --text-4xl:   2.25rem;
+  --text-5xl:   3rem;
+  --text-6xl:   3.75rem;
+  --text-7xl:   4.5rem;
+  --text-8xl:   6rem;
+
+  /* ── Line Heights ────────────────────────── */
+  --leading-none:    1;
+  --leading-tight:   1.05;
+  --leading-snug:    1.15;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.7;
+  --leading-loose:   2;
+
+  /* ── Letter Spacing ──────────────────────── */
+  --tracking-tight:   -0.02em;
+  --tracking-normal:   0em;
+  --tracking-wide:     0.04em;
+  --tracking-wider:    0.06em;
+  --tracking-widest:   0.12em;
+
+  /* ── Shadows ─────────────────────────────── */
+  --shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md:  0 4px 16px rgba(0, 0, 0, 0.10);
+  --shadow-lg:  0 8px 32px rgba(0, 0, 0, 0.16);
+  --shadow-xl:  0 16px 48px rgba(0, 0, 0, 0.24);
+  --shadow-accent: 0 0 32px rgba(0, 217, 166, 0.20);
+  --shadow-accent-lg: 0 0 64px rgba(0, 217, 166, 0.30);
+
+  /* ── Z-Index ─────────────────────────────── */
+  --z-below:    -1;
+  --z-base:      0;
+  --z-raised:    10;
+  --z-dropdown:  100;
+  --z-sticky:    200;
+  --z-overlay:   300;
+  --z-modal:     400;
+  --z-toast:     500;
+
+  /* ── Breakpoints ─────────────────────────── */
+  --breakpoint-sm:  640px;
+  --breakpoint-md:  768px;
+  --breakpoint-lg:  1024px;
+  --breakpoint-xl:  1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* ── Transitions ─────────────────────────── */
+  --ease-smooth:  cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-spring:  cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-luxury:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:      cubic-bezier(0.4, 0, 1, 1);
+  --ease-out:     cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out:  cubic-bezier(0.4, 0, 0.2, 1);
+
+  --duration-fast:    150ms;
+  --duration-normal:  300ms;
+  --duration-slow:    500ms;
+  --duration-slower:  800ms;
+  --duration-theme:   600ms;
+
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+/* ─────────────────────────────────────────────
+   3. RUNTIME CSS CUSTOM PROPERTIES
+   Used by components directly (not Tailwind utilities).
+   next-themes sets [data-theme="dark"] or "light" on <html>.
+   ───────────────────────────────────────────── */
+
+/* Light theme (default) */
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  --bg:          #F8F7F4;
+  --bg-sub:      #EEECEA;
+  --bg-card:     #E8E4DC;
+  --bg-card-hover: #DEDAD2;
+  --bg-overlay:  rgba(248, 247, 244, 0.85);
+
+  --fg:          #0A0E1A;
+  --fg-sub:      #374151;
+  --fg-muted:    #6B7280;
+  --fg-faint:    #9CA3AF;
+
+  --border:      rgba(10, 14, 26, 0.08);
+  --border-sub:  rgba(10, 14, 26, 0.14);
+  --border-strong: rgba(10, 14, 26, 0.22);
+
+  --accent:      #00D9A6;
+  --accent-bright: #00F0B8;
+  --accent-deep:   #007A60;
+  --accent-tint:   #D4F5EE;
+  --accent-muted:  rgba(0, 217, 166, 0.10);
+  --accent-text:   #004D3D;  /* dark teal — readable on tint bg */
+
+  --navbar-bg:   rgba(248, 247, 244, 0.80);
+  --code-bg:     #E8E4DC;
+  --tag-bg:      rgba(0, 217, 166, 0.10);
+  --tag-text:    #004D3D;
+  --logo-filter: none;  /* Next.js logo — normal in light mode */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Dark theme */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg:          #0A0E1A;
+  --bg-sub:      #111827;
+  --bg-card:     #1C2333;
+  --bg-card-hover: #222B3D;
+  --bg-overlay:  rgba(10, 14, 26, 0.85);
+
+  --fg:          #F8F7F4;
+  --fg-sub:      #C9C5BC;
+  --fg-muted:    #9CA3AF;
+  --fg-faint:    #6B7280;
+
+  --border:      rgba(248, 247, 244, 0.07);
+  --border-sub:  rgba(248, 247, 244, 0.12);
+  --border-strong: rgba(248, 247, 244, 0.20);
+
+  --accent:      #00D9A6;
+  --accent-bright: #00F0B8;
+  --accent-deep:   #00A880;
+  --accent-tint:   rgba(0, 217, 166, 0.08);
+  --accent-muted:  rgba(0, 217, 166, 0.12);
+  --accent-text:   #0A0E1A;  /* dark text on accent bg */
+
+  --navbar-bg:   rgba(10, 14, 26, 0.80);
+  --code-bg:     #0D1117;
+  --tag-bg:      rgba(0, 217, 166, 0.10);
+  --tag-text:    #00D9A6;
+  --logo-filter: invert(1);  /* Next.js logo — inverted in dark mode */
+}
+
+
+/* ─────────────────────────────────────────────
+   4. RESET & BASE
+   ───────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Smooth scroll — overridden by Lenis if used */
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--fg);
+  background-color: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  overflow-x: hidden;
 }
+
+/* Images */
+img,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Links */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Inputs */
+input,
+textarea,
+select,
+button {
+  font: inherit;
+}
+
+/* Lists */
+ul,
+ol {
+  list-style: none;
+}
+
+/* HR */
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+}
+
+
+/* ─────────────────────────────────────────────
+   5. SMOOTH SCROLL SYSTEM
+   
+   Works with:
+   - Native CSS scroll-behavior
+   - Framer Motion scroll utilities
+   - Lenis (if you add it later: npm i lenis)
+   
+   Key: DO NOT use overflow: hidden on html/body
+   when using Lenis — it needs to own the scroll.
+   ───────────────────────────────────────────── */
+
+/* CSS-level smooth scroll (fallback / respects prefers-reduced-motion) */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Lenis integration — when Lenis is active it adds this class */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* Scroll anchors — offset for sticky navbar (adjust to your navbar height) */
+[id] {
+  scroll-margin-top: 80px;
+}
+
+
+/* ─────────────────────────────────────────────
+   6. TYPOGRAPHY
+   ───────────────────────────────────────────── */
+
+/* Display / Headings — Instrument Serif */
+h1, h2 {
+  font-family: var(--font-display);
+  font-weight: 400; /* Instrument Serif is beautiful at regular weight */
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg);
+  line-height: var(--leading-tight);
+}
+
+h3, h4, h5, h6 {
+  font-family: var(--font-body);
+  font-weight: 500;
+  letter-spacing: var(--tracking-normal);
+  color: var(--fg);
+  line-height: var(--leading-snug);
+}
+
+h1 { font-size: clamp(2.5rem, 5vw + 1rem, 5rem); }
+h2 { font-size: clamp(2rem, 3.5vw + 0.5rem, 3rem); }
+h3 { font-size: clamp(1.25rem, 2vw + 0.25rem, 1.5rem); }
+h4 { font-size: 1.125rem; }
+h5 { font-size: 1rem; }
+h6 { font-size: 0.875rem; }
+
+/* Paragraph */
+p {
+  color: var(--fg-sub);
+  line-height: var(--leading-relaxed);
+}
+
+/* Lead paragraph */
+.lead {
+  font-size: clamp(1rem, 1.5vw + 0.25rem, 1.25rem);
+  color: var(--fg-sub);
+  line-height: var(--leading-relaxed);
+}
+
+/* Italic accent phrases — used inside display headings */
+.accent-italic {
+  font-style: italic;
+  color: var(--accent);
+}
+
+/* Monospace / code labels */
+code,
+kbd,
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  color: var(--accent);
+  background: var(--tag-bg);
+  padding: 0.125em 0.4em;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-sub);
+}
+
+pre {
+  font-family: var(--font-mono);
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  line-height: 1.7;
+}
+
+/* Eyebrow / overline label */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* Caption */
+.caption {
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  letter-spacing: 0.02em;
+}
+
+/* Strong */
+strong, b {
+  font-weight: 600;
+  color: var(--fg);
+}
+
+/* Focus visible — accessibility */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+
+/* ─────────────────────────────────────────────
+   7. THEME TRANSITION — LUXURY FEEL
+   
+   These transitions fire when next-themes swaps
+   the data-theme attribute. The cubic-bezier
+   gives a silky, high-end feel vs instant swap.
+   
+   NOTE: We scope transitions to specific properties
+   (NOT "transition: all") to avoid breaking
+   Framer Motion animations. Framer uses inline
+   transforms — if we transition "all" or "transform"
+   here, it will conflict.
+   ───────────────────────────────────────────── */
+
+/* Applied via JS: document.documentElement.classList.add('theme-transitioning')
+   then removed after the transition. See ThemeProvider setup below.
+   But we also provide a CSS-only fallback. */
+
+html {
+  transition:
+    background-color var(--duration-theme) var(--ease-luxury),
+    color           var(--duration-theme) var(--ease-luxury);
+}
+
+/* 
+   Scope element-level theme transitions.
+   We explicitly EXCLUDE transform, opacity, clip-path
+   so Framer Motion animations are never blocked.
+*/
+*,
+*::before,
+*::after {
+  transition-property:
+    background-color,
+    border-color,
+    color,
+    fill,
+    stroke,
+    box-shadow;
+  transition-duration: var(--duration-theme);
+  transition-timing-function: var(--ease-luxury);
+}
+
+/*
+  CRITICAL: Reset transitions for elements being animated by Framer Motion.
+  Add [data-framer-motion] to any component wrapped in <motion.*> or use
+  the .framer class manually.
+  
+  Better approach: add this attribute in your motion components:
+  <motion.div data-framer-motion ...>
+*/
+[data-framer-motion],
+[data-motion],
+.motion-element {
+  transition-property: none !important;
+}
+
+/* Also disable theme transition during page load to prevent flash */
+.no-transition,
+.no-transition *,
+.no-transition *::before,
+.no-transition *::after {
+  transition: none !important;
+}
+
+
+/* ─────────────────────────────────────────────
+   8. SCROLLBAR — Custom luxury style
+   ───────────────────────────────────────────── */
+
+/* Webkit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-sub);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--radius-full);
+  transition: background var(--duration-normal) var(--ease-smooth);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-deep);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--bg-sub);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) var(--bg-sub);
+}
+
+
+/* ─────────────────────────────────────────────
+   9. TEXT SELECTION
+   ───────────────────────────────────────────── */
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+::-moz-selection {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+
+/* ─────────────────────────────────────────────
+   10. LAYOUT UTILITIES
+   ───────────────────────────────────────────── */
+
+/* Container — consistent max-width + padding */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-inline: 2.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    padding-inline: 3rem;
+  }
+}
+
+/* Wide container — for hero / full-bleed sections */
+.container-wide {
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+/* Section spacing */
+.section {
+  padding-block: var(--spacing-section);
+}
+
+.section-sm {
+  padding-block: 4rem;
+}
+
+/* Grid systems */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.grid-auto {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .grid-2, .grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ─────────────────────────────────────────────
+   11. COMPONENT STYLES
+   ───────────────────────────────────────────── */
+
+/* ── Navbar ──────────────────────────────────── */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-sticky);
+  height: 72px;
+  display: flex;
+  align-items: center;
+  background: var(--navbar-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid transparent;
+  transition:
+    border-color var(--duration-normal) var(--ease-smooth),
+    background   var(--duration-normal) var(--ease-smooth);
+}
+
+.navbar.scrolled {
+  border-bottom-color: var(--border);
+}
+
+/* ── Cards ───────────────────────────────────── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  transition:
+    background     var(--duration-normal) var(--ease-smooth),
+    border-color   var(--duration-normal) var(--ease-smooth),
+    box-shadow     var(--duration-normal) var(--ease-smooth);
+}
+
+.card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-sub);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-accent:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-accent);
+}
+
+/* ── Buttons ─────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.375rem;
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition:
+    background    var(--duration-fast) var(--ease-smooth),
+    border-color  var(--duration-fast) var(--ease-smooth),
+    color         var(--duration-fast) var(--ease-smooth),
+    box-shadow    var(--duration-fast) var(--ease-smooth);
+  white-space: nowrap;
+  user-select: none;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #0A0E1A;
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background: var(--accent-bright);
+  border-color: var(--accent-bright);
+  box-shadow: var(--shadow-accent);
+}
+
+.btn-primary:active {
+  background: var(--accent-deep);
+  transform: scale(0.98);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--fg);
+  border-color: var(--border-strong);
+}
+
+.btn-outline:hover {
+  background: var(--bg-card);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--fg-sub);
+  border-color: transparent;
+}
+
+.btn-ghost:hover {
+  background: var(--bg-card);
+  color: var(--fg);
+}
+
+/* ── Tags / Badges ───────────────────────────── */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  background: var(--tag-bg);
+  color: var(--tag-text);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.tag-accent {
+  background: var(--accent-muted);
+  color: var(--accent);
+  border-color: rgba(0, 217, 166, 0.20);
+}
+
+/* ── Divider ─────────────────────────────────── */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  margin-block: 2rem;
+}
+
+/* ── Avatar / Image Frame ────────────────────── */
+.avatar-frame {
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--border-sub);
+}
+
+.avatar-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(0, 217, 166, 0.20);
+  pointer-events: none;
+}
+
+/* ── Section heading pattern ─────────────────── */
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.section-label::before {
+  content: "";
+  display: block;
+  width: 2rem;
+  height: 1px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+
+/* ─────────────────────────────────────────────
+   12. KEYFRAME ANIMATIONS
+   (Used alongside Framer Motion for CSS-only effects)
+   ───────────────────────────────────────────── */
+
+/* Fade up — entrance */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade in — simple */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Slide in from left */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale in */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Accent pulse — for the "available" badge */
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0, 217, 166, 0.40);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(0, 217, 166, 0);
+  }
+}
+
+/* Marquee — infinite scroll for tech stack */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes marqueeReverse {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
+/* Cursor blink */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* Accent glow pulse (background element) */
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+/* Gentle float — for decorative elements */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+/* Spin — loading indicator */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+
+/* Animation utility classes */
+.animate-fade-up     { animation: fadeUp    0.6s var(--ease-luxury) forwards; }
+.animate-fade-in     { animation: fadeIn    0.4s var(--ease-smooth) forwards; }
+.animate-scale-in    { animation: scaleIn   0.5s var(--ease-luxury) forwards; }
+.animate-float       { animation: float     3s   var(--ease-in-out) infinite; }
+.animate-pulse-badge { animation: pulse     2s   ease infinite; }
+.animate-blink       { animation: blink     1.1s step-end infinite; }
+.animate-spin        { animation: spin      1s   linear infinite; }
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--marquee-duration, 30s) linear infinite;
+}
+
+.marquee-track-reverse {
+  animation-name: marqueeReverse;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* Delay utilities */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-700 { animation-delay: 700ms; }
+
+/* Initially hidden — used with Framer Motion entrance animations */
+.will-animate {
+  opacity: 0;
+}
+
+
+/* ─────────────────────────────────────────────
+   13. BACKGROUND EFFECTS
+   ───────────────────────────────────────────── */
+
+/* Dot grid background — subtle texture for dark mode */
+.bg-dot-grid {
+  background-image: radial-gradient(
+    circle,
+    var(--border) 1px,
+    transparent 1px
+  );
+  background-size: 28px 28px;
+}
+
+/* Radial gradient vignette overlay */
+.bg-vignette::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    var(--bg) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Accent glow orb — decorative hero background element */
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  background: var(--accent-muted);
+  pointer-events: none;
+  animation: glowPulse 6s var(--ease-in-out) infinite;
+}
+
+
+/* ─────────────────────────────────────────────
+   14. REDUCED MOTION — ACCESSIBILITY
+   All animations and transitions are cut when
+   the user prefers reduced motion.
+   ───────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .marquee-track,
+  .marquee-track-reverse {
+    animation: none;
+  }
+}
+
+
+/* ─────────────────────────────────────────────
+   15. PRINT
+   ───────────────────────────────────────────── */
+
+@media print {
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+
+  .navbar,
+  .btn,
+  .tag {
+    display: none;
+  }
+}
+
+/* ============================================================
+   END OF DESIGN SYSTEM
+   
+   Next steps to wire everything up:
+   
+   1. In layout.tsx — import this file:
+      import "@/app/globals.css"
+   
+   2. In layout.tsx — add ThemeProvider (next-themes):
+      import { ThemeProvider } from "next-themes"
+      <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem>
+   
+   3. In your root <html> tag — add suppressHydrationWarning:
+      <html lang="en" suppressHydrationWarning>
+   
+   4. Google Fonts — add to layout.tsx metadata or use next/font:
+      - Instrument Serif: https://fonts.google.com/specimen/Instrument+Serif
+      - Geist: already bundled with Next.js (import from "next/font/local" or "geist")
+      - Geist Mono: same as above
+   
+   5. For Framer Motion — wrap any <motion.div> with:
+      data-framer-motion  (disables theme transition conflict)
+   
+   6. Optional — Lenis smooth scroll:
+      npm install lenis
+      Then create: components/SmoothScroll.tsx
+      (See comment in section 5 above)
+   ============================================================ */
