@@ -237,7 +237,7 @@ export function Navbar() {
                 whileTap={{ scale: 0.97 }}
                 transition={{ duration: 0.2, ease: EASE_LUXURY }}
               >
-                Hire Me
+                Start a Project
                 <ArrowUpRight size={14} strokeWidth={2.5} />
               </motion.span>
             </Link>
@@ -453,7 +453,7 @@ export function Navbar() {
                     whileTap={{ scale: 0.97 }}
                     transition={{ duration: 0.2, ease: EASE_LUXURY }}
                   >
-                    Hire Me
+                    Start a Project
                     <ArrowUpRight size={15} strokeWidth={2.5} />
                   </motion.span>
                 </Link>
