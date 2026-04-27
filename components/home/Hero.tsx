@@ -27,7 +27,7 @@ export function Hero() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "7rem 1.5rem 4rem",
+        padding: "clamp(5rem, 12svh, 7rem) 1.5rem clamp(3rem, 6svh, 4rem)",
         overflow: "hidden",
         background: "var(--bg)",
       }}
@@ -179,7 +179,7 @@ export function Hero() {
             color: "var(--fg-muted)",
             lineHeight: 1.7,
             maxWidth: "56ch",
-            margin: "0 auto 2.5rem",
+            margin: "0 auto clamp(1.5rem, 3svh, 2.5rem)",
           }}
         >
           Muhammad Ubaidullah — Full Stack Developer specializing in{" "}
@@ -201,7 +201,7 @@ export function Hero() {
             justifyContent: "center",
             gap: "0.75rem",
             flexWrap: "wrap",
-            marginBottom: "3rem",
+            marginBottom: "clamp(1.5rem, 3svh, 3rem)",
           }}
         >
           <Link href="#work" style={{ textDecoration: "none" }}>

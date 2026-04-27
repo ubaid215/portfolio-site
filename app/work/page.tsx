@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { motion, useInView, AnimatePresence } from "motion/react"
 import { ArrowUpRight } from "lucide-react"
@@ -25,6 +26,7 @@ function ProjectCard({
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, margin: "-60px" })
+  const [imgError, setImgError] = useState(false)
 
   return (
     <motion.div
@@ -53,7 +55,7 @@ function ProjectCard({
           whileHover={{ y: -6 }}
           transition={{ duration: 0.3, ease: EASE }}
         >
-          {/* Hero mockup area */}
+          {/* ── Hero / Cover Image area ── */}
           <div
             style={{
               height: 220,
@@ -65,54 +67,85 @@ function ProjectCard({
               justifyContent: "center",
             }}
           >
-            {/* Dot grid overlay */}
+            {/* Cover image — shown when available and no load error */}
+            {!imgError ? (
+              <Image
+                src={project.coverImage}
+                alt={project.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                style={{ objectFit: "cover", objectPosition: "top" }}
+                onError={() => setImgError(true)}
+                priority={index < 2}
+              />
+            ) : null}
+
+            {/* Overlay gradient — sits on top of image for readability */}
             <div
               aria-hidden
-              className="bg-dot-grid"
               style={{
                 position: "absolute",
                 inset: 0,
-                opacity: 0.18,
-                pointerEvents: "none",
+                background:
+                  "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 100%)",
+                zIndex: 1,
               }}
             />
 
-            {/* Accent glow */}
-            <div
-              aria-hidden
-              style={{
-                position: "absolute",
-                top: "30%",
-                left: "20%",
-                width: "60%",
-                height: "60%",
-                borderRadius: "50%",
-                background: "var(--accent-muted)",
-                filter: "blur(50px)",
-                opacity: 0.6,
-                pointerEvents: "none",
-              }}
-            />
+            {/* Dot grid overlay (subtle, only visible when no image) */}
+            {imgError && (
+              <div
+                aria-hidden
+                className="bg-dot-grid"
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  opacity: 0.18,
+                  pointerEvents: "none",
+                }}
+              />
+            )}
 
-            {/* Project index number — large decorative */}
-            <span
-              aria-hidden
-              style={{
-                position: "absolute",
-                right: "1.5rem",
-                bottom: "-0.5rem",
-                fontFamily: "var(--font-display)",
-                fontStyle: "italic",
-                fontSize: "7rem",
-                fontWeight: 400,
-                lineHeight: 1,
-                color: "rgba(0,217,166,0.06)",
-                userSelect: "none",
-                pointerEvents: "none",
-              }}
-            >
-              {project.index}
-            </span>
+            {/* Accent glow (fallback only) */}
+            {imgError && (
+              <div
+                aria-hidden
+                style={{
+                  position: "absolute",
+                  top: "30%",
+                  left: "20%",
+                  width: "60%",
+                  height: "60%",
+                  borderRadius: "50%",
+                  background: "var(--accent-muted)",
+                  filter: "blur(50px)",
+                  opacity: 0.6,
+                  pointerEvents: "none",
+                }}
+              />
+            )}
+
+            {/* Project index — large decorative (fallback) */}
+            {imgError && (
+              <span
+                aria-hidden
+                style={{
+                  position: "absolute",
+                  right: "1.5rem",
+                  bottom: "-0.5rem",
+                  fontFamily: "var(--font-display)",
+                  fontStyle: "italic",
+                  fontSize: "7rem",
+                  fontWeight: 400,
+                  lineHeight: 1,
+                  color: "rgba(0,217,166,0.06)",
+                  userSelect: "none",
+                  pointerEvents: "none",
+                }}
+              >
+                {project.index}
+              </span>
+            )}
 
             {/* Status badge */}
             <div
@@ -120,6 +153,7 @@ function ProjectCard({
                 position: "absolute",
                 top: "1rem",
                 left: "1rem",
+                zIndex: 2,
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "0.4rem",
@@ -127,6 +161,7 @@ function ProjectCard({
                 borderRadius: 9999,
                 background: "rgba(0,217,166,0.12)",
                 border: "1px solid rgba(0,217,166,0.25)",
+                backdropFilter: "blur(8px)",
               }}
             >
               <span
@@ -159,30 +194,34 @@ function ProjectCard({
                 position: "absolute",
                 top: "1rem",
                 right: "1rem",
+                zIndex: 2,
                 width: 36,
                 height: 36,
                 borderRadius: "var(--radius-md)",
-                background: "rgba(0,0,0,0.3)",
+                background: "rgba(0,0,0,0.35)",
                 border: "1px solid rgba(255,255,255,0.08)",
+                backdropFilter: "blur(8px)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 color: "var(--fg-faint)",
-                transition: "color 0.2s ease, background 0.2s ease, border-color 0.2s ease",
+                transition:
+                  "color 0.2s ease, background 0.2s ease, border-color 0.2s ease",
               }}
             >
               <ArrowUpRight size={16} strokeWidth={1.5} />
             </div>
 
-            {/* Center: project index pill */}
+            {/* Project index + year pill (bottom of hero, over image) */}
             <div
               style={{
-                position: "relative",
-                zIndex: 1,
+                position: "absolute",
+                bottom: "1rem",
+                left: "1rem",
+                zIndex: 2,
                 display: "flex",
-                flexDirection: "column",
                 alignItems: "center",
-                gap: "0.75rem",
+                gap: "0.5rem",
               }}
             >
               <span
@@ -195,18 +234,18 @@ function ProjectCard({
                   padding: "0.25rem 0.75rem",
                   borderRadius: 9999,
                   border: "1px solid rgba(0,217,166,0.2)",
-                  background: "rgba(0,217,166,0.06)",
+                  background: "rgba(0,217,166,0.08)",
+                  backdropFilter: "blur(8px)",
                 }}
               >
-                Project {project.index}
+                {project.index}
               </span>
               <span
                 style={{
                   fontFamily: "var(--font-display)",
                   fontStyle: "italic",
-                  fontSize: "1.125rem",
+                  fontSize: "0.9rem",
                   color: "rgba(255,255,255,0.5)",
-                  letterSpacing: "-0.01em",
                 }}
               >
                 {project.year}
@@ -214,7 +253,7 @@ function ProjectCard({
             </div>
           </div>
 
-          {/* Content */}
+          {/* ── Content ── */}
           <div style={{ padding: "1.5rem" }}>
             {/* Categories */}
             <div
@@ -365,7 +404,6 @@ export default function WorkPage() {
           background: "var(--bg-sub)",
         }}
       >
-        {/* Decorative glow */}
         <div
           aria-hidden
           style={{
@@ -386,7 +424,6 @@ export default function WorkPage() {
           ref={headingRef}
           style={{ maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 1 }}
         >
-          {/* Eyebrow */}
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -462,7 +499,6 @@ export default function WorkPage() {
               Every project shipped to production — built solo, end-to-end.
             </p>
 
-            {/* Stats row */}
             <div style={{ display: "flex", gap: "2rem", flexShrink: 0 }}>
               {[
                 { v: "5", l: "Projects" },
@@ -502,7 +538,13 @@ export default function WorkPage() {
       </section>
 
       {/* Filters + Grid */}
-      <section style={{ padding: "clamp(3rem, 6vw, 4.5rem) 1.5rem", maxWidth: 1200, margin: "0 auto" }}>
+      <section
+        style={{
+          padding: "clamp(3rem, 6vw, 4.5rem) 1.5rem",
+          maxWidth: 1200,
+          margin: "0 auto",
+        }}
+      >
         {/* Filter tabs */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -549,11 +591,22 @@ export default function WorkPage() {
                       color: active ? "var(--accent)" : "var(--fg-faint)",
                     }}
                   >
-                    ({PROJECTS.filter((p) => p.categories.includes(filter as ProjectCategory)).length})
+                    (
+                    {
+                      PROJECTS.filter((p) =>
+                        p.categories.includes(filter as ProjectCategory)
+                      ).length
+                    }
+                    )
                   </span>
                 )}
                 {filter === "All" && (
-                  <span style={{ marginLeft: "0.375rem", color: active ? "var(--accent)" : "var(--fg-faint)" }}>
+                  <span
+                    style={{
+                      marginLeft: "0.375rem",
+                      color: active ? "var(--accent)" : "var(--fg-faint)",
+                    }}
+                  >
                     ({PROJECTS.length})
                   </span>
                 )}
@@ -572,7 +625,8 @@ export default function WorkPage() {
             transition={{ duration: 0.3 }}
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 380px), 1fr))",
+              gridTemplateColumns:
+                "repeat(auto-fill, minmax(min(100%, 380px), 1fr))",
               gap: "1.25rem",
             }}
           >

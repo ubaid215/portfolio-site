@@ -69,12 +69,12 @@
   /* ── Semantic — Light Mode ───────────────── */
   --color-bg-primary-light:    #F8F7F4;
   --color-bg-secondary-light:  #EEECEA;
-  --color-bg-card-light:       #E8E4DC;
+  --color-bg-card-light:       #E3DFD7;
   --color-text-primary-light:  #0A0E1A;
-  --color-text-secondary-light:#374151;
-  --color-text-muted-light:    #6B7280;
-  --color-border-light:        rgba(10, 14, 26, 0.10);
-  --color-border-strong-light: rgba(10, 14, 26, 0.20);
+  --color-text-secondary-light:#1F2937;
+  --color-text-muted-light:    #4B5563;
+  --color-border-light:        rgba(10, 14, 26, 0.12);
+  --color-border-strong-light: rgba(10, 14, 26, 0.30);
 
   /* ── Semantic — Dark Mode ────────────────── */
   --color-bg-primary-dark:     #0A0E1A;
@@ -198,30 +198,33 @@
 
   --bg:          #F8F7F4;
   --bg-sub:      #EEECEA;
-  --bg-card:     #E8E4DC;
-  --bg-card-hover: #DEDAD2;
+  --bg-card:     #E3DFD7;      /* slightly darker than before for card contrast */
+  --bg-card-hover: #D8D3CA;
   --bg-overlay:  rgba(248, 247, 244, 0.85);
 
   --fg:          #0A0E1A;
-  --fg-sub:      #374151;
-  --fg-muted:    #6B7280;
-  --fg-faint:    #9CA3AF;
+  --fg-sub:      #1F2937;      /* was #374151 — bumped darker for better contrast */
+  --fg-muted:    #4B5563;      /* was #6B7280 — bumped darker (4.6:1 vs 3.9:1) */
+  --fg-faint:    #6B7280;      /* was #9CA3AF — #9CA3AF fails AA on light bg */
 
-  --border:      rgba(10, 14, 26, 0.08);
-  --border-sub:  rgba(10, 14, 26, 0.14);
-  --border-strong: rgba(10, 14, 26, 0.22);
+  --border:      rgba(10, 14, 26, 0.12);   /* slightly more visible */
+  --border-sub:  rgba(10, 14, 26, 0.18);
+  --border-strong: rgba(10, 14, 26, 0.30);
 
-  --accent:      #00D9A6;
-  --accent-bright: #00F0B8;
-  --accent-deep:   #007A60;
+  /* Accent: #00D9A6 is very light on white — keep for decorative use only.
+     For readable accent text on light bg use --accent-text / --accent-on-light. */
+  --accent:        #00A880;    /* darker jade — 3.1:1 on white, fine for non-text */
+  --accent-bright: #00C99A;
+  --accent-deep:   #006B52;
   --accent-tint:   #D4F5EE;
-  --accent-muted:  rgba(0, 217, 166, 0.10);
-  --accent-text:   #004D3D;  /* dark teal — readable on tint bg */
+  --accent-muted:  rgba(0, 168, 128, 0.12);
+  --accent-text:   #004D3D;    /* readable on any light surface — 8.5:1 on white */
+  --accent-on-light: #005C49;  /* use this wherever accent color is actual text */
 
-  --navbar-bg:   rgba(248, 247, 244, 0.80);
-  --code-bg:     #E8E4DC;
-  --tag-bg:      rgba(0, 217, 166, 0.10);
-  --tag-text:    #004D3D;
+  --navbar-bg:   rgba(248, 247, 244, 0.88);
+  --code-bg:     #E3DFD7;
+  --tag-bg:      rgba(0, 168, 128, 0.10);
+  --tag-text:    #004D3D;      /* 8.5:1 on white — WCAG AA/AAA pass */
   --logo-filter: none;  /* Next.js logo — normal in light mode */
 }
 

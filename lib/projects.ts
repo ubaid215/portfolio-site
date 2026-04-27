@@ -21,10 +21,16 @@ export interface Project {
   approachPoints: { title: string; desc: string }[]
   outcome: string
   outcomeStats: { value: string; label: string }[]
-  // Visuals (placeholder paths — swap with real screenshots)
-  heroBg: string        // gradient or color for hero
-  accentColor: string   // per-project accent override (still uses --accent for brand)
-  mockupColor: string   // bg color for screenshot placeholders
+  // Visuals
+  heroBg: string          // gradient or color for hero
+  accentColor: string     // per-project accent override
+  mockupColor: string     // bg color for screenshot placeholders
+  coverImage: string      // card cover — /public/projects/{slug}/cover.png
+  screenshots: {
+    src: string           // /public/images/projects/{slug}/screen-1.png …
+    alt: string
+    span?: boolean        // true = full-width (16/9), false = half-width (4/3)
+  }[]
 }
 
 export const PROJECTS: Project[] = [
@@ -33,7 +39,7 @@ export const PROJECTS: Project[] = [
     index: "01",
     title: "E-Commerce Platform + CMS",
     tagline: "Full retail engine with custom content management",
-    year: "2024",
+    year: "2025",
     role: "Solo Full Stack Developer",
     status: "Production",
     categories: ["Full Stack", "Client Work"],
@@ -67,13 +73,20 @@ export const PROJECTS: Project[] = [
     heroBg: "linear-gradient(135deg, #0D1520 0%, #0A1628 50%, #061018 100%)",
     accentColor: "#00D9A6",
     mockupColor: "#111827",
+    coverImage: "/images/projects/ecommerce-platform/cover.png",
+    screenshots: [
+      { src: "/images/projects/ecommerce-platform/screen-1.png", alt: "Dashboard overview", span: true },
+      { src: "/images/projects/ecommerce-platform/screen-2.png", alt: "Product CMS", span: false },
+      { src: "/images/projects/ecommerce-platform/screen-3.png", alt: "Order management", span: false },
+      { src: "/images/projects/ecommerce-platform/screen-4.png", alt: "Analytics view", span: false },
+    ],
   },
   {
     slug: "school-management",
     index: "02",
     title: "School Management System",
     tagline: "Multi-portal platform — students, teachers, parents, admin",
-    year: "2024",
+    year: "2026",
     role: "Solo Full Stack Developer",
     status: "Production",
     categories: ["Full Stack", "SaaS", "Client Work"],
@@ -107,13 +120,20 @@ export const PROJECTS: Project[] = [
     heroBg: "linear-gradient(135deg, #0A0E1A 0%, #0E1628 50%, #080C18 100%)",
     accentColor: "#00D9A6",
     mockupColor: "#1C2333",
+    coverImage: "/images/projects/school-management/cover.png",
+    screenshots: [
+      { src: "/images/projects/school-management/screen-1.png", alt: "Admin dashboard", span: true },
+      { src: "/images/projects/school-management/screen-2.png", alt: "Attendance view", span: false },
+      { src: "/images/projects/school-management/screen-3.png", alt: "Parent portal", span: false },
+      { src: "/images/projects/school-management/screen-4.png", alt: "Grade book", span: false },
+    ],
   },
   {
     slug: "restaurant-pos",
     index: "03",
     title: "Restaurant POS + CMS",
     tagline: "Full point-of-sale with kitchen flow and revenue analytics",
-    year: "2023",
+    year: "2026",
     role: "Solo Full Stack Developer",
     status: "Production",
     categories: ["Full Stack", "Client Work"],
@@ -147,13 +167,20 @@ export const PROJECTS: Project[] = [
     heroBg: "linear-gradient(135deg, #100A0A 0%, #1A0E0E 50%, #0D0808 100%)",
     accentColor: "#00D9A6",
     mockupColor: "#1C1010",
+    coverImage: "/images/projects/restaurant-pos/cover.png",
+    screenshots: [
+      { src: "/images/projects/restaurant-pos/screen-1.png", alt: "POS order view", span: true },
+      { src: "/images/projects/restaurant-pos/screen-2.png", alt: "Kitchen display", span: false },
+      { src: "/images/projects/restaurant-pos/screen-3.png", alt: "Table floor plan", span: false },
+      { src: "/images/projects/restaurant-pos/screen-4.png", alt: "Revenue dashboard", span: false },
+    ],
   },
   {
     slug: "donation-dashboard",
     index: "04",
     title: "Donation Manager + WhatsApp Bot",
     tagline: "Campaign dashboard with official WhatsApp Business API",
-    year: "2024",
+    year: "2026",
     role: "Solo Full Stack Developer",
     status: "Production",
     categories: ["Full Stack", "SaaS", "Client Work"],
@@ -187,13 +214,20 @@ export const PROJECTS: Project[] = [
     heroBg: "linear-gradient(135deg, #0A0E1A 0%, #0A1018 50%, #060C14 100%)",
     accentColor: "#00D9A6",
     mockupColor: "#1A2030",
+    coverImage: "/images/projects/donation-dashboard/cover.png",
+    screenshots: [
+      { src: "/images/projects/donation-dashboard/screen-1.png", alt: "Campaign dashboard", span: true },
+      { src: "/images/projects/donation-dashboard/screen-2.png", alt: "Donor CRM", span: false },
+      { src: "/images/projects/donation-dashboard/screen-3.png", alt: "Template manager", span: false },
+      { src: "/images/projects/donation-dashboard/screen-4.png", alt: "Message queue", span: false },
+    ],
   },
   {
     slug: "tax-websites",
     index: "05",
     title: "Tax Firm Websites (×2)",
     tagline: "Lead-generating web presence for professional tax firms",
-    year: "2023",
+    year: "2025",
     role: "Frontend Developer",
     status: "Live",
     categories: ["Frontend", "Client Work"],
@@ -227,6 +261,13 @@ export const PROJECTS: Project[] = [
     heroBg: "linear-gradient(135deg, #0A0C14 0%, #0E1020 50%, #080A12 100%)",
     accentColor: "#00D9A6",
     mockupColor: "#12151F",
+    coverImage: "/images/projects/tax-websites/cover.png",
+    screenshots: [
+      { src: "/images/projects/tax-websites/screen-1.png", alt: "Homepage hero", span: true },
+      { src: "/images/projects/tax-websites/screen-2.png", alt: "Services section", span: false },
+      { src: "/images/projects/tax-websites/screen-3.png", alt: "Contact form", span: false },
+      { src: "/images/projects/tax-websites/screen-4.png", alt: "Mobile view", span: false },
+    ],
   },
 ]
 

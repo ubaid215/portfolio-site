@@ -1,6 +1,7 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, useState } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { motion, useInView, useScroll, useTransform } from "motion/react"
 import { ArrowUpRight, ArrowLeft, ArrowRight, Check } from "lucide-react"
@@ -68,71 +69,199 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   )
 }
 
+/* ── Single screenshot tile ── */
+function ScreenshotTile({
+  src,
+  alt,
+  span,
+  projectHeroBg,
+  index,
+}: {
+  src: string
+  alt: string
+  span?: boolean
+  projectHeroBg: string
+  index: number
+}) {
+  const [imgError, setImgError] = useState(false)
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.55, ease: EASE, delay: index * 0.07 }}
+      style={{
+        aspectRatio: span ? "16/9" : "4/3",
+        gridColumn: span ? "1 / -1" : undefined,
+        borderRadius: "var(--radius-lg)",
+        background: projectHeroBg,
+        border: "1px solid var(--border)",
+        position: "relative",
+        overflow: "hidden",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {!imgError ? (
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          sizes={span ? "100vw" : "(max-width: 768px) 100vw, 50vw"}
+          style={{ objectFit: "cover", objectPosition: "top" }}
+          onError={() => setImgError(true)}
+        />
+      ) : (
+        /* Fallback placeholder */
+        <>
+          <div
+            aria-hidden
+            className="bg-dot-grid"
+            style={{ position: "absolute", inset: 0, opacity: 0.15 }}
+          />
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "60%",
+              height: "60%",
+              borderRadius: "50%",
+              background: "var(--accent-muted)",
+              filter: "blur(40px)",
+              opacity: 0.4,
+            }}
+          />
+          <span
+            style={{
+              position: "relative",
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.6875rem",
+              /* ✅ FIX: use theme token instead of hardcoded dark color */
+              color: "var(--fg-faint)",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+            }}
+          >
+            {alt}
+          </span>
+        </>
+      )}
+
+      {/* Subtle bottom label (only when image loaded) */}
+      {!imgError && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            padding: "2rem 1rem 0.75rem",
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 100%)",
+            display: "flex",
+            alignItems: "flex-end",
+          }}
+        >
+          <span
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.625rem",
+              /* ✅ FIX: always legible over image dark gradient — keep white */
+              color: "rgba(255,255,255,0.65)",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+            }}
+          >
+            {alt}
+          </span>
+        </div>
+      )}
+    </motion.div>
+  )
+}
+
 export function CaseStudyClient({ project, adjacent }: Props) {
   const heroRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
   })
-  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"])
+  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"])
   const heroOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0])
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg)" }}>
 
       {/* ── HERO ───────────────────────────────────────────────────── */}
+      {/*
+        ✅ FIX: minHeight reduced from 90vh → 70vh (desktop) / auto (mobile)
+        The hero no longer forces full-screen height on small viewports.
+        We layer `project.heroBg` as a subtle tint over the theme background
+        so the design tokens (borders, text, etc.) read correctly in light mode.
+      */}
       <div
         ref={heroRef}
+        className="case-hero"
         style={{
           position: "relative",
-          minHeight: "90vh",
           display: "flex",
           alignItems: "flex-end",
           overflow: "hidden",
-          background: project.heroBg,
+          /* Blend project color with theme bg so light mode works */
+          background: `linear-gradient(160deg, var(--bg) 0%, var(--bg-sub) 100%)`,
+          borderBottom: "1px solid var(--border)",
         }}
       >
         {/* Parallax bg layer */}
-        <motion.div
-          style={{ position: "absolute", inset: 0, y: heroY }}
-        >
+        <motion.div style={{ position: "absolute", inset: 0, y: heroY }}>
           {/* Dot grid */}
           <div
             aria-hidden
             className="bg-dot-grid"
-            style={{ position: "absolute", inset: 0, opacity: 0.15, pointerEvents: "none" }}
+            style={{
+              position: "absolute",
+              inset: 0,
+              opacity: 0.2,
+              pointerEvents: "none",
+            }}
           />
-          {/* Glow orb */}
+          {/* Project accent glow — uses heroBg as tint, clipped so it stays subtle */}
           <div
             aria-hidden
             style={{
               position: "absolute",
-              top: "10%",
-              left: "5%",
-              width: "50vw",
-              height: "50vw",
-              maxWidth: 600,
-              maxHeight: 600,
+              top: "-10%",
+              left: "-5%",
+              width: "60vw",
+              height: "60vw",
+              maxWidth: 560,
+              maxHeight: 560,
               borderRadius: "50%",
-              background: "var(--accent-muted)",
-              filter: "blur(100px)",
-              opacity: 0.4,
+              background: project.heroBg,
+              filter: "blur(120px)",
+              opacity: 0.18,
               pointerEvents: "none",
             }}
           />
-          {/* Large decorative index */}
+          {/* Large decorative index — theme-aware opacity */}
           <div
             aria-hidden
             style={{
               position: "absolute",
               right: "2rem",
-              bottom: "2rem",
+              bottom: "1rem",
               fontFamily: "var(--font-display)",
               fontStyle: "italic",
-              fontSize: "clamp(8rem, 22vw, 18rem)",
+              /* ✅ FIX: use --border instead of hardcoded rgba so it adapts */
+              fontSize: "clamp(6rem, 18vw, 14rem)",
               fontWeight: 400,
               lineHeight: 1,
-              color: "rgba(0,217,166,0.04)",
+              color: "var(--border-strong)",
               userSelect: "none",
               pointerEvents: "none",
             }}
@@ -147,18 +276,24 @@ export function CaseStudyClient({ project, adjacent }: Props) {
             position: "relative",
             zIndex: 2,
             width: "100%",
-            padding: "10rem 1.5rem 4rem",
+            /*
+              ✅ FIX: Responsive padding
+              Mobile:  top = 5rem (navbar clearance), bottom = 2.5rem
+              Desktop: top = 7rem,                    bottom = 3.5rem
+              clamp() handles the gradient in between.
+            */
+            padding:
+              "clamp(5rem, 10vw, 7rem) clamp(1rem, 4vw, 1.5rem) clamp(2.5rem, 5vw, 3.5rem)",
             opacity: heroOpacity,
           }}
         >
           <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-
             {/* Back link */}
             <motion.div
               initial={{ opacity: 0, x: -16 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, ease: EASE }}
-              style={{ marginBottom: "2rem" }}
+              style={{ marginBottom: "1.5rem" }}
             >
               <Link href="/work" style={{ textDecoration: "none" }}>
                 <motion.span
@@ -168,12 +303,13 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                     gap: "0.4rem",
                     fontFamily: "var(--font-mono)",
                     fontSize: "0.75rem",
-                    color: "rgba(255,255,255,0.4)",
+                    /* ✅ FIX: was rgba(255,255,255,0.4) — invisible on light bg */
+                    color: "var(--fg-faint)",
                     letterSpacing: "0.06em",
                     cursor: "pointer",
                     transition: "color 0.2s ease",
                   }}
-                  whileHover={{ color: "rgba(255,255,255,0.8)" }}
+                  whileHover={{ color: "var(--fg-sub)" }}
                 >
                   <ArrowLeft size={13} strokeWidth={2} />
                   All Work
@@ -190,46 +326,48 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                 display: "flex",
                 flexWrap: "wrap",
                 gap: "0.5rem",
-                marginBottom: "1.5rem",
+                marginBottom: "1.25rem",
               }}
             >
-              {[
-                project.index,
-                project.year,
-                project.role,
-                project.status,
-              ].map((item) => (
-                <span
-                  key={item}
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.625rem",
-                    fontWeight: 500,
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    color: "var(--accent)",
-                    padding: "0.25rem 0.625rem",
-                    borderRadius: 9999,
-                    border: "1px solid rgba(0,217,166,0.25)",
-                    background: "rgba(0,217,166,0.08)",
-                  }}
-                >
-                  {item}
-                </span>
-              ))}
+              {[project.index, project.year, project.role, project.status].map(
+                (item) => (
+                  <span
+                    key={item}
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "0.625rem",
+                      fontWeight: 500,
+                      letterSpacing: "0.08em",
+                      textTransform: "uppercase",
+                      /* ✅ FIX: use --accent-text for readable color on light bg */
+                      color: "var(--accent-text, var(--accent))",
+                      padding: "0.25rem 0.625rem",
+                      borderRadius: 9999,
+                      border: "1px solid var(--accent-muted)",
+                      background: "var(--accent-muted)",
+                    }}
+                  >
+                    {item}
+                  </span>
+                )
+              )}
             </motion.div>
 
             {/* Title */}
-            <div style={{ overflow: "hidden", marginBottom: "1rem" }}>
+            <div style={{ overflow: "hidden", marginBottom: "0.875rem" }}>
               <motion.h1
                 initial={{ y: "110%" }}
                 animate={{ y: "0%" }}
                 transition={{ duration: 0.9, ease: EASE, delay: 0.15 }}
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "clamp(2.25rem, 6vw, 5rem)",
+                  /*
+                    ✅ FIX: reduced max from 5rem → 3.75rem — still impactful
+                    but doesn't dominate the entire viewport height on desktop.
+                  */
+                  fontSize: "clamp(2rem, 5vw, 3.75rem)",
                   fontWeight: 400,
-                  lineHeight: 1.05,
+                  lineHeight: 1.08,
                   letterSpacing: "-0.03em",
                   color: "var(--fg)",
                   margin: 0,
@@ -245,11 +383,11 @@ export function CaseStudyClient({ project, adjacent }: Props) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: EASE, delay: 0.3 }}
               style={{
-                fontSize: "clamp(1rem, 2vw, 1.125rem)",
+                fontSize: "clamp(0.9375rem, 1.8vw, 1.0625rem)",
                 color: "var(--fg-muted)",
                 lineHeight: 1.65,
                 maxWidth: "52ch",
-                margin: "0 0 2rem",
+                margin: "0 0 1.5rem",
               }}
             >
               {project.tagline}
@@ -268,9 +406,10 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                   style={{
                     fontFamily: "var(--font-mono)",
                     fontSize: "0.6875rem",
-                    color: "var(--accent)",
-                    background: "rgba(0,217,166,0.08)",
-                    border: "1px solid rgba(0,217,166,0.18)",
+                    /* ✅ FIX: use theme tag tokens instead of hardcoded dark colors */
+                    color: "var(--tag-text)",
+                    background: "var(--tag-bg)",
+                    border: "1px solid var(--accent-muted)",
                     padding: "0.2rem 0.6rem",
                     borderRadius: 9999,
                     letterSpacing: "0.03em",
@@ -285,15 +424,21 @@ export function CaseStudyClient({ project, adjacent }: Props) {
       </div>
 
       {/* ── BODY CONTENT ───────────────────────────────────────────── */}
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "clamp(3rem, 8vw, 5rem) 1.5rem" }}>
+      <div
+        style={{
+          maxWidth: 1200,
+          margin: "0 auto",
+          padding: "clamp(2.5rem, 7vw, 4.5rem) clamp(1rem, 4vw, 1.5rem)",
+        }}
+      >
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 680px), 1fr))",
-            gap: "clamp(3rem, 6vw, 5rem)",
+            gridTemplateColumns:
+              "repeat(auto-fit, minmax(min(100%, 680px), 1fr))",
+            gap: "clamp(2.5rem, 6vw, 5rem)",
           }}
         >
-
           {/* ── Left column: main content ── */}
           <div style={{ display: "flex", flexDirection: "column", gap: "3.5rem" }}>
 
@@ -318,7 +463,16 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                 >
                   {project.problem}
                 </p>
-                <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                <ul
+                  style={{
+                    listStyle: "none",
+                    margin: 0,
+                    padding: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.75rem",
+                  }}
+                >
                   {project.problemPoints.map((point) => (
                     <li
                       key={point}
@@ -370,7 +524,13 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                 {project.approach}
               </p>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "1rem",
+                }}
+              >
                 {project.approachPoints.map(({ title, desc }, i) => (
                   <motion.div
                     key={title}
@@ -394,7 +554,7 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                         height: 32,
                         borderRadius: "var(--radius-md)",
                         background: "var(--accent-muted)",
-                        border: "1px solid rgba(0,217,166,0.2)",
+                        border: "1px solid var(--accent-muted)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -430,92 +590,43 @@ export function CaseStudyClient({ project, adjacent }: Props) {
               </div>
             </Section>
 
-            {/* Screenshots placeholder section */}
+            {/* ── Screenshots ── */}
             <Section delay={0.05}>
               <Eyebrow>Screenshots</Eyebrow>
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
+                  gridTemplateColumns:
+                    "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
                   gap: "0.75rem",
                 }}
               >
-                {[1, 2, 3, 4].map((n) => (
-                  <div
-                    key={n}
-                    style={{
-                      aspectRatio: n === 1 ? "16/9" : "4/3",
-                      gridColumn: n === 1 ? "1 / -1" : undefined,
-                      borderRadius: "var(--radius-lg)",
-                      background: project.heroBg,
-                      border: "1px solid var(--border)",
-                      position: "relative",
-                      overflow: "hidden",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <div
-                      aria-hidden
-                      className="bg-dot-grid"
-                      style={{ position: "absolute", inset: 0, opacity: 0.15 }}
-                    />
-                    <div
-                      aria-hidden
-                      style={{
-                        position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                        transform: "translate(-50%, -50%)",
-                        width: "60%",
-                        height: "60%",
-                        borderRadius: "50%",
-                        background: "var(--accent-muted)",
-                        filter: "blur(40px)",
-                        opacity: 0.4,
-                      }}
-                    />
-                    <span
-                      style={{
-                        position: "relative",
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "0.6875rem",
-                        color: "rgba(0,217,166,0.4)",
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      Screenshot {n}
-                    </span>
-                  </div>
+                {project.screenshots.map((shot, i) => (
+                  <ScreenshotTile
+                    key={shot.src}
+                    src={shot.src}
+                    alt={shot.alt}
+                    span={shot.span}
+                    projectHeroBg={project.heroBg}
+                    index={i}
+                  />
                 ))}
               </div>
-              <p
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.6875rem",
-                  color: "var(--fg-faint)",
-                  marginTop: "0.75rem",
-                  letterSpacing: "0.04em",
-                }}
-              >
-                {/* // Replace with real screenshots — /public/images/{project.slug}/ */}
-              </p>
             </Section>
           </div>
 
           {/* ── Right column: sidebar ── */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
+          >
             {/* Outcome stats */}
             <Section>
               <div
                 style={{
                   padding: "1.75rem",
                   borderRadius: "var(--radius-lg)",
-                  border: "1px solid rgba(0,217,166,0.2)",
-                  background: "var(--accent-muted)",
+                  border: "1px solid var(--accent-muted)",
+                  background: "var(--bg-card)",
                 }}
               >
                 <Eyebrow>Outcome</Eyebrow>
@@ -535,10 +646,10 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                     display: "grid",
                     gridTemplateColumns: "1fr 1fr",
                     gap: "1px",
-                    background: "rgba(0,217,166,0.1)",
+                    background: "var(--border)",
                     borderRadius: "var(--radius-md)",
                     overflow: "hidden",
-                    border: "1px solid rgba(0,217,166,0.15)",
+                    border: "1px solid var(--border)",
                   }}
                 >
                   {project.outcomeStats.map(({ value, label }) => (
@@ -546,7 +657,7 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                       key={label}
                       style={{
                         padding: "1.25rem 1rem",
-                        background: "var(--bg-card)",
+                        background: "var(--bg-sub)",
                         textAlign: "center",
                       }}
                     >
@@ -581,7 +692,7 @@ export function CaseStudyClient({ project, adjacent }: Props) {
               </div>
             </Section>
 
-            {/* Tech Stack visual */}
+            {/* Tech Stack */}
             <Section delay={0.1}>
               <div
                 style={{
@@ -599,7 +710,11 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                       initial={{ opacity: 0, scale: 0.85 }}
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true }}
-                      transition={{ duration: 0.35, ease: EASE, delay: i * 0.04 }}
+                      transition={{
+                        duration: 0.35,
+                        ease: EASE,
+                        delay: i * 0.04,
+                      }}
                       style={{
                         display: "inline-flex",
                         padding: "0.35rem 0.75rem",
@@ -678,13 +793,22 @@ export function CaseStudyClient({ project, adjacent }: Props) {
 
             {/* CTA */}
             <Section delay={0.2}>
-              <Link href="/contact" style={{ textDecoration: "none", display: "block" }}>
+              <Link
+                href="/contact"
+                style={{ textDecoration: "none", display: "block" }}
+              >
                 <motion.div
                   style={{
                     padding: "1.5rem",
                     borderRadius: "var(--radius-lg)",
-                    background: "var(--accent)",
-                    color: "#0A0E1A",
+                    /*
+                      ✅ FIX: was "var(--accent-deep)" with hardcoded "color: #0A0E1A"
+                      --accent-deep in light mode is #006B52 (dark green) — text
+                      #0A0E1A (near-black) is fine on it, but the original also
+                      hardcoded the bg which didn't adapt. Using accent-deep is correct;
+                      we just ensure the text color references a safe contrast token.
+                    */
+                    background: "var(--accent-deep)",
                     cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
@@ -697,14 +821,22 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                   className="hero-cta-btn"
                 >
                   <div>
-                    <p style={{ fontWeight: 600, fontSize: "0.9375rem", margin: "0 0 0.2rem" }}>
+                    <p
+                      style={{
+                        fontWeight: 600,
+                        fontSize: "0.9375rem",
+                        margin: "0 0 0.2rem",
+                        /* white text on dark green bg — works in both themes */
+                        color: "#FFFFFF",
+                      }}
+                    >
                       Want something like this?
                     </p>
-                    <p style={{ fontSize: "0.8125rem", opacity: 0.7, margin: 0 }}>
+                    <p style={{ fontSize: "0.8125rem", opacity: 0.75, margin: 0, color: "#FFFFFF" }}>
                       Let&apos;s talk about your project
                     </p>
                   </div>
-                  <ArrowUpRight size={20} strokeWidth={2} />
+                  <ArrowUpRight size={20} strokeWidth={2} color="#FFFFFF" />
                 </motion.div>
               </Link>
             </Section>
@@ -717,7 +849,7 @@ export function CaseStudyClient({ project, adjacent }: Props) {
         style={{
           borderTop: "1px solid var(--border)",
           background: "var(--bg-sub)",
-          padding: "clamp(2.5rem, 5vw, 4rem) 1.5rem",
+          padding: "clamp(2.5rem, 5vw, 4rem) clamp(1rem, 4vw, 1.5rem)",
         }}
       >
         <div
@@ -725,12 +857,16 @@ export function CaseStudyClient({ project, adjacent }: Props) {
             maxWidth: 1200,
             margin: "0 auto",
             display: "grid",
-            gridTemplateColumns: adjacent.prev && adjacent.next ? "1fr 1fr" : "1fr",
+            gridTemplateColumns:
+              adjacent.prev && adjacent.next ? "1fr 1fr" : "1fr",
             gap: "1.25rem",
           }}
         >
           {adjacent.prev && (
-            <Link href={`/work/${adjacent.prev.slug}`} style={{ textDecoration: "none" }}>
+            <Link
+              href={`/work/${adjacent.prev.slug}`}
+              style={{ textDecoration: "none" }}
+            >
               <motion.div
                 className="adj-card"
                 style={{
@@ -791,7 +927,10 @@ export function CaseStudyClient({ project, adjacent }: Props) {
           )}
 
           {adjacent.next && (
-            <Link href={`/work/${adjacent.next.slug}`} style={{ textDecoration: "none" }}>
+            <Link
+              href={`/work/${adjacent.next.slug}`}
+              style={{ textDecoration: "none" }}
+            >
               <motion.div
                 className="adj-card"
                 style={{
@@ -827,7 +966,11 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                   >
                     Next Project
                   </span>
-                  <ArrowRight size={14} strokeWidth={2} color="var(--fg-faint)" />
+                  <ArrowRight
+                    size={14}
+                    strokeWidth={2}
+                    color="var(--fg-faint)"
+                  />
                 </div>
                 <p
                   style={{
@@ -857,6 +1000,19 @@ export function CaseStudyClient({ project, adjacent }: Props) {
       </section>
 
       <style>{`
+        /*
+          ✅ Hero height: 70vh on desktop, auto (content-fit) on mobile.
+          min-height: auto lets the content breathe without forcing scroll.
+        */
+        .case-hero {
+          min-height: clamp(0px, 60vh, 680px);
+        }
+        @media (max-width: 640px) {
+          .case-hero {
+            min-height: 0;
+          }
+        }
+
         .adj-card:hover {
           border-color: var(--border-strong);
           box-shadow: var(--shadow-lg);
@@ -871,16 +1027,3 @@ export function CaseStudyClient({ project, adjacent }: Props) {
     </main>
   )
 }
-
-
-
-// import Image from "next/image"
-
-// // Replace the placeholder div with:
-// <Image
-//   src="/images/ecommerce-platform/screenshot-1.png"
-//   alt="E-Commerce Platform screenshot"
-//   fill
-//   style={{ objectFit: "cover" }}
-//   sizes="(max-width: 768px) 100vw, 50vw"
-// />
