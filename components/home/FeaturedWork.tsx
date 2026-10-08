@@ -5,61 +5,17 @@ import { useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowUpRight } from "lucide-react"
+import { PROJECTS as ALL_PROJECTS, type Project } from "@/lib/projects"
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
-const PROJECTS = [
-  {
-    index: "01",
-    slug: "ecommerce-platform",
-    title: "E-Commerce Platform + Custom CMS",
-    description:
-      "Full inventory management, analytics dashboard, and custom CMS for a live retail client. Solo-built end-to-end — from DB schema to deployment.",
-    stack: ["MERN Stack", "MongoDB", "Node.js", "React", "Redux"],
-    role: "Solo Developer",
-    status: "Production",
-    coverImage: "/images/projects/ecommerce-cover.png",
-  },
-  {
-    index: "02",
-    slug: "school-management",
-    title: "School Management System",
-    description:
-      "Multi-portal platform with student, teacher, parent, and admin dashboards. Real-time attendance, grading, fee collection, and notifications.",
-    stack: ["Next.js", "NestJS", "PostgreSQL", "Prisma", "WebSocket"],
-    role: "Solo Developer",
-    status: "Production",
-    coverImage: "/images/projects/school-cover.png",
-  },
-  {
-    index: "03",
-    slug: "restaurant-pos",
-    title: "Restaurant POS + CMS",
-    description:
-      "Full POS system, menu management CMS, and revenue analytics — one cohesive platform. Handles table orders, kitchen flow, and end-of-day reports.",
-    stack: ["Next.js", "Node.js", "MongoDB", "Tailwind CSS"],
-    role: "Solo Developer",
-    status: "Production",
-    coverImage: "/images/projects/restaurant-cover.png",
-  },
-  {
-    index: "04",
-    slug: "donation-dashboard",
-    title: "Donation Manager + WhatsApp Bot",
-    description:
-      "Dashboard with official WhatsApp Business API integration for automated donor messaging and campaign tracking. Handles bulk messaging with template support.",
-    stack: ["MERN Stack", "Meta API", "BullMQ", "Redis"],
-    role: "Solo Developer",
-    status: "Production",
-    coverImage: "/images/projects/donation-cover.png",
-  },
-]
+const PROJECTS = ALL_PROJECTS.slice(0, 4)
 
 function ProjectCard({
   project,
   index,
 }: {
-  project: (typeof PROJECTS)[0]
+  project: Project
   index: number
 }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -154,8 +110,8 @@ function ProjectCard({
               <span
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "0.6875rem",
-                  color: "var(--accent)",
+                  fontSize: "var(--type-meta-size)",
+                  color: "var(--brass-ink)",
                   letterSpacing: "0.08em",
                   fontWeight: 500,
                   flexShrink: 0,
@@ -168,13 +124,10 @@ function ProjectCard({
               {/* Title + arrow */}
               <div style={{ flex: 1 }}>
                 <h3
+                  className="type-card-title"
                   style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: "1.0625rem",
-                    fontWeight: 500,
                     color: "var(--fg)",
                     margin: "0 0 0.5rem",
-                    lineHeight: 1.3,
                   }}
                 >
                   {project.title}
@@ -187,7 +140,7 @@ function ProjectCard({
                     margin: 0,
                   }}
                 >
-                  {project.description}
+                  {project.shortDesc}
                 </p>
               </div>
 
@@ -219,13 +172,13 @@ function ProjectCard({
             >
               {/* Stack tags */}
               <div style={{ display: "flex", flexWrap: "wrap", gap: "0.375rem" }}>
-                {project.stack.map((tag) => (
+                {project.stack.slice(0, 3).map((tag) => (
                   <span
                     key={tag}
                     style={{
                       fontFamily: "var(--font-mono)",
-                      fontSize: "0.6875rem",
-                      color: "var(--accent-on-light, var(--accent))",
+                      fontSize: "var(--type-meta-size)",
+                      color: "var(--accent-ink)",
                       background: "var(--accent-muted)",
                       border: "1px solid rgba(0,168,128,0.20)",
                       padding: "0.2rem 0.55rem",
@@ -238,30 +191,6 @@ function ProjectCard({
                 ))}
               </div>
 
-              {/* Status badge */}
-              <span
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.6875rem",
-                  color: "var(--accent-on-light, var(--accent))",
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.35rem",
-                }}
-              >
-                <span
-                  style={{
-                    width: 5,
-                    height: 5,
-                    borderRadius: "50%",
-                    background: "var(--accent)",
-                    display: "inline-block",
-                  }}
-                />
-                {project.status}
-              </span>
             </div>
           </div>
         </motion.div>
@@ -291,11 +220,11 @@ export function FeaturedWork() {
             transition={{ duration: 0.6, ease: EASE }}
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: "0.6875rem",
+              fontSize: "var(--type-meta-size)",
               fontWeight: 500,
               letterSpacing: "0.12em",
               textTransform: "uppercase",
-              color: "var(--accent)",
+              color: "var(--accent-ink)",
               marginBottom: "1rem",
               display: "flex",
               alignItems: "center",
@@ -315,23 +244,16 @@ export function FeaturedWork() {
 
           <div style={{ overflow: "hidden" }}>
             <motion.h2
+              className="type-section"
               initial={{ y: "105%" }}
               animate={isInView ? { y: "0%" } : {}}
               transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
               style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(2rem, 5vw, 3.5rem)",
-                fontWeight: 400,
-                lineHeight: 1.1,
-                letterSpacing: "-0.02em",
                 color: "var(--fg)",
                 margin: "0 0 1rem",
               }}
             >
-              Things I&apos;ve{" "}
-              <span style={{ fontStyle: "italic", color: "var(--accent)" }}>
-                Actually Built
-              </span>
+              Selected Work
             </motion.h2>
           </div>
 
@@ -347,7 +269,7 @@ export function FeaturedWork() {
               margin: 0,
             }}
           >
-            Not mockups. Not tutorials. Real products, real users, real data.
+            A closer look at the workflows, product decisions, and interfaces behind selected projects.
           </motion.p>
         </div>
 
@@ -389,7 +311,7 @@ export function FeaturedWork() {
                 cursor: "pointer",
                 transition: "color 0.2s ease, border-color 0.2s ease",
               }}
-              whileHover={{ color: "var(--accent)" }}
+              whileHover={{ color: "var(--accent-ink)" }}
             >
               View all projects
               <ArrowUpRight size={15} strokeWidth={2} />
@@ -408,7 +330,7 @@ export function FeaturedWork() {
           transform: scaleY(1);
         }
         .project-card:hover .project-arrow {
-          color: var(--accent);
+          color: var(--accent-ink);
           transform: translate(2px, -2px);
         }
         .project-card:hover .project-cover-overlay {

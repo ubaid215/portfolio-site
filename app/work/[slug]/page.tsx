@@ -18,6 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: project.title,
     description: project.shortDesc,
+    openGraph: { title: project.title, description: project.shortDesc, images: [{ url: project.coverImage }] },
   }
 }
 

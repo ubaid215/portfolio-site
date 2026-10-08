@@ -3,20 +3,16 @@
 /**
  * ThemeToggle.tsx
  * motion v12 — imports from "motion/react", not "motion"
- * useEffect pattern fixed for React 19 strict ESLint rules
+ * Delay theme-specific controls until after hydration.
  */
 
 import { useTheme } from "next-themes"
-import { useEffect, useState } from "react"
+import { useSyncExternalStore } from "react"
 import { motion, AnimatePresence } from "motion/react"
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  const mounted = useSyncExternalStore(() => () => {}, () => true, () => false)
 
   if (!mounted) return <div style={{ width: 40, height: 40 }} />
 
@@ -40,7 +36,7 @@ export function ThemeToggle() {
         color: "var(--fg-sub)",
         flexShrink: 0,
       }}
-      whileHover={{ scale: 1.05, borderColor: "var(--accent)", color: "var(--accent)" }}
+      whileHover={{ scale: 1.05, borderColor: "var(--accent)", color: "var(--accent-ink)" }}
       whileTap={{ scale: 0.95 }}
       transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
     >

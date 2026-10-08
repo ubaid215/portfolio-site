@@ -147,46 +147,6 @@ function ProjectCard({
               </span>
             )}
 
-            {/* Status badge */}
-            <div
-              style={{
-                position: "absolute",
-                top: "1rem",
-                left: "1rem",
-                zIndex: 2,
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.4rem",
-                padding: "0.25rem 0.625rem",
-                borderRadius: 9999,
-                background: "rgba(0,217,166,0.12)",
-                border: "1px solid rgba(0,217,166,0.25)",
-                backdropFilter: "blur(8px)",
-              }}
-            >
-              <span
-                style={{
-                  width: 5,
-                  height: 5,
-                  borderRadius: "50%",
-                  background: "var(--accent)",
-                  display: "inline-block",
-                }}
-              />
-              <span
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.625rem",
-                  fontWeight: 500,
-                  color: "var(--accent)",
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                }}
-              >
-                {project.status}
-              </span>
-            </div>
-
             {/* Arrow icon top-right */}
             <div
               className="work-card-arrow"
@@ -198,13 +158,13 @@ function ProjectCard({
                 width: 36,
                 height: 36,
                 borderRadius: "var(--radius-md)",
-                background: "rgba(0,0,0,0.35)",
-                border: "1px solid rgba(255,255,255,0.08)",
+                background: "rgba(10,14,26,0.86)",
+                border: "1px solid rgba(255,255,255,0.2)",
                 backdropFilter: "blur(8px)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                color: "var(--fg-faint)",
+                color: "#FFFFFF",
                 transition:
                   "color 0.2s ease, background 0.2s ease, border-color 0.2s ease",
               }}
@@ -222,20 +182,20 @@ function ProjectCard({
                 display: "flex",
                 alignItems: "center",
                 gap: "0.5rem",
+                padding: "0.25rem 0.75rem",
+                borderRadius: 9999,
+                border: "1px solid rgba(255,255,255,0.2)",
+                background: "rgba(10,14,26,0.88)",
+                backdropFilter: "blur(8px)",
               }}
             >
               <span
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "0.6875rem",
-                  color: "var(--accent)",
+                  fontSize: "var(--type-meta-size)",
+                  color: "var(--brass-image)",
                   letterSpacing: "0.1em",
                   fontWeight: 500,
-                  padding: "0.25rem 0.75rem",
-                  borderRadius: 9999,
-                  border: "1px solid rgba(0,217,166,0.2)",
-                  background: "rgba(0,217,166,0.08)",
-                  backdropFilter: "blur(8px)",
                 }}
               >
                 {project.index}
@@ -245,7 +205,7 @@ function ProjectCard({
                   fontFamily: "var(--font-display)",
                   fontStyle: "italic",
                   fontSize: "0.9rem",
-                  color: "rgba(255,255,255,0.5)",
+                  color: "#FFFFFF",
                 }}
               >
                 {project.year}
@@ -269,7 +229,7 @@ function ProjectCard({
                   key={cat}
                   style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: "0.625rem",
+                    fontSize: "var(--type-meta-size)",
                     color: "var(--fg-faint)",
                     padding: "0.2rem 0.5rem",
                     borderRadius: 9999,
@@ -286,13 +246,10 @@ function ProjectCard({
 
             {/* Title */}
             <h2
+              className="type-card-title"
               style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "1.0625rem",
-                fontWeight: 500,
                 color: "var(--fg)",
                 margin: "0 0 0.5rem",
-                lineHeight: 1.3,
               }}
             >
               {project.title}
@@ -301,7 +258,7 @@ function ProjectCard({
             {/* Tagline */}
             <p
               style={{
-                fontSize: "0.875rem",
+                fontSize: "0.9375rem",
                 color: "var(--fg-muted)",
                 lineHeight: 1.6,
                 margin: "0 0 1.25rem",
@@ -326,8 +283,8 @@ function ProjectCard({
                   key={tag}
                   style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: "0.6875rem",
-                    color: "var(--accent)",
+                    fontSize: "var(--type-meta-size)",
+                    color: "var(--accent-ink)",
                     background: "var(--accent-muted)",
                     border: "1px solid rgba(0,217,166,0.18)",
                     padding: "0.2rem 0.55rem",
@@ -342,7 +299,7 @@ function ProjectCard({
                 <span
                   style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: "0.6875rem",
+                    fontSize: "var(--type-meta-size)",
                     color: "var(--fg-faint)",
                     padding: "0.2rem 0.55rem",
                     letterSpacing: "0.03em",
@@ -387,7 +344,7 @@ export default function WorkPage() {
       : PROJECTS.filter((p) => p.categories.includes(activeFilter))
 
   return (
-    <main
+    <div
       style={{
         paddingTop: "7rem",
         minHeight: "100vh",
@@ -430,11 +387,11 @@ export default function WorkPage() {
             transition={{ duration: 0.6, ease: EASE }}
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: "0.6875rem",
+              fontSize: "var(--type-meta-size)",
               fontWeight: 500,
               letterSpacing: "0.12em",
               textTransform: "uppercase",
-              color: "var(--accent)",
+              color: "var(--accent-ink)",
               marginBottom: "1rem",
               display: "flex",
               alignItems: "center",
@@ -454,23 +411,16 @@ export default function WorkPage() {
 
           <div style={{ overflow: "hidden", marginBottom: "1.25rem" }}>
             <motion.h1
+              className="type-page"
               initial={{ y: "110%" }}
               animate={isInView ? { y: "0%" } : {}}
               transition={{ duration: 0.85, ease: EASE, delay: 0.1 }}
               style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(2.5rem, 7vw, 5rem)",
-                fontWeight: 400,
-                lineHeight: 1.05,
-                letterSpacing: "-0.03em",
                 color: "var(--fg)",
                 margin: 0,
               }}
             >
-              Things I&apos;ve{" "}
-              <span style={{ fontStyle: "italic", color: "var(--accent)" }}>
-                Actually Built
-              </span>
+              Selected Work
             </motion.h1>
           </div>
 
@@ -495,44 +445,9 @@ export default function WorkPage() {
                 margin: 0,
               }}
             >
-              Not mockups. Not tutorials. Real products, real users, real data.
-              Every project shipped to production — built solo, end-to-end.
+              Explore the problems, decisions, and interfaces behind five featured engagements.
             </p>
 
-            <div style={{ display: "flex", gap: "2rem", flexShrink: 0 }}>
-              {[
-                { v: "5", l: "Projects" },
-                { v: "100%", l: "Shipped" },
-                { v: "3+", l: "Years" },
-              ].map(({ v, l }) => (
-                <div key={l} style={{ textAlign: "center" }}>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontStyle: "italic",
-                      fontSize: "1.75rem",
-                      color: "var(--accent)",
-                      margin: "0 0 0.125rem",
-                      lineHeight: 1,
-                    }}
-                  >
-                    {v}
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "0.625rem",
-                      color: "var(--fg-faint)",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.1em",
-                      margin: 0,
-                    }}
-                  >
-                    {l}
-                  </p>
-                </div>
-              ))}
-            </div>
           </motion.div>
         </div>
       </section>
@@ -568,12 +483,12 @@ export default function WorkPage() {
                   padding: "0.5rem 1.125rem",
                   borderRadius: 9999,
                   border: active
-                    ? "1px solid rgba(0,217,166,0.5)"
+                    ? "1px solid var(--accent-ink)"
                     : "1px solid var(--border)",
                   background: active ? "var(--accent-muted)" : "transparent",
-                  color: active ? "var(--accent)" : "var(--fg-muted)",
+                  color: active ? "var(--accent-ink)" : "var(--fg-muted)",
                   fontFamily: "var(--font-mono)",
-                  fontSize: "0.75rem",
+                  fontSize: "var(--type-meta-size)",
                   fontWeight: 500,
                   letterSpacing: "0.04em",
                   cursor: "pointer",
@@ -588,7 +503,7 @@ export default function WorkPage() {
                   <span
                     style={{
                       marginLeft: "0.375rem",
-                      color: active ? "var(--accent)" : "var(--fg-faint)",
+                      color: active ? "var(--accent-ink)" : "var(--fg-faint)",
                     }}
                   >
                     (
@@ -604,7 +519,7 @@ export default function WorkPage() {
                   <span
                     style={{
                       marginLeft: "0.375rem",
-                      color: active ? "var(--accent)" : "var(--fg-faint)",
+                      color: active ? "var(--accent-ink)" : "var(--fg-faint)",
                     }}
                   >
                     ({PROJECTS.length})
@@ -660,11 +575,11 @@ export default function WorkPage() {
           transform: scaleY(1);
         }
         .work-card:hover .work-card-arrow {
-          color: var(--accent) !important;
+          color: #00D9A6 !important;
           background: rgba(0,217,166,0.12) !important;
           border-color: rgba(0,217,166,0.3) !important;
         }
       `}</style>
-    </main>
+    </div>
   )
 }

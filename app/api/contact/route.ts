@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer"
 import { NextResponse } from "next/server"
+import { validateContactPayload } from "@/lib/contact-validation"
+import { CONTACT_EMAIL } from "@/lib/site"
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -10,28 +12,48 @@ const transporter = nodemailer.createTransport({
 })
 
 export async function POST(req: Request) {
-  const { name, email, projectType, budget, message } = await req.json()
-
-  if (!name || !email || !message) {
-    return NextResponse.json({ error: "Missing fields" }, { status: 400 })
+  let payload: unknown
+  try {
+    payload = await req.json()
+  } catch {
+    return NextResponse.json({ error: "Send a valid project inquiry." }, { status: 400 })
   }
 
+  const validation = validateContactPayload(payload)
+  if (!validation.ok) {
+    return NextResponse.json({ error: validation.error }, { status: 400 })
+  }
+
+  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+    return NextResponse.json({ error: `The form is temporarily unavailable. Email ${CONTACT_EMAIL} directly.` }, { status: 503 })
+  }
+
+  const { name, email, projectType, budget, message } = validation.data
+
   // Send notification to yourself
-  await transporter.sendMail({
-    from: `"Portfolio Contact" <${process.env.GMAIL_USER}>`,
-    to: process.env.GMAIL_USER,
-    replyTo: email,
-    subject: `New inquiry — ${name} (${projectType || "General"})`,
-    html: notificationEmailHTML(name, email, projectType, budget, message),
-  })
+  try {
+    await transporter.sendMail({
+      from: `"Portfolio Contact" <${process.env.GMAIL_USER}>`,
+      to: process.env.GMAIL_USER,
+      replyTo: email,
+      subject: `New inquiry — ${name} (${projectType})`,
+      html: notificationEmailHTML(name, email, projectType, budget, message),
+    })
+  } catch {
+    return NextResponse.json({ error: `The message could not be sent. Email ${CONTACT_EMAIL} directly.` }, { status: 503 })
+  }
 
   // Send thank-you email to the client
-  await transporter.sendMail({
-    from: `"Muhammad Ubaidullah" <${process.env.GMAIL_USER}>`,
-    to: email,
-    subject: `Thank you for reaching out, ${name.split(" ")[0]}! ✨`,
-    html: thankYouEmailHTML(name, projectType),
-  })
+  try {
+    await transporter.sendMail({
+      from: `"Muhammad Ubaidullah" <${process.env.GMAIL_USER}>`,
+      to: email,
+      subject: `Thank you for reaching out, ${name.split(" ")[0]}! ✨`,
+      html: thankYouEmailHTML(name, projectType),
+    })
+  } catch {
+    // The inquiry was delivered. A failed acknowledgment should not prompt a duplicate submission.
+  }
 
   return NextResponse.json({ success: true })
 }
@@ -303,22 +325,21 @@ function thankYouEmailHTML(name: string, projectType: string): string {
             <div class="greeting">Hello ${escapeHtml(firstName)},</div>
             <div class="title">Thank you for reaching out! ✨</div>
             <div class="message">
-              I've received your inquiry and I'm genuinely excited to learn more about your project.
-              I'll review your message carefully and get back to you within <strong>24 hours</strong>.
+              I've received your inquiry. I'll review your message and aim to reply within two business days.
             </div>
             
             ${projectType ? `
             <div class="project-note">
               <p>📋 <strong>Project type:</strong> ${escapeHtml(projectType)}</p>
-              <p style="margin-bottom: 0;">⚡ I'll prepare a tailored response based on your requirements.</p>
+              <p style="margin-bottom: 0;">I'll review the details you shared before replying.</p>
             </div>
             ` : ''}
             
             <div class="timeline">
-              ⏱️ Response expected within 24 hours (usually faster)
+              I aim to reply within two business days.
             </div>
             
-            <a href="mailto:ubaidtech274@gmail.com" class="btn">
+            <a href="mailto:${CONTACT_EMAIL}" class="btn">
               Reply directly →
             </a>
             

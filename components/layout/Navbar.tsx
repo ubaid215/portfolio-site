@@ -163,7 +163,7 @@ export function Navbar() {
                 fontFamily: "var(--font-display)",
                 fontStyle: "italic",
                 fontSize: "1.25rem",
-                color: "var(--accent)",
+                color: "var(--accent-ink)",
                 letterSpacing: "-0.01em",
                 userSelect: "none",
               }}
@@ -226,14 +226,14 @@ export function Navbar() {
                   padding: "0.5rem 1.1rem",
                   borderRadius: 9999,
                   background: "var(--accent)",
-                  color: "#0A0E1A",
+                  color: "var(--accent-text)",
                   fontSize: "0.875rem",
                   fontWeight: 600,
                   letterSpacing: "0.01em",
                   cursor: "pointer",
                   whiteSpace: "nowrap",
                 }}
-                whileHover={{ scale: 1.04, backgroundColor: "var(--accent-bright)" }}
+                whileHover={{ scale: 1.04, backgroundColor: "var(--accent-hover)" }}
                 whileTap={{ scale: 0.97 }}
                 transition={{ duration: 0.2, ease: EASE_LUXURY }}
               >
@@ -387,7 +387,7 @@ export function Navbar() {
                           borderBottom: "1px solid var(--border)",
                           color: "var(--fg)",
                         }}
-                        whileHover={{ x: 8, color: "var(--accent)" }}
+                        whileHover={{ x: 8, color: "var(--accent-ink)" }}
                         transition={{ duration: 0.2, ease: EASE_LUXURY }}
                       >
                         <span style={{
@@ -401,7 +401,7 @@ export function Navbar() {
                         </span>
                         <span style={{
                           fontFamily: "var(--font-mono)",
-                          fontSize: "0.75rem",
+                          fontSize: "var(--type-meta-size)",
                           color: "var(--fg-faint)",
                           letterSpacing: "0.08em",
                         }}>
@@ -444,12 +444,12 @@ export function Navbar() {
                       padding: "0.75rem 1.5rem",
                       borderRadius: 9999,
                       background: "var(--accent)",
-                      color: "#0A0E1A",
+                      color: "var(--accent-text)",
                       fontSize: "0.9375rem",
                       fontWeight: 600,
                       cursor: "pointer",
                     }}
-                    whileHover={{ scale: 1.04, backgroundColor: "var(--accent-bright)" }}
+                    whileHover={{ scale: 1.04, backgroundColor: "var(--accent-hover)" }}
                     whileTap={{ scale: 0.97 }}
                     transition={{ duration: 0.2, ease: EASE_LUXURY }}
                   >

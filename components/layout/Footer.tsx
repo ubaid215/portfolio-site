@@ -17,7 +17,8 @@ import Link from "next/link"
 import { motion, useInView } from "motion/react"
 import { useRef } from "react"
 import { ArrowUpRight, Mail } from "lucide-react"
-import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa"
+import { FaGithub, FaLinkedin } from "react-icons/fa"
+import { CONTACT_EMAIL, GITHUB_URL, LINKEDIN_URL } from "@/lib/site"
 
 /* ── Data ─────────────────────────────────────────────────────────── */
 const FOOTER_LINKS = [
@@ -28,10 +29,9 @@ const FOOTER_LINKS = [
 ]
 
 const SOCIAL_LINKS = [
-  { label: "GitHub",   href: "https://github.com/ubaid215",   icon: FaGithub   },
-  { label: "LinkedIn", href: "https://linkedin.com/in/ubaidullah", icon: FaLinkedin },
-  { label: "Email",    href: "mailto:hi@ubaid.dev",             icon: Mail     },
-  { label: "Twitter",  href: "https://twitter.com/ubaidullah",  icon: FaTwitter  },
+  { label: "GitHub",   href: GITHUB_URL, icon: FaGithub },
+  { label: "LinkedIn", href: LINKEDIN_URL, icon: FaLinkedin },
+  { label: "Email",    href: `mailto:${CONTACT_EMAIL}`, icon: Mail },
 ]
 
 const EASE_LUXURY = [0.16, 1, 0.3, 1] as const
@@ -98,7 +98,7 @@ function SocialButton({
       whileHover={{
         scale: 1.08,
         borderColor: "var(--accent)",
-        color: "var(--accent)",
+        color: "var(--accent-ink)",
       }}
       whileTap={{ scale: 0.95 }}
       transition={{ duration: 0.5, delay, ease: EASE_LUXURY }}
@@ -183,38 +183,31 @@ export function Footer() {
             transition={{ duration: 0.6, ease: EASE_LUXURY }}
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: "0.75rem",
+              fontSize: "var(--type-meta-size)",
               fontWeight: 500,
               letterSpacing: "0.12em",
               textTransform: "uppercase",
-              color: "var(--accent)",
+              color: "var(--accent-ink)",
               marginBottom: "1rem",
             }}
           >
-            ▸ Available for remote roles &amp; freelance
+            ▸ Available for client projects
           </motion.p>
 
           {/* Large display headline */}
           <div style={{ overflow: "hidden" }}>
             <motion.h2
+              className="type-page"
               data-framer-motion
               initial={{ y: "105%" }}
               animate={isInView ? { y: "0%" } : {}}
               transition={{ duration: 0.8, ease: EASE_LUXURY }}
               style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(2.5rem, 7vw, 5.5rem)",
-                fontWeight: 400,
-                lineHeight: 1.0,
-                letterSpacing: "-0.03em",
                 color: "var(--fg)",
                 marginBottom: "1.5rem",
               }}
             >
-              Let&apos;s build something{" "}
-              <span style={{ fontStyle: "italic", color: "var(--accent)" }}>
-                real.
-              </span>
+              Let&apos;s build something real.
             </motion.h2>
           </div>
 
@@ -238,7 +231,7 @@ export function Footer() {
               maxWidth: "36ch",
               margin: 0,
             }}>
-              Full-time remote roles, contracts, or serious freelance projects. Response within 24&nbsp;hours.
+              Have an operational challenge or product idea? Share the brief and I&apos;ll reply with a clear next step.
             </p>
 
             <Link href="/contact" style={{ textDecoration: "none", flexShrink: 0 }}>
@@ -251,7 +244,7 @@ export function Footer() {
                   padding: "0.75rem 1.5rem",
                   borderRadius: 9999,
                   background: "var(--accent)",
-                  color: "#0A0E1A",
+                  color: "var(--accent-text)",
                   fontSize: "0.9375rem",
                   fontWeight: 600,
                   cursor: "pointer",
@@ -291,7 +284,7 @@ export function Footer() {
                   fontFamily: "var(--font-display)",
                   fontStyle: "italic",
                   fontSize: "1.375rem",
-                  color: "var(--accent)",
+                  color: "var(--accent-ink)",
                   letterSpacing: "-0.01em",
                   marginBottom: "0.625rem",
                 }}
@@ -337,10 +330,10 @@ export function Footer() {
               />
               <span style={{
                 fontFamily: "var(--font-mono)",
-                fontSize: "0.7rem",
+                fontSize: "var(--type-meta-size)",
                 fontWeight: 500,
                 letterSpacing: "0.06em",
-                color: "var(--accent)",
+                color: "var(--accent-ink)",
                 textTransform: "uppercase",
               }}>
                 Open to work
@@ -352,7 +345,7 @@ export function Footer() {
           <div>
             <p style={{
               fontFamily: "var(--font-mono)",
-              fontSize: "0.7rem",
+              fontSize: "var(--type-meta-size)",
               fontWeight: 500,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
@@ -375,7 +368,7 @@ export function Footer() {
           <div>
             <p style={{
               fontFamily: "var(--font-mono)",
-              fontSize: "0.7rem",
+              fontSize: "var(--type-meta-size)",
               fontWeight: 500,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
@@ -420,7 +413,7 @@ export function Footer() {
 
           <p style={{
             fontFamily: "var(--font-mono)",
-            fontSize: "0.75rem",
+            fontSize: "var(--type-meta-size)",
             color: "var(--fg-faint)",
             margin: 0,
             display: "flex",
@@ -428,7 +421,7 @@ export function Footer() {
             gap: "0.35rem",
           }}>
             Designed &amp; built by
-            <span style={{ color: "var(--accent)", fontStyle: "normal" }}>
+            <span style={{ color: "var(--accent-ink)", fontStyle: "normal" }}>
               ubaid.dev
             </span>
           </p>
@@ -451,7 +444,7 @@ export function Footer() {
         transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       }
       .footer-cta-btn:hover {
-        background-color: var(--accent-bright);
+        background-color: var(--accent-hover);
       }
     `}</style>
     </>

@@ -4,38 +4,37 @@ import { motion, useInView } from "motion/react"
 import { useRef, useState } from "react"
 import { ArrowUpRight, Clock, MapPin, Wifi, Mail, MessageSquare, CheckCircle2 } from "lucide-react"
 import { FaGithub, FaLinkedin, FaWhatsapp } from "react-icons/fa"
+import { CONTACT_EMAIL, GITHUB_URL, LINKEDIN_URL, WHATSAPP_URL } from "@/lib/site"
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
 const PROJECT_TYPES = [
-  "Full Stack Web App",
-  "Next.js / React Frontend",
-  "API & Backend Engineering",
-  "CMS / Admin Dashboard",
-  "Database Design",
+  "Operations System",
+  "SaaS / Product MVP",
+  "Internal Dashboard",
+  "Website / Frontend",
   "Other / Not sure yet",
 ]
 
 const BUDGET_RANGES = [
-  "Under $500",
-  "$500 – $1,500",
-  "$1,500 – $5,000",
+  "Under $2,500",
+  "$2,500 – $5,000",
   "$5,000 – $15,000",
   "$15,000+",
-  "Let's discuss",
+  "Not sure yet",
 ]
 
 const QUICK_INFO = [
-  { icon: Clock,  label: "Response Time", value: "Within 24 hours", note: "Usually much faster" },
+  { icon: Clock,  label: "Replies", value: "Personally reviewed", note: "I aim to reply in 2 business days" },
   { icon: MapPin, label: "Timezone",       value: "PKT — UTC+5",    note: "Faisalabad, Pakistan" },
-  { icon: Wifi,   label: "Availability",   value: "Open to remote", note: "Full-time & freelance" },
+  { icon: Wifi,   label: "Availability",   value: "Open to projects", note: "Remote collaboration" },
 ]
 
 const SOCIAL_LINKS = [
-  { label: "LinkedIn", href: "https://linkedin.com/in/ubaidullah-mernstack-developer", icon: FaLinkedin, handle: "/in/ubaidullah" },
-  { label: "GitHub",   href: "https://github.com/ubaid215",                           icon: FaGithub,   handle: "github.com/ubaid215" },
-  { label: "Email",    href: "mailto:hi@ubaid.dev",                                   icon: Mail,       handle: "hi@ubaid.dev" },
-  { label: "WhatsApp", href: "https://wa.me/923174506339",                            icon: FaWhatsapp, handle: "+92 317 450 6339" },
+  { label: "LinkedIn", href: LINKEDIN_URL, icon: FaLinkedin, handle: "/in/ubaidullah-mernstack-developer" },
+  { label: "GitHub",   href: GITHUB_URL,   icon: FaGithub,   handle: "github.com/ubaid215" },
+  { label: "Email",    href: `mailto:${CONTACT_EMAIL}`, icon: Mail, handle: CONTACT_EMAIL },
+  { label: "WhatsApp", href: WHATSAPP_URL, icon: FaWhatsapp, handle: "+92 317 450 6339" },
 ]
 
 /* ── Shared input styles (large, legible, agency-grade) ── */
@@ -55,7 +54,7 @@ const inputBase: React.CSSProperties = {
 
 const labelBase: React.CSSProperties = {
   fontFamily: "var(--font-mono)",
-  fontSize: "0.6875rem",
+  fontSize: "var(--type-meta-size)",
   fontWeight: 600,
   letterSpacing: "0.1em",
   textTransform: "uppercase" as const,
@@ -73,13 +72,15 @@ export default function ContactPage() {
   })
   const [submitted, setSubmitted] = useState(false)
   const [loading,   setLoading]   = useState(false)
+  const [formError, setFormError] = useState("")
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormState((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const handleSubmit = async (e: React.MouseEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setFormError("")
     setLoading(true)
     try {
       const res = await fetch("/api/contact", {
@@ -87,21 +88,24 @@ export default function ContactPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formState),
       })
-      if (!res.ok) throw new Error()
+      if (!res.ok) {
+        const result = await res.json().catch(() => null)
+        throw new Error(result?.error || `The message could not be sent. Email ${CONTACT_EMAIL} directly.`)
+      }
       setSubmitted(true)
-    } catch {
-      alert("Something went wrong. Email me directly at ubaidtech274@gmail.com")
+    } catch (error) {
+      setFormError(error instanceof Error ? error.message : `The message could not be sent. Email ${CONTACT_EMAIL} directly.`)
     } finally {
       setLoading(false)
     }
   }
 
-  const canSubmit = !loading && formState.name && formState.email && formState.projectType && formState.message
+  const canSubmit = !loading
 
   return (
     <>
       {/* ── Hero ── */}
-      <section style={{ position: "relative", padding: "8rem 1.5rem 5rem", background: "var(--bg)", overflow: "hidden" }}>
+      <section style={{ position: "relative", padding: "7rem 1.5rem 3rem", background: "var(--bg)", overflow: "hidden" }}>
         <div aria-hidden className="bg-dot-grid" style={{ position: "absolute", inset: 0, opacity: 0.35, pointerEvents: "none" }} />
         <div aria-hidden style={{
           position: "absolute", bottom: "10%", right: "8%",
@@ -115,8 +119,8 @@ export default function ContactPage() {
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: EASE }}
             style={{
-              fontFamily: "var(--font-mono)", fontSize: "0.6875rem", fontWeight: 500,
-              letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)",
+              fontFamily: "var(--font-mono)", fontSize: "var(--type-meta-size)", fontWeight: 500,
+              letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent-ink)",
               marginBottom: "1.5rem", display: "flex", alignItems: "center", gap: "0.75rem",
             }}
           >
@@ -126,18 +130,16 @@ export default function ContactPage() {
 
           <div style={{ overflow: "hidden", marginBottom: "1.5rem" }}>
             <motion.h1
+              className="type-page"
               initial={{ y: "110%" }} animate={{ y: "0%" }}
               transition={{ duration: 0.9, ease: EASE, delay: 0.1 }}
               style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(2.75rem, 8vw, 6rem)",
-                fontWeight: 400, lineHeight: 1.05, letterSpacing: "-0.03em",
                 color: "var(--fg)", margin: 0,
               }}
             >
               Let&apos;s build something
               <br />
-              <span style={{ fontStyle: "italic", color: "var(--accent)" }}>great together.</span>
+              great together.
             </motion.h1>
           </div>
 
@@ -146,14 +148,17 @@ export default function ContactPage() {
             transition={{ duration: 0.7, ease: EASE, delay: 0.35 }}
             style={{ fontSize: "clamp(1rem, 2vw, 1.125rem)", color: "var(--fg-muted)", lineHeight: 1.75, maxWidth: "52ch" }}
           >
-            Open to remote full-time roles and serious freelance contracts.
-            Tell me what you&apos;re building — I&apos;ll tell you if I can help.
+            Tell me about the workflow, product, or website your team needs.
+            I&apos;ll review the brief and suggest a practical next step.
           </motion.p>
+          <a href={`mailto:${CONTACT_EMAIL}`} style={{ display: "inline-block", marginTop: "1.25rem", color: "var(--tag-text)", fontSize: "0.9375rem", textDecoration: "underline", textUnderlineOffset: "0.25rem" }}>
+            Or email {CONTACT_EMAIL}
+          </a>
         </div>
       </section>
 
       {/* ── Main content ── */}
-      <section style={{ padding: "clamp(4rem, 10vw, 7rem) 1.5rem", background: "var(--bg-sub)", borderTop: "1px solid var(--border)" }}>
+      <section style={{ padding: "clamp(2.5rem, 6vw, 5rem) 1.5rem", background: "var(--bg-sub)", borderTop: "1px solid var(--border)" }}>
         <div
           ref={formRef}
           style={{
@@ -166,6 +171,7 @@ export default function ContactPage() {
         >
           {/* ── Left sidebar ── */}
           <motion.div
+            className="contact-sidebar"
             initial={{ opacity: 0, x: -32 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, ease: EASE }}
@@ -179,7 +185,7 @@ export default function ContactPage() {
               width: "fit-content",
             }}>
               <span style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--accent)", display: "inline-block", animation: "pulse 2s ease infinite" }} />
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.6875rem", fontWeight: 500, color: "var(--accent)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "var(--type-meta-size)", fontWeight: 500, color: "var(--accent-ink)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
                 Currently Available
               </span>
             </div>
@@ -202,14 +208,14 @@ export default function ContactPage() {
                     width: 36, height: 36, borderRadius: "var(--radius-md)",
                     background: "var(--accent-muted)", border: "1px solid rgba(0,217,166,0.2)",
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    color: "var(--accent)", flexShrink: 0,
+                    color: "var(--accent-ink)", flexShrink: 0,
                   }}>
                     <Icon size={16} strokeWidth={1.75} />
                   </div>
                   <div>
-                    <p style={{ fontFamily: "var(--font-mono)", fontSize: "0.625rem", color: "var(--fg-faint)", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 0.2rem" }}>{label}</p>
+                    <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--type-meta-size)", color: "var(--fg-faint)", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 0.2rem" }}>{label}</p>
                     <p style={{ fontSize: "0.9375rem", fontWeight: 500, color: "var(--fg)", margin: "0 0 0.125rem" }}>{value}</p>
-                    <p style={{ fontSize: "0.75rem", color: "var(--fg-muted)", margin: 0 }}>{note}</p>
+                    <p style={{ fontSize: "var(--type-meta-size)", color: "var(--fg-muted)", margin: 0 }}>{note}</p>
                   </div>
                 </motion.div>
               ))}
@@ -224,15 +230,15 @@ export default function ContactPage() {
             >
               <div style={{ display: "flex", gap: "0.5rem", alignItems: "flex-start" }}>
                 <MessageSquare size={15} strokeWidth={1.75} style={{ color: "var(--fg-faint)", flexShrink: 0, marginTop: "2px" }} />
-                <p style={{ fontSize: "0.8125rem", color: "var(--fg-muted)", lineHeight: 1.65, margin: 0, fontStyle: "italic" }}>
-                  Currently open to remote full-time roles and freelance contracts. If you&apos;ve got a real project, let&apos;s talk.
+                <p style={{ fontSize: "0.875rem", color: "var(--fg-muted)", lineHeight: 1.6, margin: 0 }}>
+                  I work remotely with teams on focused web projects. Share the problem you need to solve and the constraints you already know.
                 </p>
               </div>
             </motion.div>
 
             {/* Social links */}
             <div>
-              <p style={{ fontFamily: "var(--font-mono)", fontSize: "0.625rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--fg-faint)", marginBottom: "1rem" }}>
+              <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--type-meta-size)", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--fg-faint)", marginBottom: "1rem" }}>
                 Find me on
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
@@ -256,7 +262,7 @@ export default function ContactPage() {
                     <Icon size={16} style={{ color: "var(--fg-muted)", flexShrink: 0 }} />
                     <div style={{ flex: 1 }}>
                       <span style={{ fontSize: "0.8125rem", fontWeight: 500, color: "var(--fg)", display: "block" }}>{label}</span>
-                      <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.6875rem", color: "var(--fg-faint)" }}>{handle}</span>
+                      <span style={{ fontFamily: "var(--font-mono)", fontSize: "var(--type-meta-size)", color: "var(--fg-faint)" }}>{handle}</span>
                     </div>
                     <ArrowUpRight size={13} strokeWidth={2} style={{ color: "var(--fg-faint)" }} />
                   </motion.a>
@@ -267,6 +273,7 @@ export default function ContactPage() {
 
           {/* ── Right: Contact form ── */}
           <motion.div
+            className="contact-form-area"
             initial={{ opacity: 0, x: 32 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, ease: EASE, delay: 0.15 }}
@@ -297,22 +304,22 @@ export default function ContactPage() {
                     boxShadow: "0 0 0 12px var(--accent-muted)",
                   }}
                 >
-                  <CheckCircle2 size={28} style={{ color: "#0A0E1A" }} />
+                  <CheckCircle2 size={28} style={{ color: "var(--accent-text)" }} />
                 </motion.div>
-                <h3 style={{ fontFamily: "var(--font-display)", fontSize: "2rem", fontWeight: 400, color: "var(--fg)", margin: "0 0 0.75rem", letterSpacing: "-0.02em" }}>
+                <h3 className="type-card-title" style={{ color: "var(--fg)", margin: "0 0 0.75rem" }}>
                   Message sent.
                 </h3>
                 <p style={{ fontSize: "1rem", color: "var(--fg-muted)", lineHeight: 1.7, maxWidth: "38ch", margin: "0 auto" }}>
-                  I&apos;ll be in touch within 24 hours. If it&apos;s urgent, reach me directly at{" "}
-                  <a href="mailto:ubaidtech274@gmail.com" style={{ color: "var(--accent)", fontWeight: 500 }}>
-                    ubaidtech274@gmail.com
+                  I&apos;ll review your inquiry and aim to reply within two business days. You can also reach me at{" "}
+                  <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: "var(--accent-ink)", fontWeight: 500 }}>
+                    {CONTACT_EMAIL}
                   </a>.
                 </p>
               </motion.div>
             ) : (
               /* ── Form ── */
-              <div style={{
-                padding: "2.75rem",
+              <form onSubmit={handleSubmit} style={{
+                padding: "clamp(1.5rem, 4vw, 2.75rem)",
                 borderRadius: "var(--radius-xl)",
                 border: "1px solid var(--border)",
                 background: "var(--bg-card)",
@@ -321,28 +328,28 @@ export default function ContactPage() {
                 {/* Form header */}
                 <div>
                   <p style={{
-                    fontFamily: "var(--font-mono)", fontSize: "0.6875rem", fontWeight: 500,
-                    letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", marginBottom: "0.5rem",
+                    fontFamily: "var(--font-mono)", fontSize: "var(--type-meta-size)", fontWeight: 500,
+                    letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent-ink)", marginBottom: "0.5rem",
                   }}>
                     ▸ Send a message
                   </p>
-                  <h2 style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "clamp(1.625rem, 3vw, 2.25rem)",
-                    fontWeight: 400, lineHeight: 1.15, letterSpacing: "-0.02em",
+                  <h2 className="type-card-title" style={{
                     color: "var(--fg)", margin: 0,
                   }}>
-                    Tell me about
-                    <span style={{ fontStyle: "italic", color: "var(--accent)" }}> your project.</span>
+                    Tell me about your project.
                   </h2>
                 </div>
 
                 {/* Name + Email — stacked on mobile, side-by-side on wide */}
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.25rem" }}>
                   <div>
-                    <label style={labelBase}>Full Name *</label>
+                    <label htmlFor="contact-name" style={labelBase}>Full Name *</label>
                     <input
+                      id="contact-name"
                       name="name"
+                      required
+                      autoComplete="name"
+                      maxLength={120}
                       value={formState.name}
                       onChange={handleChange}
                       placeholder="Jane Smith"
@@ -351,10 +358,14 @@ export default function ContactPage() {
                     />
                   </div>
                   <div>
-                    <label style={labelBase}>Email *</label>
+                    <label htmlFor="contact-email" style={labelBase}>Email *</label>
                     <input
+                      id="contact-email"
                       name="email"
                       type="email"
+                      required
+                      autoComplete="email"
+                      maxLength={254}
                       value={formState.email}
                       onChange={handleChange}
                       placeholder="you@company.com"
@@ -366,10 +377,12 @@ export default function ContactPage() {
 
                 {/* Project type */}
                 <div>
-                  <label style={labelBase}>Project Type *</label>
+                  <label htmlFor="contact-project-type" style={labelBase}>Project Type *</label>
                   <div style={{ position: "relative" }}>
                     <select
+                      id="contact-project-type"
                       name="projectType"
+                      required
                       value={formState.projectType}
                       onChange={handleChange}
                       className="form-input"
@@ -389,27 +402,29 @@ export default function ContactPage() {
                     {/* Custom chevron */}
                     <span style={{
                       position: "absolute", right: "1rem", top: "50%", transform: "translateY(-50%)",
-                      color: "var(--fg-faint)", pointerEvents: "none", fontSize: "0.75rem",
+                      color: "var(--fg-faint)", pointerEvents: "none", fontSize: "var(--type-meta-size)",
                     }}>▾</span>
                   </div>
                 </div>
 
                 {/* Budget */}
                 <div>
-                  <label style={labelBase}>Budget Range</label>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "0.25rem" }}>
+                  <span id="contact-budget-label" style={labelBase}>Budget Range (optional)</span>
+                  <div role="group" aria-labelledby="contact-budget-label" style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "0.25rem" }}>
                     {BUDGET_RANGES.map((range) => (
                       <button
                         key={range}
+                        type="button"
+                        aria-pressed={formState.budget === range}
                         onClick={() => setFormState((p) => ({ ...p, budget: range }))}
                         style={{
                           padding: "0.5rem 1rem",
                           borderRadius: 9999,
-                          border: `1.5px solid ${formState.budget === range ? "var(--accent)" : "var(--border-sub)"}`,
+                          border: `1.5px solid ${formState.budget === range ? "var(--accent-ink)" : "var(--border-sub)"}`,
                           background: formState.budget === range ? "var(--accent-muted)" : "transparent",
-                          color: formState.budget === range ? "var(--accent)" : "var(--fg-muted)",
+                          color: formState.budget === range ? "var(--accent-ink)" : "var(--fg-muted)",
                           fontFamily: "var(--font-mono)",
-                          fontSize: "0.75rem",     // slightly bigger than before
+                          fontSize: "var(--type-meta-size)",
                           cursor: "pointer",
                           transition: "all 0.2s ease",
                           letterSpacing: "0.02em",
@@ -424,9 +439,12 @@ export default function ContactPage() {
 
                 {/* Message */}
                 <div>
-                  <label style={labelBase}>Message *</label>
-                  <textarea
-                    name="message"
+                    <label htmlFor="contact-message" style={labelBase}>Message *</label>
+                    <textarea
+                      id="contact-message"
+                      name="message"
+                      required
+                      maxLength={5000}
                     value={formState.message}
                     onChange={handleChange}
                     placeholder="Describe your project — what it does, what you need, and when you need it by."
@@ -443,7 +461,7 @@ export default function ContactPage() {
 
                 {/* Submit */}
                 <motion.button
-                  onClick={handleSubmit}
+                  type="submit"
                   disabled={!canSubmit}
                   style={{
                     display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "0.5rem",
@@ -483,11 +501,17 @@ export default function ContactPage() {
                   )}
                 </motion.button>
 
+                {formError && (
+                  <p role="alert" style={{ color: "var(--fg)", background: "var(--bg)", border: "1px solid var(--border-sub)", borderRadius: "var(--radius-md)", padding: "0.875rem 1rem", margin: 0, lineHeight: 1.5 }}>
+                    {formError} <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: "var(--accent-ink)" }}>Email me directly</a>.
+                  </p>
+                )}
+
                 {/* Fine print */}
-                <p style={{ fontSize: "0.75rem", color: "var(--fg-faint)", textAlign: "center", margin: "-0.5rem 0 0", lineHeight: 1.6 }}>
-                  No commitment. I&apos;ll reply within 24 h with a clear next step.
+                <p style={{ fontSize: "var(--type-meta-size)", color: "var(--fg-faint)", textAlign: "center", margin: "-0.5rem 0 0", lineHeight: 1.6 }}>
+                  No commitment. I aim to reply within two business days.
                 </p>
-              </div>
+              </form>
             )}
           </motion.div>
         </div>
@@ -496,7 +520,7 @@ export default function ContactPage() {
       <style>{`
         .form-input::placeholder { color: var(--fg-faint); }
         .form-input:focus {
-          border-color: var(--accent) !important;
+          border-color: var(--accent-ink) !important;
           box-shadow: 0 0 0 3px var(--accent-muted);
         }
         .social-link:hover {

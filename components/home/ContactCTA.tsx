@@ -5,18 +5,19 @@ import { useRef } from "react"
 import Link from "next/link"
 import { ArrowUpRight, Mail } from "lucide-react"
 import { FaGithub, FaLinkedin } from "react-icons/fa"
+import { GITHUB_URL, LINKEDIN_URL } from "@/lib/site"
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
 const SOCIAL = [
   {
     label: "LinkedIn",
-    href: "https://linkedin.com/in/ubaidullah",
+    href: LINKEDIN_URL,
     icon: FaLinkedin,
   },
   {
     label: "GitHub",
-    href: "https://github.com/ubaidullah",
+    href: GITHUB_URL,
     icon: FaGithub,
   },
 ]
@@ -73,11 +74,11 @@ export function ContactCTA() {
           transition={{ duration: 0.6, ease: EASE }}
           style={{
             fontFamily: "var(--font-mono)",
-            fontSize: "0.6875rem",
+            fontSize: "var(--type-meta-size)",
             fontWeight: 500,
             letterSpacing: "0.12em",
             textTransform: "uppercase",
-            color: "var(--accent)",
+            color: "var(--accent-ink)",
             marginBottom: "1.5rem",
           }}
         >
@@ -87,24 +88,16 @@ export function ContactCTA() {
         {/* Headline */}
         <div style={{ overflow: "hidden", marginBottom: "1.25rem" }}>
           <motion.h2
+            className="type-section"
             initial={{ y: "110%" }}
             animate={isInView ? { y: "0%" } : {}}
             transition={{ duration: 0.85, ease: EASE, delay: 0.1 }}
             style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(2.25rem, 6vw, 4.5rem)",
-              fontWeight: 400,
-              lineHeight: 1.05,
-              letterSpacing: "-0.03em",
               color: "var(--fg)",
               margin: 0,
             }}
           >
-            Have a project? Let&apos;s
-            <br />
-            <span style={{ fontStyle: "italic", color: "var(--accent)" }}>
-              build something real.
-            </span>
+            Have a project? Let&apos;s build something real.
           </motion.h2>
         </div>
 
@@ -121,8 +114,8 @@ export function ContactCTA() {
             margin: "0 auto 2.5rem",
           }}
         >
-          I&apos;m open to full-time remote roles, contract work, and serious
-          freelance projects. Response within 24 hours.
+          Tell me what your team needs to run better. I&apos;ll review the brief
+          and reply with a clear next step.
         </motion.p>
 
         {/* CTA buttons */}
@@ -140,7 +133,7 @@ export function ContactCTA() {
           }}
         >
           {/* Primary: Email */}
-          <Link href="mailto:hi@ubaid.dev" style={{ textDecoration: "none" }}>
+          <Link href="/contact" style={{ textDecoration: "none" }}>
             <motion.span
               className="contact-primary"
               style={{
@@ -150,7 +143,7 @@ export function ContactCTA() {
                 padding: "0.875rem 2rem",
                 borderRadius: 9999,
                 background: "var(--accent)",
-                color: "#0A0E1A",
+                color: "var(--accent-text)",
                 fontSize: "0.9375rem",
                 fontWeight: 600,
                 cursor: "pointer",
@@ -161,7 +154,7 @@ export function ContactCTA() {
               transition={{ duration: 0.2, ease: EASE }}
             >
               <Mail size={16} strokeWidth={2} />
-              Email Me
+              Discuss a Project
               <ArrowUpRight size={15} strokeWidth={2.5} />
             </motion.span>
           </Link>
@@ -231,9 +224,9 @@ export function ContactCTA() {
           <span
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: "0.6875rem",
+              fontSize: "var(--type-meta-size)",
               fontWeight: 500,
-              color: "var(--accent)",
+              color: "var(--accent-ink)",
               letterSpacing: "0.06em",
               textTransform: "uppercase",
             }}
@@ -245,7 +238,7 @@ export function ContactCTA() {
 
       <style>{`
         .contact-primary { transition: background-color 0.2s cubic-bezier(0.16,1,0.3,1); }
-        .contact-primary:hover { background-color: var(--accent-bright); }
+        .contact-primary:hover { background-color: var(--accent-hover); }
         .contact-social { transition: background-color 0.2s cubic-bezier(0.16,1,0.3,1); }
         .contact-social:hover { background-color: var(--bg-card); }
       `}</style>

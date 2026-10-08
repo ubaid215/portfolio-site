@@ -81,10 +81,10 @@
   --color-bg-secondary-dark:   #111827;
   --color-bg-card-dark:        #1C2333;
   --color-text-primary-dark:   #F8F7F4;
-  --color-text-secondary-dark: #9CA3AF;
-  --color-text-muted-dark:     #6B7280;
-  --color-border-dark:         rgba(248, 247, 244, 0.08);
-  --color-border-strong-dark:  rgba(248, 247, 244, 0.16);
+  --color-text-secondary-dark: #C9C5BC;
+  --color-text-muted-dark:     #9CA3AF;
+  --color-border-dark:         rgba(248, 247, 244, 0.07);
+  --color-border-strong-dark:  rgba(248, 247, 244, 0.20);
 
   /* ── Spacing Scale ───────────────────────── */
   --spacing-px:    1px;
@@ -198,33 +198,37 @@
 
   --bg:          #F8F7F4;
   --bg-sub:      #EEECEA;
-  --bg-card:     #E3DFD7;      /* slightly darker than before for card contrast */
+  --bg-card:     #E3DFD7;
   --bg-card-hover: #D8D3CA;
   --bg-overlay:  rgba(248, 247, 244, 0.85);
 
   --fg:          #0A0E1A;
-  --fg-sub:      #1F2937;      /* was #374151 — bumped darker for better contrast */
-  --fg-muted:    #4B5563;      /* was #6B7280 — bumped darker (4.6:1 vs 3.9:1) */
-  --fg-faint:    #6B7280;      /* was #9CA3AF — #9CA3AF fails AA on light bg */
+  --fg-sub:      #1F2937;
+  --fg-muted:    #4B5563;
+  --fg-faint:    #505969;
 
   --border:      rgba(10, 14, 26, 0.12);   /* slightly more visible */
   --border-sub:  rgba(10, 14, 26, 0.18);
   --border-strong: rgba(10, 14, 26, 0.30);
 
-  /* Accent: #00D9A6 is very light on white — keep for decorative use only.
-     For readable accent text on light bg use --accent-text / --accent-on-light. */
-  --accent:        #00A880;    /* darker jade — 3.1:1 on white, fine for non-text */
-  --accent-bright: #00C99A;
+  /* Filled controls, surface text, and text on a fill have separate roles. */
+  --accent:        #009B76;
+  --accent-hover:  #008F6B;
   --accent-deep:   #006B52;
   --accent-tint:   #D4F5EE;
-  --accent-muted:  rgba(0, 168, 128, 0.12);
-  --accent-text:   #004D3D;    /* readable on any light surface — 8.5:1 on white */
-  --accent-on-light: #005C49;  /* use this wherever accent color is actual text */
+  --accent-muted:  rgba(0, 155, 118, 0.12);
+  --accent-text:   #0A0E1A;    /* text placed on a solid jade fill */
+  --accent-ink:    #005C49;    /* jade text and icons on light surfaces */
+
+  --brass:         #8C5A2B;
+  --brass-ink:     #805024;    /* readable on light cards, including hover */
+  --brass-soft:    #F3ECE3;
+  --brass-image:   #E6AE69;    /* fixed light color over dark image scrims */
 
   --navbar-bg:   rgba(248, 247, 244, 0.88);
   --code-bg:     #E3DFD7;
-  --tag-bg:      rgba(0, 168, 128, 0.10);
-  --tag-text:    #004D3D;      /* 8.5:1 on white — WCAG AA/AAA pass */
+  --tag-bg:      rgba(0, 155, 118, 0.10);
+  --tag-text:    #004D3D;
   --logo-filter: none;  /* Next.js logo — normal in light mode */
 }
 
@@ -241,18 +245,24 @@
   --fg:          #F8F7F4;
   --fg-sub:      #C9C5BC;
   --fg-muted:    #9CA3AF;
-  --fg-faint:    #6B7280;
+  --fg-faint:    #929BAB;
 
   --border:      rgba(248, 247, 244, 0.07);
   --border-sub:  rgba(248, 247, 244, 0.12);
   --border-strong: rgba(248, 247, 244, 0.20);
 
   --accent:      #00D9A6;
-  --accent-bright: #00F0B8;
+  --accent-hover: #00F0B8;
   --accent-deep:   #00A880;
   --accent-tint:   rgba(0, 217, 166, 0.08);
   --accent-muted:  rgba(0, 217, 166, 0.12);
-  --accent-text:   #0A0E1A;  /* dark text on accent bg */
+  --accent-text:   #0A0E1A;
+  --accent-ink:    #00D9A6;
+
+  --brass:         #E6AE69;
+  --brass-ink:     #E6AE69;
+  --brass-soft:    #22201E;
+  --brass-image:   #E6AE69;
 
   --navbar-bg:   rgba(10, 14, 26, 0.80);
   --code-bg:     #0D1117;
@@ -381,6 +391,76 @@ html.lenis body {
    6. TYPOGRAPHY
    ───────────────────────────────────────────── */
 
+/* Type contract: display = editorial hook; section = precise hierarchy;
+   lead/body = reading; meta = navigation and factual detail. */
+:root {
+  --type-display-size: clamp(2.8rem, 7.4vw, 6rem);
+  --type-page-size: clamp(2.7rem, 6.2vw, 5.25rem);
+  --type-case-size: clamp(2.25rem, 4.6vw, 4rem);
+  --type-section-size: clamp(2rem, 4.2vw, 3.25rem);
+  --type-card-size: clamp(1.1875rem, 1.8vw, 1.375rem);
+  --type-lead-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+  --type-body-size: 1rem;
+  --type-meta-size: 0.8125rem;
+  --type-caption-size: 0.8125rem;
+  --measure-lead: 58ch;
+  --measure-body: 68ch;
+}
+
+.type-display,
+.type-page,
+.type-case-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.type-display { font-size: var(--type-display-size); }
+.type-page { font-size: var(--type-page-size); }
+.type-case-title { font-size: var(--type-case-size); }
+
+.type-section {
+  font-family: var(--font-body);
+  font-size: var(--type-section-size);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.type-card-title {
+  font-family: var(--font-body);
+  font-size: var(--type-card-size);
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.025em;
+}
+
+.type-lead {
+  font-family: var(--font-body);
+  font-size: var(--type-lead-size);
+  line-height: 1.58;
+  max-width: var(--measure-lead);
+}
+
+.type-body {
+  font-family: var(--font-body);
+  font-size: var(--type-body-size);
+  line-height: 1.65;
+  max-width: var(--measure-body);
+}
+
+.type-meta {
+  font-family: var(--font-mono);
+  font-size: var(--type-meta-size);
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
 /* Display / Headings — Instrument Serif */
 h1, h2 {
   font-family: var(--font-display);
@@ -421,7 +501,7 @@ p {
 /* Italic accent phrases — used inside display headings */
 .accent-italic {
   font-style: italic;
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 /* Monospace / code labels */
@@ -430,7 +510,7 @@ kbd,
 .mono {
   font-family: var(--font-mono);
   font-size: 0.875em;
-  color: var(--accent);
+  color: var(--accent-ink);
   background: var(--tag-bg);
   padding: 0.125em 0.4em;
   border-radius: var(--radius-sm);
@@ -450,11 +530,11 @@ pre {
 /* Eyebrow / overline label */
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: var(--type-meta-size);
   font-weight: 500;
   letter-spacing: var(--tracking-widest);
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 /* Caption */
@@ -472,7 +552,7 @@ strong, b {
 
 /* Focus visible — accessibility */
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--accent-ink);
   outline-offset: 3px;
   border-radius: var(--radius-sm);
 }
@@ -707,7 +787,7 @@ html {
 }
 
 .card-accent:hover {
-  border-color: var(--accent);
+  border-color: var(--accent-ink);
   box-shadow: var(--shadow-accent);
 }
 
@@ -736,19 +816,19 @@ html {
 
 .btn-primary {
   background: var(--accent);
-  color: #0A0E1A;
+  color: var(--accent-text);
   border-color: var(--accent);
   font-weight: 600;
 }
 
 .btn-primary:hover {
-  background: var(--accent-bright);
-  border-color: var(--accent-bright);
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
   box-shadow: var(--shadow-accent);
 }
 
 .btn-primary:active {
-  background: var(--accent-deep);
+  background: var(--accent-hover);
   transform: scale(0.98);
 }
 
@@ -760,8 +840,8 @@ html {
 
 .btn-outline:hover {
   background: var(--bg-card);
-  border-color: var(--accent);
-  color: var(--accent);
+  border-color: var(--accent-ink);
+  color: var(--accent-ink);
 }
 
 .btn-ghost {
@@ -783,7 +863,7 @@ html {
   padding: 0.25rem 0.625rem;
   border-radius: var(--radius-full);
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: var(--type-meta-size);
   font-weight: 500;
   letter-spacing: 0.02em;
   background: var(--tag-bg);
@@ -794,7 +874,7 @@ html {
 
 .tag-accent {
   background: var(--accent-muted);
-  color: var(--accent);
+  color: var(--accent-ink);
   border-color: rgba(0, 217, 166, 0.20);
 }
 
@@ -1063,6 +1143,10 @@ html {
   .tag {
     display: none;
   }
+}
+
+@media (max-width: 860px) {
+  .contact-sidebar { display: none !important; }
 }
 
 /* ============================================================

@@ -29,13 +29,13 @@ const instrumentSerif = Instrument_Serif({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://ubaid.dev"),
   title: {
     default: "Muhammad Ubaidullah — Full Stack Developer",
     template: "%s | Muhammad Ubaidullah",
   },
   description:
-    "Full Stack Developer specializing in Next.js, NestJS & React. " +
-    "5 production apps built solo. AI-powered workflows. Available for remote roles.",
+    "Muhammad Ubaidullah builds web applications for teams managing operations, customers, and reporting. Explore selected work and discuss a project.",
   keywords: [
     "Full Stack Developer",
     "Next.js Developer",
@@ -52,16 +52,15 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://ubaid.dev",          // update with your actual domain
+    url: "https://ubaid.dev",
     siteName: "Muhammad Ubaidullah",
     title: "Muhammad Ubaidullah — Full Stack Developer",
-    description: "5 production apps shipped solo. Next.js · NestJS · React. Available for remote roles.",
+    description: "Web applications for teams managing operations, customers, and reporting. Explore selected work and discuss a project.",
   },
   twitter: {
     card: "summary_large_image",
     title: "Muhammad Ubaidullah — Full Stack Developer",
-    description: "5 production apps shipped solo. Available for remote.",
-    creator: "@ubaidullah",            // update with your handle
+    description: "Web applications for operations, customers, and reporting. Explore selected work.",
   },
   robots: {
     index: true,

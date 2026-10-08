@@ -232,7 +232,7 @@ export function TechMarquee() {
         <span
           style={{
             fontFamily: "var(--font-mono)",
-            fontSize: "0.6875rem",
+            fontSize: "var(--type-meta-size)",
             fontWeight: 500,
             letterSpacing: "0.12em",
             textTransform: "uppercase",

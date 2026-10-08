@@ -40,16 +40,16 @@ function Section({
 }
 
 /* ── Eyebrow label ── */
-function Eyebrow({ children }: { children: React.ReactNode }) {
+function Eyebrow({ children, tone = "jade" }: { children: React.ReactNode; tone?: "jade" | "brass" }) {
   return (
     <p
       style={{
         fontFamily: "var(--font-mono)",
-        fontSize: "0.6875rem",
+        fontSize: "var(--type-meta-size)",
         fontWeight: 500,
         letterSpacing: "0.12em",
         textTransform: "uppercase",
-        color: "var(--accent)",
+        color: tone === "brass" ? "var(--brass-ink)" : "var(--accent-ink)",
         marginBottom: "1rem",
         display: "flex",
         alignItems: "center",
@@ -61,7 +61,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
           display: "inline-block",
           width: "2rem",
           height: "1px",
-          background: "var(--accent)",
+          background: tone === "brass" ? "var(--brass)" : "var(--accent)",
         }}
       />
       {children}
@@ -140,7 +140,7 @@ function ScreenshotTile({
             style={{
               position: "relative",
               fontFamily: "var(--font-mono)",
-              fontSize: "0.6875rem",
+              fontSize: "var(--type-meta-size)",
               /* ✅ FIX: use theme token instead of hardcoded dark color */
               color: "var(--fg-faint)",
               letterSpacing: "0.1em",
@@ -162,7 +162,7 @@ function ScreenshotTile({
             right: 0,
             padding: "2rem 1rem 0.75rem",
             background:
-              "linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 100%)",
+              "linear-gradient(to top, rgba(0,0,0,0.78) 0%, transparent 100%)",
             display: "flex",
             alignItems: "flex-end",
           }}
@@ -170,9 +170,8 @@ function ScreenshotTile({
           <span
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: "0.625rem",
-              /* ✅ FIX: always legible over image dark gradient — keep white */
-              color: "rgba(255,255,255,0.65)",
+              fontSize: "var(--type-meta-size)",
+              color: "#FFFFFF",
               letterSpacing: "0.08em",
               textTransform: "uppercase",
             }}
@@ -195,7 +194,7 @@ export function CaseStudyClient({ project, adjacent }: Props) {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0])
 
   return (
-    <main style={{ minHeight: "100vh", background: "var(--bg)" }}>
+    <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
 
       {/* ── HERO ───────────────────────────────────────────────────── */}
       {/*
@@ -302,7 +301,7 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                     alignItems: "center",
                     gap: "0.4rem",
                     fontFamily: "var(--font-mono)",
-                    fontSize: "0.75rem",
+                    fontSize: "var(--type-meta-size)",
                     /* ✅ FIX: was rgba(255,255,255,0.4) — invisible on light bg */
                     color: "var(--fg-faint)",
                     letterSpacing: "0.06em",
@@ -329,18 +328,18 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                 marginBottom: "1.25rem",
               }}
             >
-              {[project.index, project.year, project.role, project.status].map(
+              {[project.index, project.year, project.role].map(
                 (item) => (
                   <span
                     key={item}
                     style={{
                       fontFamily: "var(--font-mono)",
-                      fontSize: "0.625rem",
+                      fontSize: "var(--type-meta-size)",
                       fontWeight: 500,
                       letterSpacing: "0.08em",
                       textTransform: "uppercase",
                       /* ✅ FIX: use --accent-text for readable color on light bg */
-                      color: "var(--accent-text, var(--accent))",
+                      color: "var(--tag-text)",
                       padding: "0.25rem 0.625rem",
                       borderRadius: 9999,
                       border: "1px solid var(--accent-muted)",
@@ -356,19 +355,11 @@ export function CaseStudyClient({ project, adjacent }: Props) {
             {/* Title */}
             <div style={{ overflow: "hidden", marginBottom: "0.875rem" }}>
               <motion.h1
+                className="type-case-title"
                 initial={{ y: "110%" }}
                 animate={{ y: "0%" }}
                 transition={{ duration: 0.9, ease: EASE, delay: 0.15 }}
                 style={{
-                  fontFamily: "var(--font-display)",
-                  /*
-                    ✅ FIX: reduced max from 5rem → 3.75rem — still impactful
-                    but doesn't dominate the entire viewport height on desktop.
-                  */
-                  fontSize: "clamp(2rem, 5vw, 3.75rem)",
-                  fontWeight: 400,
-                  lineHeight: 1.08,
-                  letterSpacing: "-0.03em",
                   color: "var(--fg)",
                   margin: 0,
                 }}
@@ -393,6 +384,10 @@ export function CaseStudyClient({ project, adjacent }: Props) {
               {project.tagline}
             </motion.p>
 
+            <figure style={{ position: "relative", aspectRatio: "16 / 9", maxWidth: 900, margin: "1.75rem 0 0", borderRadius: "var(--radius-lg)", overflow: "hidden", border: "1px solid var(--border)" }}>
+              <Image src={project.coverImage} alt={`${project.title} interface preview`} fill priority sizes="(max-width: 900px) 100vw, 900px" style={{ objectFit: "cover" }} />
+            </figure>
+
             {/* Stack pills */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -405,7 +400,7 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                   key={tag}
                   style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: "0.6875rem",
+                    fontSize: "var(--type-meta-size)",
                     /* ✅ FIX: use theme tag tokens instead of hardcoded dark colors */
                     color: "var(--tag-text)",
                     background: "var(--tag-bg)",
@@ -490,15 +485,15 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                           width: 18,
                           height: 18,
                           borderRadius: "50%",
-                          border: "1px solid rgba(255,80,80,0.35)",
-                          background: "rgba(255,80,80,0.06)",
+                          border: "1px solid var(--border-strong)",
+                          background: "var(--bg-sub)",
                           display: "inline-flex",
                           alignItems: "center",
                           justifyContent: "center",
                           flexShrink: 0,
                           marginTop: "2px",
-                          fontSize: "10px",
-                          color: "rgba(255,100,100,0.7)",
+                          fontSize: "var(--type-meta-size)",
+                          color: "var(--fg-sub)",
                         }}
                       >
                         ✕
@@ -561,7 +556,7 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                         flexShrink: 0,
                       }}
                     >
-                      <Check size={14} strokeWidth={2.5} color="var(--accent)" />
+                      <Check size={14} strokeWidth={2.5} color="var(--accent-ink)" />
                     </div>
                     <div>
                       <p
@@ -619,76 +614,29 @@ export function CaseStudyClient({ project, adjacent }: Props) {
           <div
             style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
           >
-            {/* Outcome stats */}
+            {/* Delivered scope */}
             <Section>
               <div
                 style={{
                   padding: "1.75rem",
                   borderRadius: "var(--radius-lg)",
-                  border: "1px solid var(--accent-muted)",
-                  background: "var(--bg-card)",
+                  border: "1px solid var(--border)",
+                  borderTop: "2px solid var(--brass)",
+                  background: "var(--brass-soft)",
                 }}
               >
-                <Eyebrow>Outcome</Eyebrow>
+                <Eyebrow tone="brass">What was delivered</Eyebrow>
                 <p
                   style={{
                     fontSize: "0.9375rem",
-                    color: "var(--fg-muted)",
+                    color: "var(--fg-sub)",
                     lineHeight: 1.7,
-                    margin: "0 0 1.5rem",
+                    margin: 0,
                   }}
                 >
                   {project.outcome}
                 </p>
 
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "1px",
-                    background: "var(--border)",
-                    borderRadius: "var(--radius-md)",
-                    overflow: "hidden",
-                    border: "1px solid var(--border)",
-                  }}
-                >
-                  {project.outcomeStats.map(({ value, label }) => (
-                    <div
-                      key={label}
-                      style={{
-                        padding: "1.25rem 1rem",
-                        background: "var(--bg-sub)",
-                        textAlign: "center",
-                      }}
-                    >
-                      <p
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          fontStyle: "italic",
-                          fontSize: "1.625rem",
-                          color: "var(--accent)",
-                          margin: "0 0 0.25rem",
-                          lineHeight: 1,
-                        }}
-                      >
-                        {value}
-                      </p>
-                      <p
-                        style={{
-                          fontFamily: "var(--font-mono)",
-                          fontSize: "0.625rem",
-                          color: "var(--fg-faint)",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.07em",
-                          margin: 0,
-                          lineHeight: 1.4,
-                        }}
-                      >
-                        {label}
-                      </p>
-                    </div>
-                  ))}
-                </div>
               </div>
             </Section>
 
@@ -722,7 +670,7 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                         border: "1px solid var(--border-sub)",
                         background: "var(--bg-sub)",
                         fontFamily: "var(--font-mono)",
-                        fontSize: "0.75rem",
+                        fontSize: "var(--type-meta-size)",
                         color: "var(--fg-sub)",
                         letterSpacing: "0.02em",
                       }}
@@ -749,7 +697,6 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                   {[
                     { t: "Year", v: project.year },
                     { t: "Role", v: project.role },
-                    { t: "Status", v: project.status },
                     { t: "Categories", v: project.categories.join(", ") },
                   ].map(({ t, v }) => (
                     <div
@@ -766,7 +713,7 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                       <dt
                         style={{
                           fontFamily: "var(--font-mono)",
-                          fontSize: "0.6875rem",
+                          fontSize: "var(--type-meta-size)",
                           color: "var(--fg-faint)",
                           textTransform: "uppercase",
                           letterSpacing: "0.08em",
@@ -801,14 +748,7 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                   style={{
                     padding: "1.5rem",
                     borderRadius: "var(--radius-lg)",
-                    /*
-                      ✅ FIX: was "var(--accent-deep)" with hardcoded "color: #0A0E1A"
-                      --accent-deep in light mode is #006B52 (dark green) — text
-                      #0A0E1A (near-black) is fine on it, but the original also
-                      hardcoded the bg which didn't adapt. Using accent-deep is correct;
-                      we just ensure the text color references a safe contrast token.
-                    */
-                    background: "var(--accent-deep)",
+                    background: "var(--accent)",
                     cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
@@ -826,17 +766,16 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                         fontWeight: 600,
                         fontSize: "0.9375rem",
                         margin: "0 0 0.2rem",
-                        /* white text on dark green bg — works in both themes */
-                        color: "#FFFFFF",
+                        color: "var(--accent-text)",
                       }}
                     >
                       Want something like this?
                     </p>
-                    <p style={{ fontSize: "0.8125rem", opacity: 0.75, margin: 0, color: "#FFFFFF" }}>
+                    <p style={{ fontSize: "0.8125rem", margin: 0, color: "var(--accent-text)" }}>
                       Let&apos;s talk about your project
                     </p>
                   </div>
-                  <ArrowUpRight size={20} strokeWidth={2} color="#FFFFFF" />
+                  <ArrowUpRight size={20} strokeWidth={2} color="var(--accent-text)" />
                 </motion.div>
               </Link>
             </Section>
@@ -892,7 +831,7 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                   <span
                     style={{
                       fontFamily: "var(--font-mono)",
-                      fontSize: "0.6875rem",
+                      fontSize: "var(--type-meta-size)",
                       color: "var(--fg-faint)",
                       letterSpacing: "0.08em",
                       textTransform: "uppercase",
@@ -915,8 +854,8 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                 <p
                   style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: "0.6875rem",
-                    color: "var(--accent)",
+                    fontSize: "var(--type-meta-size)",
+                    color: "var(--accent-ink)",
                     margin: 0,
                   }}
                 >
@@ -958,7 +897,7 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                   <span
                     style={{
                       fontFamily: "var(--font-mono)",
-                      fontSize: "0.6875rem",
+                      fontSize: "var(--type-meta-size)",
                       color: "var(--fg-faint)",
                       letterSpacing: "0.08em",
                       textTransform: "uppercase",
@@ -986,8 +925,8 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                 <p
                   style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: "0.6875rem",
-                    color: "var(--accent)",
+                    fontSize: "var(--type-meta-size)",
+                    color: "var(--accent-ink)",
                     margin: 0,
                   }}
                 >
@@ -1021,9 +960,9 @@ export function CaseStudyClient({ project, adjacent }: Props) {
           transition: background-color 0.2s ease;
         }
         .hero-cta-btn:hover {
-          background-color: var(--accent-bright);
+          background-color: var(--accent-hover);
         }
       `}</style>
-    </main>
+    </div>
   )
 }

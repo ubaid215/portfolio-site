@@ -1,23 +1,12 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { motion } from "motion/react"
-import { ArrowDown, Download } from "lucide-react"
+import { ArrowDown, ArrowUpRight } from "lucide-react"
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
-const WORDS = ["I Build Full Stack", "Products"]
-const ACCENT_LINE = "That Actually Ship."
-
 export function Hero() {
-  const [cursor, setCursor] = useState(true)
-
-  useEffect(() => {
-    const id = setInterval(() => setCursor((v) => !v), 530)
-    return () => clearInterval(id)
-  }, [])
-
   return (
     <section
       style={{
@@ -105,11 +94,11 @@ export function Hero() {
               alignItems: "center",
               gap: "0.5rem",
               fontFamily: "var(--font-mono)",
-              fontSize: "0.75rem",
+              fontSize: "var(--type-meta-size)",
               fontWeight: 500,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
-              color: "var(--accent)",
+              color: "var(--accent-ink)",
               padding: "0.375rem 1rem",
               borderRadius: 9999,
               border: "1px solid rgba(0,217,166,0.25)",
@@ -127,67 +116,42 @@ export function Hero() {
                 flexShrink: 0,
               }}
             />
-            Available for remote roles &amp; freelance
+            Available for client projects
           </span>
         </motion.div>
 
         {/* Headline */}
         <div style={{ overflow: "hidden", marginBottom: "1.5rem" }}>
           <motion.h1
+            className="type-display"
             initial={{ y: "110%" }}
             animate={{ y: "0%" }}
             transition={{ duration: 0.9, ease: EASE, delay: 0.1 }}
             style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(2.75rem, 8vw, 6rem)",
-              fontWeight: 400,
-              lineHeight: 1.05,
-              letterSpacing: "-0.03em",
               color: "var(--fg)",
               margin: 0,
             }}
           >
-            I Build Full Stack Products
+            Software for work that
             <br />
-            <span style={{ fontStyle: "italic", color: "var(--accent)" }}>
-              That Actually Ship.
-            </span>
-            <span
-              aria-hidden
-              style={{
-                display: "inline-block",
-                width: "3px",
-                height: "0.85em",
-                background: "var(--accent)",
-                marginLeft: "4px",
-                verticalAlign: "middle",
-                opacity: cursor ? 1 : 0,
-                transition: "opacity 0.08s",
-                borderRadius: 2,
-              }}
-            />
+            can&apos;t stay in <span style={{ fontStyle: "italic", color: "var(--accent-ink)" }}>spreadsheets.</span>
           </motion.h1>
         </div>
 
         {/* Sub-headline */}
         <motion.p
+          className="type-lead"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: EASE, delay: 0.35 }}
           style={{
-            fontSize: "clamp(1rem, 2vw, 1.125rem)",
             color: "var(--fg-muted)",
-            lineHeight: 1.7,
-            maxWidth: "56ch",
             margin: "0 auto clamp(1.5rem, 3svh, 2.5rem)",
           }}
         >
-          Muhammad Ubaidullah — Full Stack Developer specializing in{" "}
-          <span style={{ color: "var(--fg-sub)", fontWeight: 500 }}>
-            Next.js, NestJS &amp; React
-          </span>
-          . 5 production apps built solo. AI-powered workflows. Pixel-perfect
-          delivery.
+          I&apos;m Muhammad Ubaidullah. I turn manual workflows into web applications
+          for teams managing bookings, inventory, reporting, and more. Work directly
+          with me from scoping through launch.
         </motion.p>
 
         {/* CTAs */}
@@ -214,7 +178,7 @@ export function Hero() {
                 padding: "0.8125rem 1.75rem",
                 borderRadius: 9999,
                 background: "var(--accent)",
-                color: "#0A0E1A",
+                color: "var(--accent-text)",
                 fontSize: "0.9375rem",
                 fontWeight: 600,
                 cursor: "pointer",
@@ -224,12 +188,12 @@ export function Hero() {
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.2, ease: EASE }}
             >
-              View My Work
+              Explore Selected Work
               <ArrowDown size={15} strokeWidth={2.5} />
             </motion.span>
           </Link>
 
-          <Link href="/Ubaidullah_Resume.pdf" target="_blank" style={{ textDecoration: "none" }}>
+          <Link href="/contact" style={{ textDecoration: "none" }}>
             <motion.span
               className="cta-secondary"
               style={{
@@ -250,8 +214,8 @@ export function Hero() {
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.2, ease: EASE }}
             >
-              <Download size={15} strokeWidth={2} />
-              Download Resume
+              Discuss a Project
+              <ArrowUpRight size={15} strokeWidth={2} />
             </motion.span>
           </Link>
         </motion.div>
@@ -270,15 +234,15 @@ export function Hero() {
           }}
         >
           {[
-            "3+ years experience",
-            "MERN · PERN · Next.js specialist",
-            "Open to global remote",
+            "Operations software",
+            "Direct collaboration",
+            "Remote worldwide",
           ].map((item, i) => (
             <span
               key={i}
               style={{
                 fontFamily: "var(--font-mono)",
-                fontSize: "0.75rem",
+                fontSize: "var(--type-meta-size)",
                 color: "var(--fg-faint)",
                 letterSpacing: "0.04em",
               }}
@@ -319,7 +283,7 @@ export function Hero() {
 
       <style>{`
         .cta-primary { transition: background-color 0.2s cubic-bezier(0.16,1,0.3,1); }
-        .cta-primary:hover { background-color: var(--accent-bright); }
+        .cta-primary:hover { background-color: var(--accent-hover); }
         .cta-secondary { transition: background-color 0.2s cubic-bezier(0.16,1,0.3,1); }
         .cta-secondary:hover { background-color: var(--bg-card); }
       `}</style>

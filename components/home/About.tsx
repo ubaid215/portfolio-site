@@ -2,7 +2,7 @@
 
 import { motion, useInView } from "motion/react"
 import { useRef } from "react"
-import { Zap, Globe, Package } from "lucide-react"
+import { ClipboardList, Globe, Package } from "lucide-react"
 import Image from "next/image"
 
 const EASE = [0.16, 1, 0.3, 1] as const
@@ -10,24 +10,24 @@ const EASE = [0.16, 1, 0.3, 1] as const
 const VALUES = [
   {
     icon: Package,
-    title: "Ships, Doesn't Just Start",
-    desc: "Every project I take on reaches production. 5 apps live. No abandoned repos.",
+    title: "One Point of Contact",
+    desc: "The person who scopes the work also designs and builds the application.",
   },
   {
-    icon: Zap,
-    title: "AI-Augmented Speed",
-    desc: "I use the best AI tooling — Cursor, Claude, Copilot — to move 2× faster without cutting corners.",
+    icon: ClipboardList,
+    title: "Clear Decisions",
+    desc: "Workflows, data needs, and trade-offs are mapped before implementation begins.",
   },
   {
     icon: Globe,
-    title: "Remote-Ready",
-    desc: "Built for async collaboration. Clear communication, documented code, global-friendly timezones.",
+    title: "Remote Collaboration",
+    desc: "Based in Pakistan and set up for written updates and work across time zones.",
   },
 ]
 
 const BADGES = [
-  { label: "Open to Remote", color: "var(--accent)", bg: "var(--accent-muted)" },
-  { label: "3+ yrs exp", color: "var(--fg-sub)", bg: "var(--bg-card)" },
+  { label: "Open to Projects", color: "var(--accent-ink)", bg: "var(--accent-muted)" },
+  { label: "Direct Collaboration", color: "var(--fg-sub)", bg: "var(--bg-card)" },
   { label: "Faisalabad, PK 🇵🇰", color: "var(--fg-muted)", bg: "var(--bg-card)" },
 ]
 
@@ -170,7 +170,7 @@ export function About() {
                   background: bg,
                   color,
                   fontFamily: "var(--font-mono)",
-                  fontSize: "0.6875rem",
+                  fontSize: "var(--type-meta-size)",
                   fontWeight: 500,
                   letterSpacing: "0.04em",
                   whiteSpace: "nowrap",
@@ -191,11 +191,11 @@ export function About() {
             transition={{ duration: 0.6, ease: EASE }}
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: "0.6875rem",
+              fontSize: "var(--type-meta-size)",
               fontWeight: 500,
               letterSpacing: "0.12em",
               textTransform: "uppercase",
-              color: "var(--accent)",
+              color: "var(--accent-ink)",
               marginBottom: "1rem",
               display: "flex",
               alignItems: "center",
@@ -215,24 +215,16 @@ export function About() {
 
           <div style={{ overflow: "hidden", marginBottom: "1.5rem" }}>
             <motion.h2
+              className="type-section"
               initial={{ y: "110%" }}
               animate={isInView ? { y: "0%" } : {}}
               transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
               style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(1.75rem, 4vw, 2.75rem)",
-                fontWeight: 400,
-                lineHeight: 1.15,
-                letterSpacing: "-0.02em",
                 color: "var(--fg)",
                 margin: 0,
               }}
             >
-              The Developer Who Ships,
-              <br />
-              <span style={{ fontStyle: "italic", color: "var(--accent)" }}>
-                Not Just Starts.
-              </span>
+              A developer who learns the workflow first.
             </motion.h2>
           </div>
 
@@ -243,7 +235,7 @@ export function About() {
           >
             <p
               style={{
-                fontSize: "0.9375rem",
+                fontSize: "var(--type-body-size)",
                 color: "var(--fg-muted)",
                 lineHeight: 1.75,
                 marginBottom: "1rem",
@@ -253,34 +245,32 @@ export function About() {
               <span style={{ color: "var(--fg)", fontWeight: 500 }}>
                 Muhammad Ubaidullah
               </span>{" "}
-              — a full stack developer from Faisalabad, Pakistan, building
-              production-grade web applications for clients worldwide. I&apos;ve
-              shipped 5 real-world products solo, from complex POS systems to
-              multi-portal school management platforms.
+              — a full stack developer from Faisalabad, Pakistan. I build web
+              applications for teams whose operations have outgrown disconnected
+              tools and manual follow-ups.
             </p>
             <p
               style={{
-                fontSize: "0.9375rem",
+                fontSize: "var(--type-body-size)",
                 color: "var(--fg-muted)",
                 lineHeight: 1.75,
                 marginBottom: "1rem",
               }}
             >
-              I work at the intersection of modern web engineering and AI-assisted
-              development — using the best tools available to deliver fast, clean,
-              maintainable code without the overhead of a full agency.
+              My work spans retail operations, school administration, restaurant
+              service, and donor management. I start by understanding the people
+              and process, then shape the software around both.
             </p>
             <p
               style={{
-                fontSize: "0.9375rem",
+                fontSize: "var(--type-body-size)",
                 color: "var(--fg-sub)",
                 lineHeight: 1.75,
                 marginBottom: "2.5rem",
-                fontStyle: "italic",
+                fontWeight: 500,
               }}
             >
-              If you need a developer who treats your product like their own
-              business — I&apos;m your person.
+              You work directly with me from discovery through delivery.
             </p>
           </motion.div>
 
@@ -310,7 +300,7 @@ export function About() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    color: "var(--accent)",
+                    color: "var(--accent-ink)",
                     flexShrink: 0,
                   }}
                 >
