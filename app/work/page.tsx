@@ -134,9 +134,8 @@ function ProjectCard({
                   right: "1.5rem",
                   bottom: "-0.5rem",
                   fontFamily: "var(--font-display)",
-                  fontStyle: "italic",
                   fontSize: "7rem",
-                  fontWeight: 400,
+                  fontWeight: 500,
                   lineHeight: 1,
                   color: "rgba(0,217,166,0.06)",
                   userSelect: "none",
@@ -202,8 +201,7 @@ function ProjectCard({
               </span>
               <span
                 style={{
-                  fontFamily: "var(--font-display)",
-                  fontStyle: "italic",
+                  fontFamily: "var(--font-mono)",
                   fontSize: "0.9rem",
                   color: "#FFFFFF",
                 }}
@@ -445,7 +443,7 @@ export default function WorkPage() {
                 margin: 0,
               }}
             >
-              Explore the problems, decisions, and interfaces behind five featured engagements.
+              From online stores to the systems teams use every day. See what I built, why it was needed, and how it came together.
             </p>
 
           </motion.div>

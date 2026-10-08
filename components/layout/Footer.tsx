@@ -1,18 +1,5 @@
 "use client"
 
-/**
- * Footer.tsx
- *
- * Award-winning design characteristics:
- * - Large editorial display headline that reacts on hover
- * - Minimal, intentional — not a wall of links
- * - Accent underline reveals on hover for nav links
- * - Animated availability badge with pulse
- * - Social icons with staggered entrance via intersection observer
- * - Mobile-first: compact on small screens, expansive on large
- * - motion/react v12
- */
-
 import Link from "next/link"
 import { motion, useInView } from "motion/react"
 import { useRef } from "react"
@@ -191,7 +178,7 @@ export function Footer() {
               marginBottom: "1rem",
             }}
           >
-            ▸ Available for client projects
+            Have something in mind?
           </motion.p>
 
           {/* Large display headline */}
@@ -207,7 +194,7 @@ export function Footer() {
                 marginBottom: "1.5rem",
               }}
             >
-              Let&apos;s build something real.
+              Good work starts with a conversation.
             </motion.h2>
           </div>
 
@@ -231,7 +218,7 @@ export function Footer() {
               maxWidth: "36ch",
               margin: 0,
             }}>
-              Have an operational challenge or product idea? Share the brief and I&apos;ll reply with a clear next step.
+              Share your idea, your biggest challenge, or the role you&apos;re hiring for. Let&apos;s see where I can help.
             </p>
 
             <Link href="/contact" style={{ textDecoration: "none", flexShrink: 0 }}>
@@ -282,10 +269,10 @@ export function Footer() {
                 style={{
                   display: "inline-block",
                   fontFamily: "var(--font-display)",
-                  fontStyle: "italic",
+                  fontWeight: 600,
                   fontSize: "1.375rem",
                   color: "var(--accent-ink)",
-                  letterSpacing: "-0.01em",
+                  letterSpacing: "-0.03em",
                   marginBottom: "0.625rem",
                 }}
                 whileHover={{ scale: 1.03 }}
@@ -301,8 +288,8 @@ export function Footer() {
               maxWidth: "22ch",
               margin: 0,
             }}>
-              Full Stack Developer.<br />
-              Building products that ship.
+              Independent developer.<br />
+              Websites, products &amp; AI.
             </p>
 
             {/* Availability badge */}

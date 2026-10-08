@@ -1,0 +1,445 @@
+.hero {
+  --hero-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--bg);
+}
+
+.atmosphere {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.atmosphere canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.portraitStage {
+  position: absolute;
+  z-index: 1;
+  top: 4.5rem;
+  right: -1%;
+  bottom: 0;
+  width: 66%;
+  overflow: hidden;
+  pointer-events: none;
+  mask-image: linear-gradient(90deg, transparent, #000 24%, #000 88%, transparent);
+}
+
+.portraitMotion {
+  position: absolute;
+  inset: -1.5rem;
+  transform: translate3d(var(--portrait-shift-x, 0px), var(--portrait-shift-y, 0px), 0);
+}
+
+.portraitImage {
+  object-fit: cover;
+  object-position: 50% 35%;
+  filter: saturate(0.72);
+}
+
+.readabilityVeil {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(0deg, var(--bg), transparent 46%),
+    linear-gradient(90deg, var(--bg) 8%, transparent 60%),
+    linear-gradient(180deg, var(--bg), transparent 25%);
+}
+
+.inner {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 1600px);
+  min-height: max(48rem, 100svh);
+  margin-inline: auto;
+  padding: clamp(8rem, 15svh, 10rem) clamp(1.5rem, 5vw, 5rem) 1.5rem;
+}
+
+.opening { width: min(100%, 25rem); }
+
+.statement {
+  margin: 0;
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 2.35vw, 2.2rem);
+  font-weight: 500;
+  line-height: 1.22;
+  letter-spacing: -0.035em;
+}
+
+.intro {
+  max-width: 35ch;
+  margin: 1.25rem 0 0;
+  color: var(--fg-sub);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  margin-top: 1.75rem;
+}
+
+.primaryAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  min-height: 3.4rem;
+  padding: 0.9rem 1.3rem;
+  border-radius: 0.75rem;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.3;
+  transition: background-color 250ms ease, transform 400ms var(--hero-ease);
+}
+
+.actionLabel {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  height: 1.5em;
+}
+
+.actionLabel > span {
+  display: block;
+  line-height: 1.5;
+  transition: transform 450ms var(--hero-ease);
+}
+
+.actionLabel > span + span {
+  position: absolute;
+  top: 100%;
+  left: 0;
+}
+
+.actionIcon,
+.scrollIcon {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+  overflow: hidden;
+}
+
+.actionIcon svg,
+.scrollIcon svg {
+  position: absolute;
+  inset: 0;
+  transition: transform 450ms var(--hero-ease);
+}
+
+.actionIcon svg + svg { transform: translate(-120%, 120%); }
+
+.primaryAction:is(:hover, :focus-visible) {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+.primaryAction:is(:hover, :focus-visible) .actionLabel > span {
+  transform: translateY(-100%);
+}
+
+.primaryAction:is(:hover, :focus-visible) .actionIcon svg:first-child {
+  transform: translate(120%, -120%);
+}
+
+.primaryAction:is(:hover, :focus-visible) .actionIcon svg + svg {
+  transform: translate(0, 0);
+}
+
+.primaryAction:active {
+  transform: translateY(0) scale(0.98);
+  transition-duration: 120ms;
+}
+
+.secondaryAction {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 3.4rem;
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.3;
+  transition: color 200ms ease;
+}
+
+.secondaryAction::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0.7rem;
+  left: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0.25);
+  transform-origin: left;
+  transition: transform 450ms var(--hero-ease);
+}
+
+.secondaryAction svg { transition: transform 400ms var(--hero-ease); }
+.secondaryAction:is(:hover, :focus-visible) { color: var(--accent-ink); }
+.secondaryAction:is(:hover, :focus-visible)::after { transform: scaleX(1); }
+.secondaryAction:is(:hover, :focus-visible) svg { transform: translate(2px, -2px); }
+
+.primaryAction:focus-visible,
+.secondaryAction:focus-visible,
+.bottomRail a:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 5px;
+}
+
+.identity {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: auto;
+  padding-top: 4rem;
+  padding-bottom: 1.65rem;
+}
+
+.headline {
+  margin: 0;
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+
+.nameMotion {
+  display: block;
+  transform: translate3d(var(--type-shift-x, 0px), 0, 0);
+}
+
+.givenName,
+.familyName {
+  display: block;
+  overflow: hidden;
+  padding-block: 0.06em;
+}
+
+.givenName {
+  margin-bottom: 0.1rem;
+  font-size: clamp(2rem, 3.4vw, 3.4rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+.familyName {
+  margin-left: -0.035em;
+  font-size: clamp(5rem, 10.5vw, 10.5rem);
+  font-weight: 600;
+  line-height: 0.88;
+}
+
+.nameReveal { display: block; }
+.fullStop { color: var(--accent-ink); }
+
+.role {
+  margin: 0 0 0.15rem;
+  padding-bottom: 0.2rem;
+  color: var(--fg-sub);
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.5vw, 1.4rem);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  text-align: right;
+}
+
+.bottomRail {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border-strong);
+}
+
+.bottomRail p,
+.bottomRail a {
+  margin: 0;
+  color: var(--fg-muted);
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.bottomRail p span {
+  margin-inline: 0.65rem;
+  color: var(--fg-faint);
+}
+
+.bottomRail a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 2.75rem;
+  transition: color 200ms ease;
+}
+
+.scrollIcon svg + svg { transform: translateY(-125%); }
+.bottomRail a:is(:hover, :focus-visible) { color: var(--accent-ink); }
+.bottomRail a:is(:hover, :focus-visible) svg:first-child { transform: translateY(125%); }
+.bottomRail a:is(:hover, :focus-visible) svg + svg { transform: translateY(0); }
+
+@keyframes revealName {
+  from { transform: translateY(110%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes portraitEnter {
+  from { opacity: 0; clip-path: inset(0 0 0 14%); }
+  to { opacity: 1; clip-path: inset(0); }
+}
+
+@keyframes atmosphereEnter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes introFallback {
+  to { visibility: visible; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Keep the composition hidden under the departing curtain. The timer also
+     exposes the server-rendered content if JavaScript never finishes loading. */
+  :global(html[data-site-intro="playing"]) .inner,
+  :global(html[data-site-intro="playing"]) .portraitStage,
+  :global(html[data-site-intro="playing"]) .atmosphere {
+    visibility: hidden;
+    animation: introFallback 0s linear 3300ms forwards;
+  }
+
+  :global(html[data-site-intro="done"]) .portraitStage {
+    animation: portraitEnter 1200ms var(--hero-ease) both;
+  }
+
+  :global(html[data-site-intro="done"]) .nameReveal {
+    animation: revealName 1000ms var(--hero-ease) 120ms both;
+  }
+
+  :global(html[data-site-intro="done"]) .familyName .nameReveal {
+    animation-delay: 240ms;
+  }
+
+  :global(html[data-site-intro="done"]) .statement {
+    animation: riseIn 750ms var(--hero-ease) 380ms both;
+  }
+
+  :global(html[data-site-intro="done"]) .intro {
+    animation: riseIn 750ms var(--hero-ease) 480ms both;
+  }
+
+  :global(html[data-site-intro="done"]) .actions {
+    animation: riseIn 750ms var(--hero-ease) 600ms both;
+  }
+
+  :global(html[data-site-intro="done"]) .role,
+  :global(html[data-site-intro="done"]) .bottomRail {
+    animation: riseIn 750ms var(--hero-ease) 720ms both;
+  }
+
+  :global(html[data-site-intro="done"]) .atmosphere {
+    animation: atmosphereEnter 1400ms ease-out both;
+  }
+}
+
+@media (max-width: 1050px) and (min-width: 701px) {
+  .portraitStage { width: 72%; right: -9%; }
+  .opening { max-width: 21rem; }
+  .intro { max-width: 31ch; }
+  .role { font-size: 1rem; }
+  .identity { gap: 1rem; }
+}
+
+@media (max-width: 700px) {
+  .inner {
+    display: grid;
+    grid-template-areas: "identity" "opening" "rail";
+    align-content: start;
+    gap: 1.75rem;
+    min-height: 100svh;
+    padding: clamp(17rem, 42svh, 23rem) 1.5rem 1.25rem;
+  }
+
+  .portraitStage {
+    top: 3.5rem;
+    right: -16%;
+    bottom: auto;
+    width: 110%;
+    height: clamp(26rem, 64svh, 34rem);
+    mask-image: linear-gradient(180deg, transparent, #000 12%, #000 55%, transparent 96%);
+  }
+
+  .portraitImage { object-position: 50% 25%; }
+
+  .readabilityVeil {
+    background:
+      linear-gradient(0deg, var(--bg) 12%, transparent 60%),
+      linear-gradient(90deg, var(--bg), transparent 50%);
+  }
+
+  .identity {
+    grid-area: identity;
+    display: block;
+    margin: 0;
+    padding: 0;
+  }
+
+  .givenName { font-size: clamp(1.65rem, 5.5vw, 2.2rem); }
+  .familyName { font-size: clamp(2.8rem, 11.7vw, 5.15rem); }
+  .role { display: none; }
+  .opening { grid-area: opening; width: 100%; }
+  .statement { font-size: clamp(1.4rem, 4.9vw, 1.8rem); }
+  .intro { max-width: 40ch; margin-top: 0.9rem; }
+  .actions { margin-top: 1.3rem; gap: 0.5rem 1.4rem; }
+  .primaryAction { min-height: 3.25rem; padding-inline: 1rem; }
+  .bottomRail { grid-area: rail; flex-wrap: wrap; gap: 0 1rem; padding-top: 0.75rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portraitMotion,
+  .nameMotion,
+  .primaryAction:is(:hover, :focus-visible, :active),
+  .primaryAction:is(:hover, :focus-visible) .actionLabel > span,
+  .primaryAction:is(:hover, :focus-visible) .actionIcon svg:first-child,
+  .secondaryAction:is(:hover, :focus-visible) svg,
+  .bottomRail a:is(:hover, :focus-visible) svg:first-child {
+    transform: none;
+  }
+
+  .actionLabel > span + span,
+  .actionIcon svg + svg,
+  .scrollIcon svg + svg { display: none; }
+}

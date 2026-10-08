@@ -13,6 +13,11 @@ const PROJECT_TYPES = [
   "SaaS / Product MVP",
   "Internal Dashboard",
   "Website / Frontend",
+  "AI Automation",
+  "Generative AI",
+  "SEO",
+  "Digital Marketing",
+  "Team / Hiring opportunity",
   "Other / Not sure yet",
 ]
 
@@ -137,9 +142,9 @@ export default function ContactPage() {
                 color: "var(--fg)", margin: 0,
               }}
             >
-              Let&apos;s build something
+              Tell me what
               <br />
-              great together.
+              you want to build.
             </motion.h1>
           </div>
 
@@ -148,8 +153,8 @@ export default function ContactPage() {
             transition={{ duration: 0.7, ease: EASE, delay: 0.35 }}
             style={{ fontSize: "clamp(1rem, 2vw, 1.125rem)", color: "var(--fg-muted)", lineHeight: 1.75, maxWidth: "52ch" }}
           >
-            Tell me about the workflow, product, or website your team needs.
-            I&apos;ll review the brief and suggest a practical next step.
+            A new website, a product launch, an AI idea, or a place on your team.
+            Tell me what you have in mind and let&apos;s explore how I can help.
           </motion.p>
           <a href={`mailto:${CONTACT_EMAIL}`} style={{ display: "inline-block", marginTop: "1.25rem", color: "var(--tag-text)", fontSize: "0.9375rem", textDecoration: "underline", textUnderlineOffset: "0.25rem" }}>
             Or email {CONTACT_EMAIL}
@@ -231,7 +236,7 @@ export default function ContactPage() {
               <div style={{ display: "flex", gap: "0.5rem", alignItems: "flex-start" }}>
                 <MessageSquare size={15} strokeWidth={1.75} style={{ color: "var(--fg-faint)", flexShrink: 0, marginTop: "2px" }} />
                 <p style={{ fontSize: "0.875rem", color: "var(--fg-muted)", lineHeight: 1.6, margin: 0 }}>
-                  I work remotely with teams on focused web projects. Share the problem you need to solve and the constraints you already know.
+                  You don&apos;t need a finished brief to get in touch. Share the goal and what you know so far. Hiring for your team? Tell me about the role.
                 </p>
               </div>
             </motion.div>
@@ -310,7 +315,7 @@ export default function ContactPage() {
                   Message sent.
                 </h3>
                 <p style={{ fontSize: "1rem", color: "var(--fg-muted)", lineHeight: 1.7, maxWidth: "38ch", margin: "0 auto" }}>
-                  I&apos;ll review your inquiry and aim to reply within two business days. You can also reach me at{" "}
+                  Thanks for reaching out. I&apos;ll read your message and aim to reply within two business days. You can also reach me at{" "}
                   <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: "var(--accent-ink)", fontWeight: 500 }}>
                     {CONTACT_EMAIL}
                   </a>.
@@ -331,12 +336,12 @@ export default function ContactPage() {
                     fontFamily: "var(--font-mono)", fontSize: "var(--type-meta-size)", fontWeight: 500,
                     letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent-ink)", marginBottom: "0.5rem",
                   }}>
-                    ▸ Send a message
+                    Start a conversation
                   </p>
                   <h2 className="type-card-title" style={{
                     color: "var(--fg)", margin: 0,
                   }}>
-                    Tell me about your project.
+                    What do you have in mind?
                   </h2>
                 </div>
 
@@ -377,7 +382,7 @@ export default function ContactPage() {
 
                 {/* Project type */}
                 <div>
-                  <label htmlFor="contact-project-type" style={labelBase}>Project Type *</label>
+                  <label htmlFor="contact-project-type" style={labelBase}>I&apos;m interested in *</label>
                   <div style={{ position: "relative" }}>
                     <select
                       id="contact-project-type"
@@ -394,7 +399,7 @@ export default function ContactPage() {
                         paddingRight: "2.5rem",
                       }}
                     >
-                      <option value="" disabled>Select a project type…</option>
+                      <option value="" disabled>Choose a service or opportunity…</option>
                       {PROJECT_TYPES.map((type) => (
                         <option key={type} value={type} style={{ background: "var(--bg-card)", color: "var(--fg)" }}>{type}</option>
                       ))}
@@ -447,7 +452,7 @@ export default function ContactPage() {
                       maxLength={5000}
                     value={formState.message}
                     onChange={handleChange}
-                    placeholder="Describe your project — what it does, what you need, and when you need it by."
+                    placeholder="What are you hoping to build or improve? Share your goals, timing, and any useful links. For hiring enquiries, tell me about the role and team."
                     rows={6}
                     className="form-input"
                     style={{

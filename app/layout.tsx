@@ -3,7 +3,7 @@
  * 
  * Root layout — wires together:
  * - Geist fonts (built into Next.js)
- * - Instrument Serif via next/font/google
+ * - Space Grotesk via next/font/google
  * - ThemeProvider (next-themes)
  * - globals.css design system
  * - Navbar & Footer (persistent across all pages)
@@ -13,29 +13,28 @@
 import type { Metadata } from "next"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
-import { Instrument_Serif } from "next/font/google"
+import { Space_Grotesk } from "next/font/google"
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { Navbar } from "@/components/layout/Navbar"
 import { Footer } from "@/components/layout/Footer"
+import { SiteIntro } from "@/components/layout/SiteIntro"
 import "./globals.css"
 
-// Instrument Serif — display font for headings
-const instrumentSerif = Instrument_Serif({
+// Space Grotesk — display font for headings and the wordmark
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  weight: ["400"],
-  style: ["normal", "italic"],
-  variable: "--font-display",
+  variable: "--font-space-grotesk",
   display: "swap",
 })
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://ubaid.dev"),
   title: {
-    default: "Muhammad Ubaidullah — Full Stack Developer",
+    default: "Muhammad Ubaidullah | Web, SaaS & AI Development",
     template: "%s | Muhammad Ubaidullah",
   },
   description:
-    "Muhammad Ubaidullah builds web applications for teams managing operations, customers, and reporting. Explore selected work and discuss a project.",
+    "Independent full stack developer helping founders and teams build websites, SaaS products, and practical AI solutions. Explore the work and start a conversation.",
   keywords: [
     "Full Stack Developer",
     "Next.js Developer",
@@ -54,13 +53,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://ubaid.dev",
     siteName: "Muhammad Ubaidullah",
-    title: "Muhammad Ubaidullah — Full Stack Developer",
-    description: "Web applications for teams managing operations, customers, and reporting. Explore selected work and discuss a project.",
+    title: "Muhammad Ubaidullah | Web, SaaS & AI Development",
+    description: "Your goals shape what I build. Websites, SaaS products, and practical AI solutions for founders and teams.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Muhammad Ubaidullah — Full Stack Developer",
-    description: "Web applications for operations, customers, and reporting. Explore selected work.",
+    title: "Muhammad Ubaidullah | Web, SaaS & AI Development",
+    description: "Your goals shape what I build. Websites, SaaS products, and practical AI solutions for founders and teams.",
   },
   robots: {
     index: true,
@@ -79,11 +78,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
     // data-theme attribute being set by the browser before React hydrates.
     <html
       lang="en"
+      data-site-intro="playing"
       suppressHydrationWarning
-      className={`${GeistSans.variable} ${GeistMono.variable} ${instrumentSerif.variable}`}
+      className={`${GeistSans.variable} ${GeistMono.variable} ${spaceGrotesk.variable}`}
     >
       <body className="flex min-h-screen flex-col">
         <ThemeProvider>
+          <SiteIntro />
           <Navbar />
           <main className="flex-1">{children}</main>
           <Footer />

@@ -255,10 +255,9 @@ export function CaseStudyClient({ project, adjacent }: Props) {
               right: "2rem",
               bottom: "1rem",
               fontFamily: "var(--font-display)",
-              fontStyle: "italic",
               /* ✅ FIX: use --border instead of hardcoded rgba so it adapts */
               fontSize: "clamp(6rem, 18vw, 14rem)",
-              fontWeight: 400,
+              fontWeight: 500,
               lineHeight: 1,
               color: "var(--border-strong)",
               userSelect: "none",
@@ -769,10 +768,10 @@ export function CaseStudyClient({ project, adjacent }: Props) {
                         color: "var(--accent-text)",
                       }}
                     >
-                      Want something like this?
+                      Have a similar challenge?
                     </p>
                     <p style={{ fontSize: "0.8125rem", margin: 0, color: "var(--accent-text)" }}>
-                      Let&apos;s talk about your project
+                      Discuss your project
                     </p>
                   </div>
                   <ArrowUpRight size={20} strokeWidth={2} color="var(--accent-text)" />

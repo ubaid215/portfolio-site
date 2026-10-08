@@ -1,8 +1,8 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Services",
-  description: "Explore custom operations systems, product MVPs, and internal dashboards. Share your workflow to discuss a practical project scope.",
+  title: "Web, AI & Digital Marketing Services",
+  description: "Website and SaaS development, AI automation, generative AI, SEO, and digital marketing services. Find the right starting point for your project.",
 }
 
 export default function ServicesLayout({ children }: { children: React.ReactNode }) {

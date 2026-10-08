@@ -161,10 +161,10 @@ export function Navbar() {
               data-framer-motion
               style={{
                 fontFamily: "var(--font-display)",
-                fontStyle: "italic",
+                fontWeight: 600,
                 fontSize: "1.25rem",
                 color: "var(--accent-ink)",
-                letterSpacing: "-0.01em",
+                letterSpacing: "-0.03em",
                 userSelect: "none",
               }}
               whileHover={{ scale: 1.03 }}

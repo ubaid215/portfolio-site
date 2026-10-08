@@ -82,7 +82,7 @@ export function ContactCTA() {
             marginBottom: "1.5rem",
           }}
         >
-          ▸ Let&apos;s Work Together
+          Let&apos;s work together
         </motion.p>
 
         {/* Headline */}
@@ -97,7 +97,7 @@ export function ContactCTA() {
               margin: 0,
             }}
           >
-            Have a project? Let&apos;s build something real.
+            What could your business do next?
           </motion.h2>
         </div>
 
@@ -114,8 +114,8 @@ export function ContactCTA() {
             margin: "0 auto 2.5rem",
           }}
         >
-          Tell me what your team needs to run better. I&apos;ll review the brief
-          and reply with a clear next step.
+          Whether you&apos;re planning a launch or improving what you already have,
+          let&apos;s turn your goal into a clear plan for the build.
         </motion.p>
 
         {/* CTA buttons */}
@@ -154,7 +154,7 @@ export function ContactCTA() {
               transition={{ duration: 0.2, ease: EASE }}
             >
               <Mail size={16} strokeWidth={2} />
-              Discuss a Project
+              Discuss your project
               <ArrowUpRight size={15} strokeWidth={2.5} />
             </motion.span>
           </Link>

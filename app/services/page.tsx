@@ -3,7 +3,8 @@
 import { motion, useInView } from "motion/react"
 import { useRef } from "react"
 import Link from "next/link"
-import { ArrowUpRight, TrendingUp, LayoutDashboard, Layers, Clock, Users } from "lucide-react"
+import { Services } from "@/components/home/Services"
+import { ArrowUpRight, TrendingUp, LayoutDashboard, Layers, Clock } from "lucide-react"
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
@@ -12,54 +13,54 @@ const SERVICES = [
     icon: Layers,
     index: "01",
     title: "Booking & Operations Systems",
-    tagline: "Bring booking, staff workflows, and reporting into one place.",
-    problem: "Bookings, payments, and follow-ups become difficult to manage when they live in separate tools and message threads.",
-    outcome: "I scope the workflow and build the customer-facing flow, admin workspace, and integrations the team needs.",
-    proof: "Related work: the school and restaurant systems show how multi-role operational workflows can be brought into one application.",
+    tagline: "Make booking easier for customers and the day easier for your team.",
+    problem: "When bookings, payments, and follow-ups live in separate tools, your team spends time piecing the day together.",
+    outcome: "A booking experience for your customers and one workspace for your team to manage schedules, payments, and reminders.",
+    proof: "See the school and restaurant projects for examples of connected tools for staff, customers, and administrators.",
     scope: [
-      "Multi-step booking wizard with real-time availability",
-      "Admin dashboard with daily/weekly revenue snapshots",
+      "Guided booking with live availability",
+      "Daily and weekly revenue overviews",
       "WhatsApp or email reminder workflows",
-      "JWT-secured staff login with role-based access",
-      "Double-booking prevention at database level",
-      "Mobile-optimized for walk-in and phone clients",
+      "Secure staff accounts with access by role",
+      "Availability checks to prevent double bookings",
+      "Mobile access for customers and staff",
     ],
     timeline: "4–8 weeks",
     starts_at: "$1,200",
     best_for: "Tax offices, clinics, salons, tutoring centers, service agencies",
-    cta: "Get a Booking System Quote",
+    cta: "Plan your booking system",
     featured: true,
   },
   {
     icon: TrendingUp,
     index: "02",
     title: "SaaS & Product MVPs",
-    tagline: "Test a product idea with a focused first release.",
-    problem: "A new product needs enough substance to test its core idea without turning the first build into an open-ended feature list.",
-    outcome: "We define the smallest useful release, then build the core user flow, administration, and technical foundation it requires.",
-    proof: "Related work: the school management case study shows a product with distinct roles, data flows, and administrative needs.",
+    tagline: "Give your idea a first release people can use and respond to.",
+    problem: "You have a product in mind. The challenge is deciding what it needs on day one and getting it into users' hands.",
+    outcome: "A focused MVP built around your core idea, with the accounts, billing, and administration it needs to launch.",
+    proof: "Explore the school platform to see how I connect multiple user roles and features within one product.",
     scope: [
-      "Auth system with roles, teams, invites",
+      "User accounts, team roles, and invitations",
       "Stripe subscription billing integration",
-      "Core feature set scoped to validate your hypothesis",
-      "Admin panel for you to manage users & data",
-      "API-first architecture for future mobile app",
-      "Deployment on Railway / Vercel with CI pipeline",
+      "Core features for testing your product idea",
+      "Admin tools to manage users and data",
+      "APIs ready for future integrations",
+      "Deployment and a repeatable release process",
     ],
     timeline: "6–14 weeks",
     starts_at: "$2,500",
     best_for: "Founders, startup studios, businesses spinning out a product",
-    cta: "Scope My MVP",
+    cta: "Plan your first release",
     featured: false,
   },
   {
     icon: LayoutDashboard,
     index: "03",
-    title: "Custom Admin Dashboards & Internal Tools",
-    tagline: "Give your team one workspace for the decisions it makes every day.",
-    problem: "Generic tools can become awkward when a team needs custom approval flows, permissions, or reports.",
-    outcome: "I build a focused internal tool shaped around the team's roles, data, and decisions.",
-    proof: "Related work: the retail, school, and donation case studies include administration and reporting interfaces.",
+    title: "Dashboards & Internal Tools",
+    tagline: "Put the information your team needs within reach.",
+    problem: "Your team has its own way of working. Standard tools can leave approvals, reports, and important context scattered across tabs.",
+    outcome: "A shared workspace with the views, permissions, and reports that help your team manage its day.",
+    proof: "See the retail, school, and donation projects for examples of custom management and reporting tools.",
     scope: [
       "Custom UI built around your team's actual workflow",
       "Multi-role access: admin, manager, viewer",
@@ -71,7 +72,7 @@ const SERVICES = [
     timeline: "3–7 weeks",
     starts_at: "$900",
     best_for: "Operations teams, HR workflows, content pipelines, data-heavy processes",
-    cta: "Build My Dashboard",
+    cta: "Discuss your internal tool",
     featured: false,
   },
 ]
@@ -263,116 +264,7 @@ export default function ServicesPage() {
 
   return (
     <>
-      {/* ── Hero ── */}
-      <section
-        style={{
-          position: "relative",
-          padding: "8rem 1.5rem 5rem",
-          background: "var(--bg)",
-          overflow: "hidden",
-        }}
-      >
-        <div aria-hidden className="bg-dot-grid" style={{ position: "absolute", inset: 0, opacity: 0.35, pointerEvents: "none" }} />
-        <div aria-hidden style={{
-          position: "absolute", top: "20%", left: "5%",
-          width: "clamp(240px, 35vw, 500px)", height: "clamp(240px, 35vw, 500px)",
-          borderRadius: "50%", background: "var(--accent-muted)", filter: "blur(100px)",
-          pointerEvents: "none", animation: "glowPulse 8s ease-in-out infinite",
-        }} />
-
-        <div style={{ maxWidth: 860, margin: "0 auto", position: "relative", zIndex: 1 }}>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: EASE }}
-            style={{
-              fontFamily: "var(--font-mono)", fontSize: "var(--type-meta-size)", fontWeight: 500,
-              letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent-ink)",
-              marginBottom: "1.5rem", display: "flex", alignItems: "center", gap: "0.75rem",
-            }}
-          >
-            <span style={{ display: "inline-block", width: "2rem", height: "1px", background: "var(--accent)" }} />
-            What I Build
-          </motion.p>
-
-          <div style={{ overflow: "hidden", marginBottom: "1.5rem" }}>
-            <motion.h1
-              className="type-page"
-              initial={{ y: "110%" }}
-              animate={{ y: "0%" }}
-              transition={{ duration: 0.9, ease: EASE, delay: 0.1 }}
-              style={{
-                color: "var(--fg)", margin: 0,
-              }}
-            >
-              Software built
-              <br />
-              <span>
-                around the way you work.
-              </span>
-            </motion.h1>
-          </div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: EASE, delay: 0.35 }}
-            style={{
-              fontSize: "clamp(1rem, 2vw, 1.125rem)",
-              color: "var(--fg-muted)", lineHeight: 1.75, maxWidth: "52ch",
-              marginBottom: "2.5rem",
-            }}
-          >
-            I scope and build web applications around the work your team needs to do — from customer-facing flows to the internal tools behind them.
-          </motion.p>
-
-          {/* Repositioned trust indicators */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: EASE, delay: 0.5 }}
-            style={{ display: "flex", flexWrap: "wrap", gap: "0.625rem", marginBottom: "3rem" }}
-          >
-            {[
-              "Direct Collaboration",
-              "Workflow-Led Scope",
-              "From Build to Handoff",
-            ].map((badge) => (
-              <span
-                key={badge}
-                style={{
-                  fontFamily: "var(--font-mono)", fontSize: "var(--type-meta-size)", fontWeight: 500,
-                  color: "var(--accent-ink)", background: "var(--accent-muted)",
-                  border: "1px solid rgba(0,217,166,0.2)",
-                  padding: "0.35rem 0.875rem", borderRadius: 9999, letterSpacing: "0.04em",
-                }}
-              >
-                {badge}
-              </span>
-            ))}
-          </motion.div>
-
-          {/* Qualifier statement */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: EASE, delay: 0.65 }}
-            style={{
-              padding: "1.25rem 1.5rem",
-              borderRadius: "var(--radius-lg)",
-              border: "1px solid var(--border)",
-              background: "var(--bg-card)",
-              display: "flex", gap: "1rem", alignItems: "flex-start",
-              maxWidth: "52ch",
-            }}
-          >
-            <Users size={16} strokeWidth={1.75} style={{ color: "var(--accent-ink)", flexShrink: 0, marginTop: "2px" }} />
-            <p style={{ fontSize: "0.875rem", color: "var(--fg-muted)", lineHeight: 1.65, margin: 0 }}>
-              <strong style={{ color: "var(--fg)", fontWeight: 500 }}>The scope starts with your workflow.</strong> Share the problem and constraints, and I&apos;ll recommend a practical first release.
-            </p>
-          </motion.div>
-        </div>
-      </section>
+      <Services standalone />
 
       {/* ── Services Grid ── */}
       <section
@@ -395,7 +287,7 @@ export default function ServicesPage() {
               }}
             >
               <span style={{ display: "inline-block", width: "2rem", height: "1px", background: "var(--accent)" }} />
-              Three Ways to Work
+              Ways to get started
             </motion.p>
 
             <div style={{ overflow: "hidden" }}>
@@ -408,7 +300,7 @@ export default function ServicesPage() {
                   color: "var(--fg)", margin: "0 0 1rem",
                 }}
               >
-                The right shape for your work.
+              Start with the right build.
               </motion.h2>
             </div>
 
@@ -418,7 +310,7 @@ export default function ServicesPage() {
               transition={{ duration: 0.6, ease: EASE, delay: 0.25 }}
               style={{ fontSize: "1rem", color: "var(--fg-muted)", lineHeight: 1.65, maxWidth: "52ch", margin: 0 }}
             >
-              These are common starting points. Prices and timelines are estimates; final scope follows a conversation about your workflow.
+              These packages cover common development projects. Prices and timelines are estimates; we agree on the scope around your goals before work begins.
             </motion.p>
           </div>
 
@@ -462,7 +354,7 @@ export default function ServicesPage() {
             <h2 className="type-section" style={{
               color: "var(--fg)", margin: "0 0 3rem",
             }}>
-              Direct collaboration, from the first conversation to the handoff.
+              Stay close to the work. See it take shape.
             </h2>
           </motion.div>
 
@@ -483,28 +375,28 @@ export default function ServicesPage() {
           >
             {[
               {
-                label: "You talk to the builder",
-                desc: "No account managers, no project hand-off. The person who scopes your project is the person who builds it.",
+                label: "A direct working relationship",
+                desc: "You work with me on the brief, the build, and the decisions in between.",
               },
               {
-                 label: "A visible build process",
-                 desc: "The work is broken into reviewable steps so assumptions can be corrected before launch.",
+                 label: "Progress you can review",
+                 desc: "Working features give you something concrete to react to throughout the project.",
               },
               {
-                 label: "Clear scope",
-                 desc: "We identify the first release, its dependencies, and the decisions that affect cost and timing.",
+                 label: "Clear expectations",
+                 desc: "We agree on priorities, deliverables, and the decisions that affect timing and budget.",
               },
               {
-                 label: "Engineering for the workflow",
-                 desc: "The data model, access rules, and interface are shaped by how the product will be used.",
+                 label: "Your people in mind",
+                 desc: "Customer journeys and the way your team works shape the interface, features, and access rules.",
               },
               {
-                 label: "Launch planning",
-                 desc: "Deployment, documentation, and any follow-up support are discussed as part of the scope.",
+                 label: "A considered launch",
+                 desc: "We discuss deployment, testing, and any support you need before launch day arrives.",
               },
               {
-                 label: "A usable handoff",
-                 desc: "Access and documentation needs are agreed before the project is delivered.",
+                 label: "A handover your team can use",
+                 desc: "We agree on the access and documentation your team needs to take the product forward.",
               },
             ].map(({ label, desc }) => (
               <div
@@ -550,10 +442,10 @@ export default function ServicesPage() {
           <h2 className="type-section" style={{
             color: "var(--fg)", margin: "0 0 1.25rem",
           }}>
-            Tell me the problem. I&apos;ll suggest a practical next step.
+            Know the goal. Need a plan?
           </h2>
           <p style={{ fontSize: "1rem", color: "var(--fg-muted)", lineHeight: 1.7, marginBottom: "2.5rem", maxWidth: "44ch", margin: "0 auto 2.5rem" }}>
-            Tell me what happens today, what needs to change, and any timing or budget constraints. I&apos;ll reply with a practical next step.
+            Tell me what you want to launch, improve, or automate. We can work out the right starting point, scope, and priorities together.
           </p>
 
           <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center", flexWrap: "wrap" }}>
@@ -570,7 +462,7 @@ export default function ServicesPage() {
                 whileTap={{ scale: 0.97 }}
                 transition={{ duration: 0.2, ease: EASE }}
               >
-                Tell Me About Your Project
+                Discuss your project
                 <ArrowUpRight size={15} strokeWidth={2.5} />
               </motion.span>
             </Link>
@@ -587,7 +479,7 @@ export default function ServicesPage() {
                 whileTap={{ scale: 0.97 }}
                 transition={{ duration: 0.2, ease: EASE }}
               >
-                Explore Case Studies
+                See the work
               </motion.span>
             </Link>
           </div>

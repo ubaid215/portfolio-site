@@ -37,9 +37,9 @@
 @theme {
 
   /* ── Fonts ───────────────────────────────── */
-  --font-display:    "Instrument Serif", Georgia, serif;
-  --font-body:       "Geist", "DM Sans", system-ui, sans-serif;
-  --font-mono:       "Geist Mono", "JetBrains Mono", monospace;
+  --font-display:    var(--font-space-grotesk), system-ui, sans-serif;
+  --font-body:       var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono:       var(--font-geist-mono), monospace;
 
   /* ── Brand Palette ───────────────────────── */
 
@@ -394,7 +394,7 @@ html.lenis body {
 /* Type contract: display = editorial hook; section = precise hierarchy;
    lead/body = reading; meta = navigation and factual detail. */
 :root {
-  --type-display-size: clamp(2.8rem, 7.4vw, 6rem);
+  --type-display-size: clamp(2.45rem, 6.2vw, 5.25rem);
   --type-page-size: clamp(2.7rem, 6.2vw, 5.25rem);
   --type-case-size: clamp(2.25rem, 4.6vw, 4rem);
   --type-section-size: clamp(2rem, 4.2vw, 3.25rem);
@@ -411,7 +411,7 @@ html.lenis body {
 .type-page,
 .type-case-title {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.02;
   letter-spacing: -0.035em;
   text-wrap: balance;
@@ -461,10 +461,10 @@ html.lenis body {
   text-transform: uppercase;
 }
 
-/* Display / Headings — Instrument Serif */
+/* Display / Headings — Space Grotesk */
 h1, h2 {
   font-family: var(--font-display);
-  font-weight: 400; /* Instrument Serif is beautiful at regular weight */
+  font-weight: 500;
   letter-spacing: var(--tracking-tight);
   color: var(--fg);
   line-height: var(--leading-tight);
@@ -496,12 +496,6 @@ p {
   font-size: clamp(1rem, 1.5vw + 0.25rem, 1.25rem);
   color: var(--fg-sub);
   line-height: var(--leading-relaxed);
-}
-
-/* Italic accent phrases — used inside display headings */
-.accent-italic {
-  font-style: italic;
-  color: var(--accent-ink);
 }
 
 /* Monospace / code labels */
@@ -1165,7 +1159,7 @@ html {
       <html lang="en" suppressHydrationWarning>
    
    4. Google Fonts — add to layout.tsx metadata or use next/font:
-      - Instrument Serif: https://fonts.google.com/specimen/Instrument+Serif
+      - Space Grotesk: https://fonts.google.com/specimen/Space+Grotesk
       - Geist: already bundled with Next.js (import from "next/font/local" or "geist")
       - Geist Mono: same as above
    

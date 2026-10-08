@@ -10,25 +10,25 @@ const EASE = [0.16, 1, 0.3, 1] as const
 const VALUES = [
   {
     icon: Package,
-    title: "One Point of Contact",
-    desc: "The person who scopes the work also designs and builds the application.",
+    title: "One person, from idea to launch",
+    desc: "Work directly with me on the decisions, design, and development that bring your project to life.",
   },
   {
     icon: ClipboardList,
-    title: "Clear Decisions",
-    desc: "Workflows, data needs, and trade-offs are mapped before implementation begins.",
+    title: "Your priorities come first",
+    desc: "A clear scope puts time and budget into the features that matter most to your business.",
   },
   {
     icon: Globe,
-    title: "Remote Collaboration",
-    desc: "Based in Pakistan and set up for written updates and work across time zones.",
+    title: "Progress you can see",
+    desc: "Working demos and clear updates give your team a voice throughout the build.",
   },
 ]
 
 const BADGES = [
-  { label: "Open to Projects", color: "var(--accent-ink)", bg: "var(--accent-muted)" },
-  { label: "Direct Collaboration", color: "var(--fg-sub)", bg: "var(--bg-card)" },
-  { label: "Faisalabad, PK 🇵🇰", color: "var(--fg-muted)", bg: "var(--bg-card)" },
+  { label: "Open to projects", color: "var(--accent-ink)", bg: "var(--accent-muted)" },
+  { label: "Working worldwide", color: "var(--fg-sub)", bg: "var(--bg-card)" },
+  { label: "Faisalabad, Pakistan", color: "var(--fg-muted)", bg: "var(--bg-card)" },
 ]
 
 export function About() {
@@ -210,7 +210,7 @@ export function About() {
                 background: "var(--accent)",
               }}
             />
-            About Me
+            The person behind the work
           </motion.p>
 
           <div style={{ overflow: "hidden", marginBottom: "1.5rem" }}>
@@ -224,7 +224,7 @@ export function About() {
                 margin: 0,
               }}
             >
-              A developer who learns the workflow first.
+              Your goals shape what I build.
             </motion.h2>
           </div>
 
@@ -245,9 +245,9 @@ export function About() {
               <span style={{ color: "var(--fg)", fontWeight: 500 }}>
                 Muhammad Ubaidullah
               </span>{" "}
-              — a full stack developer from Faisalabad, Pakistan. I build web
-              applications for teams whose operations have outgrown disconnected
-              tools and manual follow-ups.
+              — an independent full stack developer. I help founders and teams
+              turn their next big idea into a website, a digital product, or a
+              practical AI solution.
             </p>
             <p
               style={{
@@ -257,9 +257,9 @@ export function About() {
                 marginBottom: "1rem",
               }}
             >
-              My work spans retail operations, school administration, restaurant
-              service, and donor management. I start by understanding the people
-              and process, then shape the software around both.
+              My projects span online stores, school platforms, restaurant
+              systems, and donor management. Each starts with the same question:
+              what would make this better for the people using it?
             </p>
             <p
               style={{
@@ -270,7 +270,7 @@ export function About() {
                 fontWeight: 500,
               }}
             >
-              You work directly with me from discovery through delivery.
+              Bring me in for a focused project or to build alongside your team.
             </p>
           </motion.div>
 

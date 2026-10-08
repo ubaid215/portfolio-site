@@ -1,348 +1,134 @@
 "use client"
 
-import { motion, useInView } from "motion/react"
-import { useRef } from "react"
+import { useEffect, useRef, type CSSProperties } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowUpRight } from "lucide-react"
-import { PROJECTS as ALL_PROJECTS, type Project } from "@/lib/projects"
+import { PROJECTS } from "@/lib/projects"
+import { gsap, ScrollTrigger } from "@/lib/scroll-motion"
+import styles from "./FeaturedWork.module.css"
 
-const EASE = [0.16, 1, 0.3, 1] as const
-
-const PROJECTS = ALL_PROJECTS.slice(0, 4)
-
-function ProjectCard({
-  project,
-  index,
-}: {
-  project: Project
-  index: number
-}) {
-  const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once: true, margin: "-60px" })
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 40 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, ease: EASE, delay: index * 0.1 }}
-    >
-      <Link href={`/work/${project.slug}`} style={{ textDecoration: "none", display: "block" }}>
-        <motion.div
-          className="project-card"
-          style={{
-            position: "relative",
-            borderRadius: "var(--radius-lg)",
-            border: "1px solid var(--border)",
-            background: "var(--bg-card)",
-            cursor: "pointer",
-            overflow: "hidden",
-            transition:
-              "border-color 0.3s ease, background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease",
-          }}
-          whileHover={{ y: -4 }}
-          transition={{ duration: 0.3, ease: EASE }}
-        >
-          {/* Left accent bar — reveals on hover */}
-          <div
-            className="project-accent-bar"
-            style={{
-              position: "absolute",
-              left: 0,
-              top: 0,
-              bottom: 0,
-              width: "3px",
-              background: "var(--accent)",
-              borderRadius: "var(--radius-lg) 0 0 var(--radius-lg)",
-              transform: "scaleY(0)",
-              transformOrigin: "bottom",
-              transition: "transform 0.4s cubic-bezier(0.16,1,0.3,1)",
-              zIndex: 2,
-            }}
-          />
-
-          {/* Cover image */}
-          {project.coverImage && (
-            <div
-              style={{
-                position: "relative",
-                width: "100%",
-                aspectRatio: "16/9",
-                background: "var(--bg-sub)",
-                overflow: "hidden",
-              }}
-            >
-              <Image
-                src={project.coverImage}
-                alt={project.title}
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                style={{ objectFit: "cover", objectPosition: "top" }}
-                className="project-cover-img"
-              />
-              {/* Overlay gradient on hover */}
-              <div
-                className="project-cover-overlay"
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background: "linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.45) 100%)",
-                  opacity: 0,
-                  transition: "opacity 0.3s ease",
-                  pointerEvents: "none",
-                }}
-              />
-            </div>
-          )}
-
-          <div style={{ padding: "2rem" }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "flex-start",
-                justifyContent: "space-between",
-                gap: "1rem",
-                marginBottom: "0.875rem",
-              }}
-            >
-              {/* Index */}
-              <span
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--type-meta-size)",
-                  color: "var(--brass-ink)",
-                  letterSpacing: "0.08em",
-                  fontWeight: 500,
-                  flexShrink: 0,
-                  paddingTop: "2px",
-                }}
-              >
-                {project.index}
-              </span>
-
-              {/* Title + arrow */}
-              <div style={{ flex: 1 }}>
-                <h3
-                  className="type-card-title"
-                  style={{
-                    color: "var(--fg)",
-                    margin: "0 0 0.5rem",
-                  }}
-                >
-                  {project.title}
-                </h3>
-                <p
-                  style={{
-                    fontSize: "0.875rem",
-                    color: "var(--fg-muted)",
-                    lineHeight: 1.65,
-                    margin: 0,
-                  }}
-                >
-                  {project.shortDesc}
-                </p>
-              </div>
-
-              {/* Arrow icon */}
-              <motion.div
-                className="project-arrow"
-                style={{
-                  color: "var(--fg-faint)",
-                  flexShrink: 0,
-                  transition: "color 0.2s ease, transform 0.2s ease",
-                }}
-              >
-                <ArrowUpRight size={18} strokeWidth={1.5} />
-              </motion.div>
-            </div>
-
-            {/* Meta row */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                flexWrap: "wrap",
-                gap: "0.5rem",
-                marginTop: "1.25rem",
-                paddingTop: "1.25rem",
-                borderTop: "1px solid var(--border)",
-              }}
-            >
-              {/* Stack tags */}
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.375rem" }}>
-                {project.stack.slice(0, 3).map((tag) => (
-                  <span
-                    key={tag}
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "var(--type-meta-size)",
-                      color: "var(--accent-ink)",
-                      background: "var(--accent-muted)",
-                      border: "1px solid rgba(0,168,128,0.20)",
-                      padding: "0.2rem 0.55rem",
-                      borderRadius: 9999,
-                      letterSpacing: "0.03em",
-                    }}
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-            </div>
-          </div>
-        </motion.div>
-      </Link>
-    </motion.div>
-  )
+const FEATURED = PROJECTS.slice(0, 4)
+const PROJECT_FOCUS: Record<string, string[]> = {
+  "ecommerce-platform": ["Storefront", "Inventory", "Custom CMS"],
+  "school-management": ["Connected portals", "Attendance", "Fee management"],
+  "restaurant-pos": ["Ordering", "Kitchen workflow", "Reporting"],
+  "donation-dashboard": ["Donor CRM", "WhatsApp API", "Automated messaging"],
 }
 
 export function FeaturedWork() {
-  const headingRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(headingRef, { once: true, margin: "-80px" })
+  const sectionRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+    const media = gsap.matchMedia()
+
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      gsap.fromTo("[data-work-heading]", { y: 28, opacity: 0.45 }, {
+        y: 0, opacity: 1, ease: "none",
+        scrollTrigger: { trigger: section, start: "top 90%", end: "top 55%", scrub: 0.7 },
+      })
+
+      section.querySelectorAll<HTMLElement>("[data-project-card]").forEach((card) => {
+        gsap.fromTo(card.querySelector("[data-project-link]"), { y: 48, opacity: 0.5 }, {
+          y: 0, opacity: 1, ease: "none",
+          scrollTrigger: { trigger: card, start: "top 95%", end: "top 60%", scrub: 0.65 },
+        })
+      })
+    }, section)
+
+    media.add("(min-width: 900px) and (pointer: fine) and (prefers-reduced-motion: no-preference)", () => {
+      section.querySelectorAll<HTMLElement>("[data-project-card]").forEach((card, index) => {
+        gsap.fromTo(card.querySelector("[data-project-image]"), {
+          yPercent: 8, rotate: index % 2 === 0 ? -4 : 4,
+        }, {
+          yPercent: -8, rotate: index % 2 === 0 ? -1 : 1, ease: "none",
+          scrollTrigger: {
+            trigger: card, start: "top bottom", end: "bottom top",
+            scrub: 0.9, invalidateOnRefresh: true,
+          },
+        })
+      })
+    }, section)
+
+    let disposed = false
+    void document.fonts.ready.then(() => { if (!disposed) ScrollTrigger.refresh() })
+    return () => { disposed = true; media.revert() }
+  }, [])
 
   return (
-    <section
-      id="work"
-      style={{
-        padding: "clamp(4rem, 10vw, 7rem) 1.5rem",
-        background: "var(--bg)",
-      }}
-    >
-      <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-        {/* Heading */}
-        <div ref={headingRef} style={{ marginBottom: "3.5rem" }}>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, ease: EASE }}
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--type-meta-size)",
-              fontWeight: 500,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--accent-ink)",
-              marginBottom: "1rem",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.75rem",
-            }}
-          >
-            <span
-              style={{
-                display: "inline-block",
-                width: "2rem",
-                height: "1px",
-                background: "var(--accent)",
-              }}
-            />
-            Featured Work
-          </motion.p>
-
-          <div style={{ overflow: "hidden" }}>
-            <motion.h2
-              className="type-section"
-              initial={{ y: "105%" }}
-              animate={isInView ? { y: "0%" } : {}}
-              transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
-              style={{
-                color: "var(--fg)",
-                margin: "0 0 1rem",
-              }}
-            >
-              Selected Work
-            </motion.h2>
+    <section id="work" ref={sectionRef} className={styles.section} aria-labelledby="work-title">
+      <div className={styles.container}>
+        <div className={styles.headingRow} data-work-heading>
+          <h2 id="work-title" className={styles.heading}>
+            Selected work.<br />Real workflows.
+          </h2>
+          <div className={styles.headingAside}>
+            <p>
+              A closer look at the interfaces, integrations, and product decisions
+              that bring a business workflow together.
+            </p>
+            <Link href="/work" className={styles.allWork}>
+              Explore all projects <ArrowUpRight size={18} strokeWidth={1.6} aria-hidden="true" />
+            </Link>
           </div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, ease: EASE, delay: 0.25 }}
-            style={{
-              fontSize: "1rem",
-              color: "var(--fg-muted)",
-              lineHeight: 1.65,
-              maxWidth: "48ch",
-              margin: 0,
-            }}
-          >
-            A closer look at the workflows, product decisions, and interfaces behind selected projects.
-          </motion.p>
         </div>
 
-        {/* Grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 480px), 1fr))",
-            gap: "1.25rem",
-          }}
-        >
-          {PROJECTS.map((project, i) => (
-            <ProjectCard key={project.index} project={project} index={i} />
+        <div className={styles.projectGrid}>
+          {FEATURED.map((project) => (
+            <article className={styles.projectCard} key={project.slug} data-project-card>
+              <Link
+                className={styles.projectLink}
+                href={`/work/${project.slug}`}
+                aria-label={`View ${project.title} case study`}
+                style={{ "--project-surface": project.mockupColor } as CSSProperties}
+                data-project-link
+              >
+                <div className={styles.projectMedia}>
+                  <div className={styles.tags} aria-hidden="true">
+                    {PROJECT_FOCUS[project.slug].map((tag) => <span key={tag}>{tag}</span>)}
+                  </div>
+                  <div className={styles.productPlane} data-project-image>
+                    <div className={styles.imageZoom}>
+                      <Image
+                        src={project.coverImage}
+                        alt={`${project.title} interface`}
+                        fill
+                        sizes="(max-width: 700px) 92vw, (max-width: 1000px) 55vw, 48vw"
+                        className={styles.coverImage}
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.mediaCaption} aria-hidden="true">
+                    <span>{project.categories.includes("SaaS") ? "Web application" : "Custom development"}</span>
+                    <span>{project.year}</span>
+                  </div>
+                </div>
+
+                <div className={styles.projectCopy}>
+                  <div className={styles.projectTitleRow}>
+                    <h3>{project.title}</h3>
+                    <span className={styles.projectArrow} aria-hidden="true">
+                      <ArrowUpRight size={23} strokeWidth={1.5} />
+                    </span>
+                  </div>
+                  <p>{project.shortDesc}</p>
+                  <span className={styles.caseLink} aria-hidden="true">Explore the case study</span>
+                </div>
+              </Link>
+            </article>
           ))}
         </div>
 
-        {/* View all link */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-          style={{
-            marginTop: "2.5rem",
-            textAlign: "center",
-          }}
-        >
-          <Link href="/work" style={{ textDecoration: "none" }}>
-            <motion.span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.4rem",
-                fontSize: "0.9375rem",
-                fontWeight: 500,
-                color: "var(--fg-muted)",
-                borderBottom: "1px solid var(--border-sub)",
-                paddingBottom: "2px",
-                cursor: "pointer",
-                transition: "color 0.2s ease, border-color 0.2s ease",
-              }}
-              whileHover={{ color: "var(--accent-ink)" }}
-            >
-              View all projects
-              <ArrowUpRight size={15} strokeWidth={2} />
-            </motion.span>
+        <div className={styles.closing}>
+          <p>Have a different challenge in mind?</p>
+          <Link href="/contact">
+            Let&apos;s find the right approach
+            <ArrowUpRight size={18} strokeWidth={1.6} aria-hidden="true" />
           </Link>
-        </motion.div>
+        </div>
       </div>
-
-      <style>{`
-        .project-card:hover {
-          border-color: var(--border-strong);
-          background: var(--bg-card-hover);
-          box-shadow: var(--shadow-lg);
-        }
-        .project-card:hover .project-accent-bar {
-          transform: scaleY(1);
-        }
-        .project-card:hover .project-arrow {
-          color: var(--accent-ink);
-          transform: translate(2px, -2px);
-        }
-        .project-card:hover .project-cover-overlay {
-          opacity: 1 !important;
-        }
-        .project-cover-img {
-          transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
-        }
-        .project-card:hover .project-cover-img {
-          transform: scale(1.03);
-        }
-      `}</style>
     </section>
   )
 }
