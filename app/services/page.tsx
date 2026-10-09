@@ -1,509 +1,193 @@
-"use client"
-
-import { motion, useInView } from "motion/react"
-import { useRef } from "react"
+import Image from "next/image"
 import Link from "next/link"
-import { Services } from "@/components/home/Services"
-import { ArrowUpRight, TrendingUp, LayoutDashboard, Layers, Clock } from "lucide-react"
+import { ArrowDown, ArrowRight, ArrowUpRight, Check, ChevronDown, FileText, Mail, Search, Sparkles, UserRound } from "lucide-react"
+import { ServicesMotion } from "@/components/services/ServicesMotion"
+import { SERVICE_OFFERINGS } from "@/lib/services"
+import { PROJECTS } from "@/lib/projects"
+import styles from "./page.module.css"
 
-const EASE = [0.16, 1, 0.3, 1] as const
-
-const SERVICES = [
-  {
-    icon: Layers,
-    index: "01",
-    title: "Booking & Operations Systems",
-    tagline: "Make booking easier for customers and the day easier for your team.",
-    problem: "When bookings, payments, and follow-ups live in separate tools, your team spends time piecing the day together.",
-    outcome: "A booking experience for your customers and one workspace for your team to manage schedules, payments, and reminders.",
-    proof: "See the school and restaurant projects for examples of connected tools for staff, customers, and administrators.",
-    scope: [
-      "Guided booking with live availability",
-      "Daily and weekly revenue overviews",
-      "WhatsApp or email reminder workflows",
-      "Secure staff accounts with access by role",
-      "Availability checks to prevent double bookings",
-      "Mobile access for customers and staff",
-    ],
-    timeline: "4–8 weeks",
-    starts_at: "$1,200",
-    best_for: "Tax offices, clinics, salons, tutoring centers, service agencies",
-    cta: "Plan your booking system",
-    featured: true,
-  },
-  {
-    icon: TrendingUp,
-    index: "02",
-    title: "SaaS & Product MVPs",
-    tagline: "Give your idea a first release people can use and respond to.",
-    problem: "You have a product in mind. The challenge is deciding what it needs on day one and getting it into users' hands.",
-    outcome: "A focused MVP built around your core idea, with the accounts, billing, and administration it needs to launch.",
-    proof: "Explore the school platform to see how I connect multiple user roles and features within one product.",
-    scope: [
-      "User accounts, team roles, and invitations",
-      "Stripe subscription billing integration",
-      "Core features for testing your product idea",
-      "Admin tools to manage users and data",
-      "APIs ready for future integrations",
-      "Deployment and a repeatable release process",
-    ],
-    timeline: "6–14 weeks",
-    starts_at: "$2,500",
-    best_for: "Founders, startup studios, businesses spinning out a product",
-    cta: "Plan your first release",
-    featured: false,
-  },
-  {
-    icon: LayoutDashboard,
-    index: "03",
-    title: "Dashboards & Internal Tools",
-    tagline: "Put the information your team needs within reach.",
-    problem: "Your team has its own way of working. Standard tools can leave approvals, reports, and important context scattered across tabs.",
-    outcome: "A shared workspace with the views, permissions, and reports that help your team manage its day.",
-    proof: "See the retail, school, and donation projects for examples of custom management and reporting tools.",
-    scope: [
-      "Custom UI built around your team's actual workflow",
-      "Multi-role access: admin, manager, viewer",
-      "Data tables with search, filter, bulk actions",
-      "Charts and KPI snapshots for decision-making",
-      "Notification system (email / in-app alerts)",
-      "CSV/PDF export for reporting",
-    ],
-    timeline: "3–7 weeks",
-    starts_at: "$900",
-    best_for: "Operations teams, HR workflows, content pipelines, data-heavy processes",
-    cta: "Discuss your internal tool",
-    featured: false,
-  },
+const CHAPTERS = [
+  { id: "build", name: "Build", title: "A first impression. A working product.", description: "Give your customers a clear experience and your team the software behind it. From a business website to the product you want to launch.", services: [SERVICE_OFFERINGS[0], SERVICE_OFFERINGS[1]], link: "/work", cta: "Explore the work" },
+  { id: "automate", name: "Automate", title: "Connect your tools. Give your team time.", description: "Use AI inside a useful workflow. Connect the repetitive steps, keep the context moving, and make room for your team to review the decisions.", services: [SERVICE_OFFERINGS[2], SERVICE_OFFERINGS[3]], link: "#service-scope", cta: "Explore AI capabilities" },
+  { id: "grow", name: "Grow", title: "Be found. Give people a reason to stay.", description: "Bring search, content, and the experience on your website into the same conversation. Help the right people understand your offer and take the next step.", services: [SERVICE_OFFERINGS[4], SERVICE_OFFERINGS[5]], link: "#service-scope", cta: "Explore growth capabilities" },
 ]
 
-function ServiceCard({ service, index }: { service: typeof SERVICES[0]; index: number }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once: true, margin: "-60px" })
+const PROCESS = [
+  { title: "Understand", detail: "Your goals, audience, and the way your business works.", deliverable: "A shared brief" },
+  { title: "Shape", detail: "Priorities, scope, and an experience we can agree on.", deliverable: "A practical plan" },
+  { title: "Build & review", detail: "Working features, useful feedback, and visible progress.", deliverable: "Demos you can review" },
+  { title: "Launch & hand over", detail: "Deployment, ownership, documentation, and the next step.", deliverable: "A considered release" },
+]
 
+const BUDGETS = [
+  { name: "Dashboards & internal tools", price: "From $900", timing: "3–7 weeks" },
+  { name: "Booking & operations systems", price: "From $1,200", timing: "4–8 weeks" },
+  { name: "SaaS & product MVPs", price: "From $2,500", timing: "6–14 weeks" },
+  { name: "Websites, AI & digital growth", price: "Quoted by scope", timing: "Agreed around the brief" },
+]
+
+const FAQS = [
+  { question: "What do I need before we start?", answer: "A goal, a challenge, or a rough idea is enough to start the conversation. I’ll help you work through the people using the product, the priorities, and what belongs in the first version." },
+  { question: "Can we start small and build from there?", answer: "Yes. We can agree on a focused first release, review what people need, and plan the next steps around what we learn. Scope and priorities stay part of the conversation as the product grows." },
+  { question: "How do you decide where AI belongs?", answer: "We look at the task, the information it needs, and what a useful result looks like. Before connecting a model, we discuss the data, providers, access, and the points where your team should review or take over." },
+  { question: "Can you work with our existing team or product?", answer: "I can collaborate on an existing product or take responsibility for a focused build. We’ll discuss the role, the codebase, and the way we’ll communicate before deciding how the work fits together." },
+  { question: "What happens after launch?", answer: "We agree on ownership, documentation, and any ongoing support before launch. For SEO, marketing, or an evolving product, we can also discuss a continued working arrangement around a clear set of priorities." },
+]
+
+function RollingText({ text }: { text: string }) {
+  return <span className={styles.roll}><span>{text}</span><span aria-hidden="true">{text}</span></span>
+}
+
+function TextLink({ href, text }: { href: string; text: string }) {
+  return <Link href={href} className={styles.textLink}><RollingText text={text} /><ArrowUpRight size={18} aria-hidden="true" /></Link>
+}
+
+function HeadingLine({ children }: { children: string }) {
+  return <span className={styles.headingLine}><span data-services-line>{children}</span></span>
+}
+
+function BuildVisual() {
+  const project = PROJECTS.find((item) => item.slug === "ecommerce-platform")!
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 40 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, ease: EASE, delay: index * 0.08 }}
-      style={{
-        padding: "2.25rem",
-        borderRadius: "var(--radius-xl)",
-        border: service.featured ? "1px solid rgba(0,217,166,0.35)" : "1px solid var(--border)",
-        background: service.featured ? "linear-gradient(135deg, rgba(0,217,166,0.06) 0%, var(--bg-card) 60%)" : "var(--bg-card)",
-        position: "relative",
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-        gap: "1.5rem",
-      }}
-      className="service-card"
-    >
-      {/* Top accent bar */}
-      <div
-        className="service-glow"
-        aria-hidden
-        style={{
-          position: "absolute", top: 0, left: 0, right: 0,
-          height: "2px", background: "var(--accent)",
-          transform: service.featured ? "scaleX(1)" : "scaleX(0)",
-          transformOrigin: "left",
-          transition: "transform 0.4s cubic-bezier(0.16,1,0.3,1)",
-        }}
-      />
+    <figure className={styles.productVisual}>
+      <div className={styles.visualBar}><span className={styles.windowDots} aria-hidden="true"><i /><i /><i /></span><span>Commerce, connected</span></div>
+      <div className={styles.productImage}><Image src={project.coverImage} alt="The retail platform’s inventory and product management interface" fill sizes="(max-width: 999px) 90vw, 35vw" /></div>
+      <figcaption className={styles.visualCaption}><span>Storefront, products, orders & reporting</span><Link href="/work/ecommerce-platform">View case study<ArrowUpRight size={16} aria-hidden="true" /></Link></figcaption>
+    </figure>
+  )
+}
 
-      {/* Featured badge */}
-      {service.featured && (
-        <div style={{
-          position: "absolute", top: "1.25rem", right: "1.25rem",
-          fontFamily: "var(--font-mono)", fontSize: "var(--type-meta-size)", fontWeight: 600,
-          letterSpacing: "0.1em", textTransform: "uppercase",
-          color: "var(--accent-text)", background: "var(--accent)",
-          padding: "0.25rem 0.625rem", borderRadius: 9999,
-        }}>
-          Featured
-        </div>
-      )}
+function AutomationVisual() {
+  const steps = [
+    { icon: Mail, title: "An enquiry arrives", detail: "A form, inbox, or connected tool" },
+    { icon: FileText, title: "Bring the context together", detail: "Relevant information from your tools" },
+    { icon: Sparkles, title: "AI prepares a useful draft", detail: "A summary, answer, or next action" },
+    { icon: UserRound, title: "Your team reviews", detail: "A clear point to approve or take over" },
+    { icon: Check, title: "The workflow continues", detail: "An update, follow-up, or handoff" },
+  ]
+  return (
+    <figure className={styles.automationVisual}>
+      <figcaption className={styles.diagramCaption}>Example: an enquiry follow-up</figcaption>
+      <ol className={styles.flowSteps}>
+        {steps.map(({ icon: Icon, title, detail }) => <li key={title}><span className={styles.flowIcon}><Icon size={17} aria-hidden="true" /></span><div><p>{title}</p><span>{detail}</span></div></li>)}
+      </ol>
+      <div className={styles.diagramTools}>OpenAI API / Claude API / n8n / LangChain</div>
+    </figure>
+  )
+}
 
-      {/* Header */}
-      <div style={{ display: "flex", gap: "1rem", alignItems: "flex-start" }}>
-        <div style={{
-          width: 44, height: 44, borderRadius: "var(--radius-md)",
-          background: "var(--accent-muted)", border: "1px solid rgba(0,217,166,0.2)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          color: "var(--accent-ink)", flexShrink: 0,
-        }}>
-          <service.icon size={20} strokeWidth={1.75} />
-        </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: "var(--type-meta-size)", color: "var(--accent-ink)", letterSpacing: "0.08em", display: "block", marginBottom: "0.2rem" }}>
-            {service.index}
-          </span>
-          <h3 className="type-card-title" style={{ color: "var(--fg)", margin: "0 0 0.3rem" }}>
-            {service.title}
-          </h3>
-          <p style={{ fontSize: "0.9375rem", color: "var(--fg-muted)", lineHeight: 1.5, margin: 0 }}>
-            {service.tagline}
-          </p>
-        </div>
+function GrowthVisual() {
+  return (
+    <figure className={styles.growthVisual}>
+      <figcaption className={styles.diagramCaption}>An example discovery journey</figcaption>
+      <div className={styles.searchQuery}><Search size={17} aria-hidden="true" /><span>A customer looks for your service</span></div>
+      <div className={styles.searchResult}>
+        <span className={styles.resultBrand}>Your business</span><span className={styles.resultUrl}>A page built around the right question</span>
+        <h3>The service your customer needs.</h3><p>Clear answers. Useful context. An easy way to get in touch.</p>
+        <span className={styles.resultAction}>Make an enquiry<ArrowUpRight size={15} aria-hidden="true" /></span>
       </div>
-
-      {/* Problem → Outcome */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
-        <div style={{
-          padding: "0.875rem 1rem",
-          borderRadius: "var(--radius-md)",
-          background: "var(--bg-sub)",
-          border: "1px solid var(--border-sub)",
-        }}>
-          <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--type-meta-size)", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--fg-sub)", marginBottom: "0.375rem" }}>
-            The Problem
-          </p>
-          <p style={{ fontSize: "0.9375rem", color: "var(--fg-muted)", lineHeight: 1.6, margin: 0 }}>
-            {service.problem}
-          </p>
-        </div>
-
-        <div style={{
-          padding: "0.875rem 1rem",
-          borderRadius: "var(--radius-md)",
-          background: "var(--accent-muted)",
-          border: "1px solid rgba(0,217,166,0.15)",
-        }}>
-          <p style={{ fontFamily: "var(--font-mono)", fontSize: "var(--type-meta-size)", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--accent-ink)", marginBottom: "0.375rem" }}>
-            What You Get
-          </p>
-          <p style={{ fontSize: "0.9375rem", color: "var(--fg-muted)", lineHeight: 1.6, margin: 0 }}>
-            {service.outcome}
-          </p>
-        </div>
-      </div>
-
-      {/* Proof */}
-      <div style={{ display: "flex", gap: "0.5rem", alignItems: "flex-start" }}>
-        <div style={{ width: 3, flexShrink: 0, borderRadius: 9999, background: "var(--accent)", marginTop: "3px", alignSelf: "stretch", opacity: 0.5 }} />
-        <p style={{ fontSize: "0.875rem", color: "var(--fg-muted)", lineHeight: 1.55, margin: 0 }}>
-          {service.proof}
-        </p>
-      </div>
-
-      {/* Scope */}
-      <div>
-        <p style={{
-          fontFamily: "var(--font-mono)", fontSize: "var(--type-meta-size)", fontWeight: 500,
-          letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--fg-faint)",
-          marginBottom: "0.625rem",
-        }}>
-          Scope
-        </p>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.4rem 1rem" }}>
-          {service.scope.map((item) => (
-            <div key={item} style={{ display: "flex", gap: "0.5rem", alignItems: "flex-start" }}>
-              <span style={{ color: "var(--accent-ink)", flexShrink: 0, fontSize: "var(--type-meta-size)", marginTop: "1px", lineHeight: 1.6 }}>→</span>
-              <span style={{ fontSize: "0.875rem", color: "var(--fg-sub)", lineHeight: 1.55 }}>{item}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Meta row */}
-      <div style={{
-        display: "flex", flexWrap: "wrap", gap: "0.75rem", alignItems: "center",
-        padding: "0.875rem 1rem", borderRadius: "var(--radius-md)",
-        background: "var(--bg-sub)", border: "1px solid var(--border)",
-      }}>
-        <div style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
-          <Clock size={12} strokeWidth={1.75} style={{ color: "var(--fg-faint)" }} />
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: "var(--type-meta-size)", color: "var(--fg-muted)" }}>
-            {service.timeline}
-          </span>
-        </div>
-        <span style={{ color: "var(--border-sub)", fontSize: "var(--type-meta-size)" }}>·</span>
-        <div style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: "var(--type-meta-size)", color: "var(--fg-faint)" }}>Starting from</span>
-          <span style={{
-            fontFamily: "var(--font-mono)", fontSize: "var(--type-meta-size)", fontWeight: 700,
-            color: "var(--accent-ink)", letterSpacing: "0.02em",
-          }}>
-            {service.starts_at}
-          </span>
-        </div>
-        <span style={{ color: "var(--border-sub)", fontSize: "var(--type-meta-size)" }}>·</span>
-        <span style={{ fontSize: "var(--type-meta-size)", color: "var(--fg-faint)" }}>
-          <span style={{ color: "var(--fg-muted)" }}>{service.best_for}</span>
-        </span>
-      </div>
-
-      {/* CTA */}
-      <Link href="/contact" style={{ textDecoration: "none" }}>
-        <motion.span
-          className="service-cta"
-          style={{
-            display: "inline-flex", alignItems: "center", gap: "0.4rem",
-            padding: "0.75rem 1.5rem", borderRadius: 9999,
-            border: "1px solid var(--border-sub)", background: "transparent",
-            color: "var(--fg-sub)", fontSize: "0.875rem", fontWeight: 500, cursor: "pointer",
-            transition: "border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease",
-          }}
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          transition={{ duration: 0.2, ease: EASE }}
-        >
-          {service.cta}
-          <ArrowUpRight size={14} strokeWidth={2} />
-        </motion.span>
-      </Link>
-    </motion.div>
+      <ol className={styles.growthJourney}><li>Discovery</li><li>A useful page</li><li>A conversation</li></ol>
+      <p className={styles.growthNote}>Search, content, and the customer journey working together.</p>
+    </figure>
   )
 }
 
 export default function ServicesPage() {
-  const headingRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(headingRef, { once: true, margin: "-80px" })
-
   return (
-    <>
-      <Services standalone />
-
-      {/* ── Services Grid ── */}
-      <section
-        style={{
-          padding: "clamp(4rem, 10vw, 7rem) 1.5rem",
-          background: "var(--bg-sub)",
-          borderTop: "1px solid var(--border)",
-        }}
-      >
-        <div ref={headingRef} style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div style={{ marginBottom: "3.5rem" }}>
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, ease: EASE }}
-              style={{
-                fontFamily: "var(--font-mono)", fontSize: "var(--type-meta-size)", fontWeight: 500,
-                letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent-ink)",
-                marginBottom: "1rem", display: "flex", alignItems: "center", gap: "0.75rem",
-              }}
-            >
-              <span style={{ display: "inline-block", width: "2rem", height: "1px", background: "var(--accent)" }} />
-              Ways to get started
-            </motion.p>
-
-            <div style={{ overflow: "hidden" }}>
-              <motion.h2
-                className="type-section"
-                initial={{ y: "105%" }}
-                animate={isInView ? { y: "0%" } : {}}
-                transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
-                style={{
-                  color: "var(--fg)", margin: "0 0 1rem",
-                }}
-              >
-              Start with the right build.
-              </motion.h2>
-            </div>
-
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, ease: EASE, delay: 0.25 }}
-              style={{ fontSize: "1rem", color: "var(--fg-muted)", lineHeight: 1.65, maxWidth: "52ch", margin: 0 }}
-            >
-              These packages cover common development projects. Prices and timelines are estimates; we agree on the scope around your goals before work begins.
-            </motion.p>
-          </div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 500px), 1fr))",
-              gap: "1.25rem",
-            }}
-          >
-            {SERVICES.map((service, i) => (
-              <ServiceCard key={service.index} service={service} index={i} />
-            ))}
+    <ServicesMotion className={styles.page}>
+      <section className={`${styles.container} ${styles.hero}`} aria-labelledby="services-heading">
+        <div className={styles.heroCopy}>
+          <p className={styles.heroNote}>A development partner for your next move.</p>
+          <h1 id="services-heading" className={styles.heroHeading} aria-label="Build what your business needs next.">
+            <span className={styles.heroLine}><span>Build what</span></span><span className={styles.heroLine}><span>your business</span></span><span className={styles.heroLine}><span>needs next.</span></span>
+          </h1>
+          <p className={styles.heroLead}>From your first impression to the systems behind it. I build websites, software, and practical AI workflows—and help people find what you offer.</p>
+          <div className={styles.heroActions}>
+            <Link href="/contact" className={styles.primaryAction}><RollingText text="Discuss your project" /><ArrowUpRight size={18} aria-hidden="true" /></Link>
+            <Link href="#services" className={styles.exploreLink}>Explore the services<ArrowDown size={17} aria-hidden="true" /></Link>
           </div>
         </div>
+        <div className={styles.heroVisual} data-services-hero-visual>
+          <svg className={styles.heroConnection} viewBox="0 0 600 600" fill="none" aria-hidden="true"><path d="M80 120 H370 Q450 120 450 200 V385 Q450 460 365 460 H130" /></svg>
+          <figure className={styles.heroProduct} data-services-hero-card>
+            <div className={styles.heroProductLabel}><span>Commerce</span><span>Products, stock & orders</span></div>
+            <div className={styles.heroMainImage}><Image src="/images/projects/ecommerce-platform/cover.png" alt="A real product management interface from the e-commerce platform" fill loading="eager" sizes="(max-width: 999px) 85vw, 42vw" /></div>
+          </figure>
+          <figure className={styles.heroAccounting} data-services-hero-card>
+            <div className={styles.heroProductLabel}><span>Finaccont</span><span>Accounting software</span></div>
+            <div className={styles.heroSmallImage}><Image src="/images/projects/finaccont/cover.png" alt="Finaccont accounting software interface" fill loading="eager" sizes="(max-width: 999px) 60vw, 25vw" /></div>
+          </figure>
+          <p className={styles.heroVisualNote}>Real interfaces. Connected business workflows.</p>
+        </div>
+        <div className={styles.heroRail}><p>For founders, business owners, and product teams.</p><span>Build. Automate. Grow.</span></div>
       </section>
 
-      {/* ── Why Me / Differentiators ── */}
-      <section
-        style={{
-          padding: "clamp(4rem, 10vw, 6rem) 1.5rem",
-          background: "var(--bg)",
-          borderTop: "1px solid var(--border)",
-        }}
-      >
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: EASE }}
-          >
-            <p style={{
-              fontFamily: "var(--font-mono)", fontSize: "var(--type-meta-size)", fontWeight: 500,
-              letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent-ink)",
-              marginBottom: "1rem", display: "flex", alignItems: "center", gap: "0.75rem",
-            }}>
-              <span style={{ display: "inline-block", width: "2rem", height: "1px", background: "var(--accent)" }} />
-              Working Together
-            </p>
-            <h2 className="type-section" style={{
-              color: "var(--fg)", margin: "0 0 3rem",
-            }}>
-              Stay close to the work. See it take shape.
-            </h2>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: EASE, delay: 0.1 }}
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 240px), 1fr))",
-              gap: "1px",
-              background: "var(--border)",
-              borderRadius: "var(--radius-xl)",
-              overflow: "hidden",
-              border: "1px solid var(--border)",
-            }}
-          >
-            {[
-              {
-                label: "A direct working relationship",
-                desc: "You work with me on the brief, the build, and the decisions in between.",
-              },
-              {
-                 label: "Progress you can review",
-                 desc: "Working features give you something concrete to react to throughout the project.",
-              },
-              {
-                 label: "Clear expectations",
-                 desc: "We agree on priorities, deliverables, and the decisions that affect timing and budget.",
-              },
-              {
-                 label: "Your people in mind",
-                 desc: "Customer journeys and the way your team works shape the interface, features, and access rules.",
-              },
-              {
-                 label: "A considered launch",
-                 desc: "We discuss deployment, testing, and any support you need before launch day arrives.",
-              },
-              {
-                 label: "A handover your team can use",
-                 desc: "We agree on the access and documentation your team needs to take the product forward.",
-              },
-            ].map(({ label, desc }) => (
-              <div
-                key={label}
-                style={{ padding: "1.75rem 2rem", background: "var(--bg-card)" }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.625rem" }}>
-                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--accent)" }} />
-                  <h3 style={{ fontSize: "0.9375rem", fontWeight: 600, color: "var(--fg)", margin: 0 }}>{label}</h3>
-                </div>
-                <p style={{ fontSize: "0.9375rem", color: "var(--fg-muted)", lineHeight: 1.6, margin: 0 }}>{desc}</p>
+      <section id="services" className={`${styles.container} ${styles.chapters}`} aria-label="Build, Automate, and Grow services" data-services-stage>
+        <div className={styles.chapterNav}>
+          <div className={styles.chapterButtons} role="group" aria-label="Service chapters">
+            {CHAPTERS.map((chapter) => <button key={chapter.id} type="button" data-services-chapter-button aria-controls={`services-${chapter.id}`}><span>{chapter.name}</span><ArrowRight size={19} aria-hidden="true" /></button>)}
+          </div>
+          <p className={styles.chapterHint}>The right pieces for what comes next.</p>
+          <div className={styles.chapterTrack} aria-hidden="true"><span data-services-progress /></div>
+        </div>
+        <div className={styles.chapterPanels}>
+          {CHAPTERS.map((chapter) => (
+            <article key={chapter.id} id={`services-${chapter.id}`} className={styles.chapterPanel} data-services-panel aria-labelledby={`${chapter.id}-heading`}>
+              <div className={styles.chapterCopy}>
+                <h2 id={`${chapter.id}-heading`}>{chapter.title}</h2><p className={styles.chapterLead}>{chapter.description}</p>
+                <div className={styles.chapterOffers}>{chapter.services.map((service) => <div key={service.id}><h3>{service.title}</h3><p>{service.deliverables.join(" / ")}</p></div>)}</div>
+                <TextLink href={chapter.link} text={chapter.cta} />
               </div>
-            ))}
-          </motion.div>
+              {chapter.id === "build" ? <BuildVisual /> : chapter.id === "automate" ? <AutomationVisual /> : <GrowthVisual />}
+            </article>
+          ))}
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section
-        style={{
-          padding: "clamp(4rem, 10vw, 6rem) 1.5rem",
-          background: "var(--bg-sub)",
-          borderTop: "1px solid var(--border)",
-          position: "relative",
-          overflow: "hidden",
-          textAlign: "center",
-        }}
-      >
-        <div aria-hidden style={{
-          position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-          width: "50vw", height: "50vw", maxWidth: 600, maxHeight: 600,
-          borderRadius: "50%", background: "var(--accent-muted)", filter: "blur(100px)",
-          opacity: 0.6, pointerEvents: "none",
-        }} />
-
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: EASE }}
-          style={{ position: "relative", zIndex: 1, maxWidth: 680, margin: "0 auto" }}
-        >
-          <h2 className="type-section" style={{
-            color: "var(--fg)", margin: "0 0 1.25rem",
-          }}>
-            Know the goal. Need a plan?
-          </h2>
-          <p style={{ fontSize: "1rem", color: "var(--fg-muted)", lineHeight: 1.7, marginBottom: "2.5rem", maxWidth: "44ch", margin: "0 auto 2.5rem" }}>
-            Tell me what you want to launch, improve, or automate. We can work out the right starting point, scope, and priorities together.
-          </p>
-
-          <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center", flexWrap: "wrap" }}>
-            <Link href="/contact" style={{ textDecoration: "none" }}>
-              <motion.span
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: "0.45rem",
-                  padding: "0.9375rem 2.25rem", borderRadius: 9999,
-                  background: "var(--accent)", color: "var(--accent-text)",
-                  fontSize: "0.9375rem", fontWeight: 700, cursor: "pointer",
-                  letterSpacing: "-0.01em",
-                }}
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ duration: 0.2, ease: EASE }}
-              >
-                Discuss your project
-                <ArrowUpRight size={15} strokeWidth={2.5} />
-              </motion.span>
-            </Link>
-
-            <Link href="/work" style={{ textDecoration: "none" }}>
-              <motion.span
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: "0.45rem",
-                  padding: "0.9375rem 1.75rem", borderRadius: 9999,
-                  border: "1px solid var(--border-sub)", background: "transparent",
-                  color: "var(--fg-sub)", fontSize: "0.9375rem", fontWeight: 500, cursor: "pointer",
-                }}
-                whileHover={{ scale: 1.03, borderColor: "var(--border-strong)", color: "var(--fg)" }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ duration: 0.2, ease: EASE }}
-              >
-                See the work
-              </motion.span>
-            </Link>
-          </div>
-
-          {/* Micro-assurance */}
-          <p style={{
-            fontFamily: "var(--font-mono)", fontSize: "var(--type-meta-size)", color: "var(--fg-faint)",
-            letterSpacing: "0.06em", textTransform: "uppercase", marginTop: "1.75rem",
-          }}>
-            Remote worldwide · Based in Faisalabad, Pakistan
-          </p>
-        </motion.div>
+      <section className={styles.scene} aria-labelledby="services-connection" data-services-scene>
+        <div className={`${styles.container} ${styles.sceneInner}`}>
+          <p className={styles.sceneNote}>Your website. Your workflow. Your next move.</p>
+          <h2 id="services-connection" className={styles.sceneHeading} aria-label="One business. A connected digital experience."><HeadingLine>One business.</HeadingLine><HeadingLine>A connected</HeadingLine><HeadingLine>digital experience.</HeadingLine></h2>
+          <p className={styles.sceneCopy} data-services-reveal>The value is in how the pieces work together: what customers see, how your team works, and what your business can do next.</p>
+          <div className={styles.sceneSignature}><span>ubaid.dev</span><span>Thoughtfully built. Purposefully connected.</span></div>
+        </div>
       </section>
 
-      <style>{`
-        .service-card:hover .service-glow { transform: scaleX(1); }
-        .service-card:hover .service-cta {
-          border-color: var(--accent-ink);
-          color: var(--accent-ink);
-          background-color: var(--accent-muted);
-        }
-        .service-card { transition: border-color 0.3s ease, box-shadow 0.3s ease; }
-        .service-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-lg); }
-      `}</style>
-    </>
+      <section id="service-scope" className={`${styles.container} ${styles.scopeSection}`} aria-labelledby="services-scope-heading">
+        <div className={styles.sectionHeader}>
+          <h2 id="services-scope-heading" className={styles.sectionHeading} aria-label="The details, when you need them."><HeadingLine>The details,</HeadingLine><HeadingLine>when you need them.</HeadingLine></h2>
+          <p>Explore what each service can include. We shape the final scope around your audience, your workflow, and the outcome you need.</p>
+        </div>
+        <div className={styles.scopeList}>
+          {SERVICE_OFFERINGS.map((service) => (
+            <details key={service.id} id={service.id} className={styles.scopeDetail}>
+              <summary><span>{service.title}</span><ChevronDown size={22} aria-hidden="true" /></summary>
+              <div className={styles.scopeContent}><p className={styles.scopeDescription}>{service.description}</p><p>{service.detail}</p><ul>{service.deliverables.map((item) => <li key={item}>{item}</li>)}</ul><TextLink href="/contact" text={`Discuss ${service.title.toLowerCase().replace(/\bai\b/g, "AI").replace(/\bsaas\b/g, "SaaS")}`} /></div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section className={styles.processBand} aria-labelledby="services-process-heading" data-services-process>
+        <div className={styles.container}>
+          <div className={styles.sectionHeader}><h2 id="services-process-heading" className={styles.sectionHeading} aria-label="A clear way forward."><HeadingLine>A clear way</HeadingLine><HeadingLine>forward.</HeadingLine></h2><p>One direct working relationship. Clear priorities, working demos, and decisions you can follow.</p></div>
+          <div className={styles.processTrack} aria-hidden="true"><span data-services-process-progress /></div>
+          <ol className={styles.processSteps}>{PROCESS.map((step, index) => <li key={step.title}><span className={styles.stepIndex}>{String(index + 1).padStart(2, "0")}</span><h3>{step.title}</h3><p>{step.detail}</p><span className={styles.deliverable}>{step.deliverable}</span></li>)}</ol>
+        </div>
+      </section>
+
+      <section className={`${styles.container} ${styles.budgetSection}`} aria-labelledby="services-budget-heading">
+        <div className={styles.budgetIntro}>
+          <p className={styles.sectionNote}>Budget guidance</p><h2 id="services-budget-heading" className={styles.sectionHeading} aria-label="A starting point for the conversation."><HeadingLine>A starting point</HeadingLine><HeadingLine>for the conversation.</HeadingLine></h2>
+          <p>The build should fit the goal and the budget. These starting estimates give us a place to begin; the final quote and timeline follow the agreed scope.</p><TextLink href="/contact" text="Discuss your budget" />
+        </div>
+        <dl className={styles.budgetList}>{BUDGETS.map((budget) => <div key={budget.name}><dt>{budget.name}</dt><dd><strong>{budget.price}</strong><span>{budget.timing}</span></dd></div>)}</dl>
+      </section>
+
+      <section className={`${styles.container} ${styles.faqSection}`} aria-labelledby="services-faq-heading">
+        <div><p className={styles.sectionNote}>Before we begin</p><h2 id="services-faq-heading" className={styles.sectionHeading} aria-label="A little more clarity."><HeadingLine>A little more</HeadingLine><HeadingLine>clarity.</HeadingLine></h2></div>
+        <div className={styles.faqList}>{FAQS.map((faq) => <details key={faq.question} className={styles.faqDetail}><summary><span>{faq.question}</span><ChevronDown size={21} aria-hidden="true" /></summary><p>{faq.answer}</p></details>)}</div>
+      </section>
+    </ServicesMotion>
   )
 }
