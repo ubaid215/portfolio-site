@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useLayoutEffect, useRef } from "react"
+import { usePathname } from "next/navigation"
 import Lenis from "lenis"
 import { gsap, ScrollTrigger } from "@/lib/scroll-motion"
 
@@ -12,6 +13,25 @@ import { gsap, ScrollTrigger } from "@/lib/scroll-motion"
  * Reduced motion skips it entirely and keeps the browser's own scrolling.
  */
 export function SmoothScroll() {
+  const pathname = usePathname()
+  const previousPathname = useRef(pathname)
+  const lenisRef = useRef<Lenis | null>(null)
+
+  useLayoutEffect(() => {
+    if (previousPathname.current === pathname) return
+    previousPathname.current = pathname
+
+    // Reset the persistent controller after the new route commits. Stopping
+    // inertia alone leaves its target at the previous page's scroll position.
+    const lenis = lenisRef.current
+    if (lenis) {
+      lenis.resize()
+      lenis.scrollTo(window.location.hash ? window.scrollY : 0, { immediate: true, force: true })
+    } else if (!window.location.hash) {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" })
+    }
+  }, [pathname])
+
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)")
     let active: { lenis: Lenis; raf: (time: number) => void; onAnchorClick: (event: MouseEvent) => void } | null = null
@@ -23,6 +43,7 @@ export function SmoothScroll() {
         // Route changes drop the momentum instead of carrying it onto a new page.
         stopInertiaOnNavigate: true,
       })
+      lenisRef.current = lenis
       const raf = (time: number) => lenis.raf(time * 1000)
       lenis.on("scroll", ScrollTrigger.update)
       gsap.ticker.add(raf)
@@ -54,6 +75,7 @@ export function SmoothScroll() {
       gsap.ticker.remove(active.raf)
       gsap.ticker.lagSmoothing(500, 33)
       active.lenis.destroy()
+      lenisRef.current = null
       active = null
     }
 

@@ -29,5 +29,5 @@ export default async function CaseStudyPage({ params }: Props) {
 
   const adjacent = getAdjacentProjects(slug)
 
-  return <CaseStudyClient project={project} adjacent={adjacent} />
+  return <CaseStudyClient key={project.slug} project={project} adjacent={adjacent} />
 }

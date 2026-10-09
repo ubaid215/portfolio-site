@@ -1,0 +1,54 @@
+{
+  "scope": "All five existing case study pages; existing-brand extension",
+  "userDirection": "More detailed business storytelling with supporting visuals",
+  "checks": {
+    "typescript": "node_modules/.bin/tsc.cmd --noEmit --incremental false: passed, exit 0",
+    "eslint": "Changed TSX files: passed, exit 0",
+    "diffWhitespace": "git diff --check: passed, exit 0 (existing Windows line-ending notices)",
+    "build": "Not run per standing user constraint",
+    "assets": "23 unique existing project image paths verified; zero missing",
+    "routes": [
+      "ecommerce-platform",
+      "school-management",
+      "restaurant-pos",
+      "donation-dashboard",
+      "tax-websites"
+    ],
+    "chapters": "Each browser route has challenge, approach, product, delivery",
+    "galleryCounts": [
+      4,
+      4,
+      4,
+      3,
+      3
+    ],
+    "lastProjectNavigation": "Tax Firm Websites uses Previous project linking to donation-dashboard",
+    "overflow": "No horizontal overflow at 1440, 1270, 390 or 320px in inspected routes",
+    "viewer": "Opens, arrows change images, Escape closes, focus returns to originating screenshot, body overflow restored",
+    "viewerNarrow": "320px viewport: dialog 282px, zero internal horizontal overflow",
+    "chapterNavigation": "Approach anchor settles at 125px under navbar; active chapter follows",
+    "reducedMotion": "Inspected GSAP matchMedia guards and CSS reduced-motion rules; not live media-emulated",
+    "noJavaScript": "Content defaults visible; enhancement sets animation starting states only after mount"
+  },
+  "mechanicalDetector": "One pass; font/radius advisories addressed with existing tokens. Intentional neutral 80% black dialog scrim remains; no hard findings.",
+  "captures": [
+    "round2-desktop-1440.png",
+    "round2-mobile-390.png",
+    "round2-original-1270-light.png",
+    "hero-desktop.png",
+    "inspector-desktop.png",
+    "inspector-mobile.png"
+  ],
+  "captureDirectory": ".impeccable/review/case-studies",
+  "captureReadiness": "Full-page captures verified at scrollY 0 with loaded fonts. All opened by root.",
+  "browserLogs": "Transient missing-module errors during file creation resolved before verification. Existing unrelated Motion container warning and global Next smooth-scroll HTML notice remain.",
+  "assetProvenance": "Existing owner-provided project screenshots under public/images/projects; no generated rasters or new illustration prompts",
+  "unrelatedChangesPreserved": [
+    "app/page.tsx",
+    "components/home/About.tsx",
+    "docs/seo-client-acquisition-strategy.md",
+    "docs/superpowers"
+  ],
+  "captionCorrections": "11 screenshot labels corrected against the original images by the finish reviewer; project scope and story facts unchanged",
+  "finalVerification": "TypeScript rechecked after caption corrections: passed. Changed-source ESLint including lib/projects.ts: passed. Two batched visual rounds completed; all final captures opened."
+}

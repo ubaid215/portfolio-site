@@ -47,7 +47,7 @@ export function About() {
             <div className={styles.image} data-about-image>
               <Image src="/images/professional-img.png" alt="Muhammad Ubaidullah" fill sizes="(max-width: 800px) 90vw, 40vw" />
             </div>
-            <div className={styles.caption}><span>Independent developer.</span><span>Invested in your next move.</span></div>
+            <div className={styles.caption}><span>Problem Solver.</span><span>Invested in your next move.</span></div>
           </div>
           <div className={styles.location}><span>Faisalabad, Pakistan</span><span>Working worldwide <ArrowUpRight size={15} aria-hidden="true" /></span></div>
         </div>

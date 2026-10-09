@@ -81,6 +81,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html
       lang="en"
       data-site-intro="playing"
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
       className={`${GeistSans.variable} ${GeistMono.variable} ${spaceGrotesk.variable}`}
     >

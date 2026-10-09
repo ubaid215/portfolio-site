@@ -21,9 +21,9 @@ export default function HomePage() {
   return (
     <HomeMotion>
       <Hero />
+      <About />
       <Services />
       <FeaturedWork />
-      <About />
       <Skills />
       <Testimonials />
       <ContactCTA />

@@ -68,8 +68,8 @@ export const PROJECTS: Project[] = [
     screenshots: [
       { src: "/images/projects/ecommerce-platform/screen-1.png", alt: "Dashboard overview", span: true },
       { src: "/images/projects/ecommerce-platform/screen-2.png", alt: "Product CMS", span: false },
-      { src: "/images/projects/ecommerce-platform/screen-3.png", alt: "Order management", span: false },
-      { src: "/images/projects/ecommerce-platform/screen-4.png", alt: "Analytics view", span: false },
+      { src: "/images/projects/ecommerce-platform/screen-3.png", alt: "Retail storefront", span: false },
+      { src: "/images/projects/ecommerce-platform/screen-4.png", alt: "Product browsing", span: false },
     ],
   },
   {
@@ -107,9 +107,9 @@ export const PROJECTS: Project[] = [
     coverImage: "/images/projects/school-management/cover.png",
     screenshots: [
       { src: "/images/projects/school-management/screen-1.png", alt: "Admin dashboard", span: true },
-      { src: "/images/projects/school-management/screen-2.png", alt: "Attendance view", span: false },
-      { src: "/images/projects/school-management/screen-3.png", alt: "Parent portal", span: false },
-      { src: "/images/projects/school-management/screen-4.png", alt: "Grade book", span: false },
+      { src: "/images/projects/school-management/screen-2.png", alt: "Teacher portal — student overview", span: false },
+      { src: "/images/projects/school-management/screen-3.png", alt: "Student enrollment", span: false },
+      { src: "/images/projects/school-management/screen-4.png", alt: "Student portal", span: false },
     ],
   },
   {
@@ -147,8 +147,8 @@ export const PROJECTS: Project[] = [
     coverImage: "/images/projects/restaurant-pos/cover.png",
     screenshots: [
       { src: "/images/projects/restaurant-pos/screen-1.png", alt: "POS order view", span: true },
-      { src: "/images/projects/restaurant-pos/screen-2.png", alt: "Kitchen display", span: false },
-      { src: "/images/projects/restaurant-pos/screen-3.png", alt: "Table floor plan", span: false },
+      { src: "/images/projects/restaurant-pos/screen-2.png", alt: "Restaurant menu", span: false },
+      { src: "/images/projects/restaurant-pos/screen-3.png", alt: "Restaurant homepage", span: false },
       { src: "/images/projects/restaurant-pos/screen-4.png", alt: "Revenue dashboard", span: false },
     ],
   },
@@ -186,9 +186,9 @@ export const PROJECTS: Project[] = [
     mockupColor: "#1A2030",
     coverImage: "/images/projects/donation-dashboard/cover.png",
     screenshots: [
-      { src: "/images/projects/donation-dashboard/screen-1.png", alt: "Campaign dashboard", span: true },
-      { src: "/images/projects/donation-dashboard/screen-2.png", alt: "Donor CRM", span: false },
-      { src: "/images/projects/donation-dashboard/screen-3.png", alt: "Template manager", span: false },
+      { src: "/images/projects/donation-dashboard/screen-1.png", alt: "Donation dashboard", span: true },
+      { src: "/images/projects/donation-dashboard/screen-2.png", alt: "Donation entry", span: false },
+      { src: "/images/projects/donation-dashboard/screen-3.png", alt: "Donation reports", span: false },
     ],
   },
   {
@@ -226,7 +226,7 @@ export const PROJECTS: Project[] = [
     coverImage: "/images/projects/tax-websites/cover.png",
     screenshots: [
       { src: "/images/projects/tax-websites/screen-1.png", alt: "Homepage hero", span: true },
-      { src: "/images/projects/tax-websites/screen-2.png", alt: "Services section", span: false },
+      { src: "/images/projects/tax-websites/screen-2.png", alt: "Firm vision and approach", span: false },
       { src: "/images/projects/tax-websites/screen-3.png", alt: "Contact form", span: false },
     ],
   },

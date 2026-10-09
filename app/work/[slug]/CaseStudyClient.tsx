@@ -1,967 +1,179 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { motion, useInView, useScroll, useTransform } from "motion/react"
-import { ArrowUpRight, ArrowLeft, ArrowRight, Check } from "lucide-react"
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight, Check, Maximize2, X } from "lucide-react"
 import type { Project } from "@/lib/projects"
-
-const EASE = [0.16, 1, 0.3, 1] as const
+import { CaseStudyMotion } from "@/components/work/CaseStudyMotion"
+import styles from "./page.module.css"
 
 interface Props {
   project: Project
   adjacent: { prev: Project | null; next: Project | null }
 }
 
-/* ── Section wrapper with in-view animation ── */
-function Section({
-  children,
-  delay = 0,
-  style,
-}: {
-  children: React.ReactNode
-  delay?: number
-  style?: React.CSSProperties
-}) {
-  const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once: true, margin: "-60px" })
+const chapters = [
+  { id: "challenge", label: "The challenge" },
+  { id: "approach", label: "The approach" },
+  { id: "product", label: "The product" },
+  { id: "delivery", label: "The delivery" },
+]
+
+function RollingLabel({ children }: { children: string }) {
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 32 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, ease: EASE, delay }}
-      style={style}
-    >
-      {children}
-    </motion.div>
+    <span className={styles.roll}>
+      <span className={styles.rollInner}>
+        <span>{children}</span>
+        <span aria-hidden="true">{children}</span>
+      </span>
+    </span>
   )
 }
 
-/* ── Eyebrow label ── */
-function Eyebrow({ children, tone = "jade" }: { children: React.ReactNode; tone?: "jade" | "brass" }) {
-  return (
-    <p
-      style={{
-        fontFamily: "var(--font-mono)",
-        fontSize: "var(--type-meta-size)",
-        fontWeight: 500,
-        letterSpacing: "0.12em",
-        textTransform: "uppercase",
-        color: tone === "brass" ? "var(--brass-ink)" : "var(--accent-ink)",
-        marginBottom: "1rem",
-        display: "flex",
-        alignItems: "center",
-        gap: "0.75rem",
-      }}
-    >
-      <span
-        style={{
-          display: "inline-block",
-          width: "2rem",
-          height: "1px",
-          background: tone === "brass" ? "var(--brass)" : "var(--accent)",
-        }}
-      />
-      {children}
-    </p>
-  )
-}
-
-/* ── Single screenshot tile ── */
-function ScreenshotTile({
-  src,
-  alt,
-  span,
-  projectHeroBg,
-  index,
-}: {
-  src: string
-  alt: string
-  span?: boolean
-  projectHeroBg: string
-  index: number
-}) {
-  const [imgError, setImgError] = useState(false)
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.55, ease: EASE, delay: index * 0.07 }}
-      style={{
-        aspectRatio: span ? "16/9" : "4/3",
-        gridColumn: span ? "1 / -1" : undefined,
-        borderRadius: "var(--radius-lg)",
-        background: projectHeroBg,
-        border: "1px solid var(--border)",
-        position: "relative",
-        overflow: "hidden",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      {!imgError ? (
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          sizes={span ? "100vw" : "(max-width: 768px) 100vw, 50vw"}
-          style={{ objectFit: "cover", objectPosition: "top" }}
-          onError={() => setImgError(true)}
-        />
-      ) : (
-        /* Fallback placeholder */
-        <>
-          <div
-            aria-hidden
-            className="bg-dot-grid"
-            style={{ position: "absolute", inset: 0, opacity: 0.15 }}
-          />
-          <div
-            aria-hidden
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "60%",
-              height: "60%",
-              borderRadius: "50%",
-              background: "var(--accent-muted)",
-              filter: "blur(40px)",
-              opacity: 0.4,
-            }}
-          />
-          <span
-            style={{
-              position: "relative",
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--type-meta-size)",
-              /* ✅ FIX: use theme token instead of hardcoded dark color */
-              color: "var(--fg-faint)",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-            }}
-          >
-            {alt}
-          </span>
-        </>
-      )}
-
-      {/* Subtle bottom label (only when image loaded) */}
-      {!imgError && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            padding: "2rem 1rem 0.75rem",
-            background:
-              "linear-gradient(to top, rgba(0,0,0,0.78) 0%, transparent 100%)",
-            display: "flex",
-            alignItems: "flex-end",
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--type-meta-size)",
-              color: "#FFFFFF",
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-            }}
-          >
-            {alt}
-          </span>
-        </div>
-      )}
-    </motion.div>
+function ProjectImage({ src, alt, sizes, eager = false }: { src: string; alt: string; sizes: string; eager?: boolean }) {
+  const [failed, setFailed] = useState(false)
+  return failed ? (
+    <span className={styles.imageFallback}><span>Preview unavailable</span><span>{alt}</span></span>
+  ) : (
+    <Image src={src} alt={alt} fill sizes={sizes} loading={eager ? "eager" : "lazy"} onError={() => setFailed(true)} />
   )
 }
 
 export function CaseStudyClient({ project, adjacent }: Props) {
-  const heroRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  })
-  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"])
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0])
+  const [activeChapter, setActiveChapter] = useState("challenge")
+  const [selectedShot, setSelectedShot] = useState<number | null>(null)
+  const dialogRef = useRef<HTMLDialogElement>(null)
+  const shots = [{ src: project.coverImage, alt: `${project.title} — interface overview` }, ...project.screenshots]
+  const viewerOpen = selectedShot !== null
+  const currentShot = shots[selectedShot ?? 0]
+  const continuation = adjacent.next ?? adjacent.prev
+
+  useEffect(() => {
+    if (!viewerOpen) return
+    const dialog = dialogRef.current
+    if (!dialog) return
+    const originalOverflow = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    dialog.showModal()
+    return () => {
+      document.body.style.overflow = originalOverflow
+      if (dialog.open) dialog.close()
+    }
+  }, [viewerOpen])
+
+  function moveShot(direction: number) {
+    setSelectedShot((current) => current === null ? null : (current + direction + shots.length) % shots.length)
+  }
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
-
-      {/* ── HERO ───────────────────────────────────────────────────── */}
-      {/*
-        ✅ FIX: minHeight reduced from 90vh → 70vh (desktop) / auto (mobile)
-        The hero no longer forces full-screen height on small viewports.
-        We layer `project.heroBg` as a subtle tint over the theme background
-        so the design tokens (borders, text, etc.) read correctly in light mode.
-      */}
-      <div
-        ref={heroRef}
-        className="case-hero"
-        style={{
-          position: "relative",
-          display: "flex",
-          alignItems: "flex-end",
-          overflow: "hidden",
-          /* Blend project color with theme bg so light mode works */
-          background: `linear-gradient(160deg, var(--bg) 0%, var(--bg-sub) 100%)`,
-          borderBottom: "1px solid var(--border)",
-        }}
-      >
-        {/* Parallax bg layer */}
-        <motion.div style={{ position: "absolute", inset: 0, y: heroY }}>
-          {/* Dot grid */}
-          <div
-            aria-hidden
-            className="bg-dot-grid"
-            style={{
-              position: "absolute",
-              inset: 0,
-              opacity: 0.2,
-              pointerEvents: "none",
-            }}
-          />
-          {/* Project accent glow — uses heroBg as tint, clipped so it stays subtle */}
-          <div
-            aria-hidden
-            style={{
-              position: "absolute",
-              top: "-10%",
-              left: "-5%",
-              width: "60vw",
-              height: "60vw",
-              maxWidth: 560,
-              maxHeight: 560,
-              borderRadius: "50%",
-              background: project.heroBg,
-              filter: "blur(120px)",
-              opacity: 0.18,
-              pointerEvents: "none",
-            }}
-          />
-          {/* Large decorative index — theme-aware opacity */}
-          <div
-            aria-hidden
-            style={{
-              position: "absolute",
-              right: "2rem",
-              bottom: "1rem",
-              fontFamily: "var(--font-display)",
-              /* ✅ FIX: use --border instead of hardcoded rgba so it adapts */
-              fontSize: "clamp(6rem, 18vw, 14rem)",
-              fontWeight: 500,
-              lineHeight: 1,
-              color: "var(--border-strong)",
-              userSelect: "none",
-              pointerEvents: "none",
-            }}
-          >
-            {project.index}
+    <CaseStudyMotion className={styles.page} onChapterChange={setActiveChapter}>
+      <header className={`${styles.container} ${styles.hero}`}>
+        <div className={styles.topline}>
+          <Link href="/work" className={styles.textLink}><ArrowLeft size={18} aria-hidden="true" /><RollingLabel>All projects</RollingLabel></Link>
+          <span className={styles.caseNumber}>Case study {project.index}</span>
+        </div>
+        <div className={styles.heroGrid}>
+          <div className={styles.titleMask}><h1 data-case-title>{project.title}</h1></div>
+          <div className={styles.introduction} data-case-introduction>
+            <p>{project.shortDesc}</p>
+            <a href="#challenge" className={styles.textLink}><RollingLabel>Explore the story</RollingLabel><ArrowDown size={18} aria-hidden="true" /></a>
           </div>
-        </motion.div>
+        </div>
+        <dl className={styles.facts} data-case-facts>
+          <div><dt>My role</dt><dd>{project.role}</dd></div>
+          <div><dt>Year</dt><dd>{project.year}</dd></div>
+          <div><dt>Project focus</dt><dd>{project.categories.join(" / ")}</dd></div>
+        </dl>
+        <figure className={styles.cover}>
+          <button type="button" className={styles.coverButton} onClick={() => setSelectedShot(0)} aria-label={`Inspect ${project.title} overview`}>
+            <span className={styles.coverImage} data-case-cover><ProjectImage src={project.coverImage} alt={`${project.title} interface`} sizes="(max-width: 700px) 90vw, 85vw" eager /></span>
+            <span className={styles.inspect}><Maximize2 size={16} aria-hidden="true" /> Inspect interface</span>
+          </button>
+          <figcaption><span>{project.tagline}</span><span>Built in {project.year}</span></figcaption>
+        </figure>
+      </header>
 
-        {/* Hero content */}
-        <motion.div
-          style={{
-            position: "relative",
-            zIndex: 2,
-            width: "100%",
-            /*
-              ✅ FIX: Responsive padding
-              Mobile:  top = 5rem (navbar clearance), bottom = 2.5rem
-              Desktop: top = 7rem,                    bottom = 3.5rem
-              clamp() handles the gradient in between.
-            */
-            padding:
-              "clamp(5rem, 10vw, 7rem) clamp(1rem, 4vw, 1.5rem) clamp(2.5rem, 5vw, 3.5rem)",
-            opacity: heroOpacity,
-          }}
-        >
-          <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-            {/* Back link */}
-            <motion.div
-              initial={{ opacity: 0, x: -16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, ease: EASE }}
-              style={{ marginBottom: "1.5rem" }}
-            >
-              <Link href="/work" style={{ textDecoration: "none" }}>
-                <motion.span
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "0.4rem",
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--type-meta-size)",
-                    /* ✅ FIX: was rgba(255,255,255,0.4) — invisible on light bg */
-                    color: "var(--fg-faint)",
-                    letterSpacing: "0.06em",
-                    cursor: "pointer",
-                    transition: "color 0.2s ease",
-                  }}
-                  whileHover={{ color: "var(--fg-sub)" }}
-                >
-                  <ArrowLeft size={13} strokeWidth={2} />
-                  All Work
-                </motion.span>
-              </Link>
-            </motion.div>
+      <div className={`${styles.container} ${styles.story}`}>
+        <aside className={styles.chapterAside}>
+          <nav className={styles.chapterNav} aria-label="Case study chapters">
+            <ol>{chapters.map((chapter, index) => (
+              <li key={chapter.id}>
+                <a href={`#${chapter.id}`} aria-current={activeChapter === chapter.id ? "location" : undefined}>
+                  <span className={styles.chapterNumber}>{String(index + 1).padStart(2, "0")}</span>
+                  <span>{chapter.label}</span><ArrowUpRight size={16} aria-hidden="true" />
+                </a>
+              </li>
+            ))}</ol>
+          </nav>
+          <Link href="/contact" className={`${styles.textLink} ${styles.asideContact}`}><RollingLabel>Have a project in mind?</RollingLabel><ArrowUpRight size={16} aria-hidden="true" /></Link>
+        </aside>
 
-            {/* Meta row */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: EASE, delay: 0.1 }}
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "0.5rem",
-                marginBottom: "1.25rem",
-              }}
-            >
-              {[project.index, project.year, project.role].map(
-                (item) => (
-                  <span
-                    key={item}
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "var(--type-meta-size)",
-                      fontWeight: 500,
-                      letterSpacing: "0.08em",
-                      textTransform: "uppercase",
-                      /* ✅ FIX: use --accent-text for readable color on light bg */
-                      color: "var(--tag-text)",
-                      padding: "0.25rem 0.625rem",
-                      borderRadius: 9999,
-                      border: "1px solid var(--accent-muted)",
-                      background: "var(--accent-muted)",
-                    }}
-                  >
-                    {item}
-                  </span>
-                )
-              )}
-            </motion.div>
+        <div className={styles.narrative}>
+          <section id="challenge" className={styles.chapter} data-case-chapter>
+            <h2 data-case-heading>The challenge.</h2>
+            <p className={styles.lead} data-case-copy>{project.problem}</p>
+            <ul className={styles.problemList}>{project.problemPoints.map((point) => <li key={point} data-case-detail>{point}</li>)}</ul>
+          </section>
 
-            {/* Title */}
-            <div style={{ overflow: "hidden", marginBottom: "0.875rem" }}>
-              <motion.h1
-                className="type-case-title"
-                initial={{ y: "110%" }}
-                animate={{ y: "0%" }}
-                transition={{ duration: 0.9, ease: EASE, delay: 0.15 }}
-                style={{
-                  color: "var(--fg)",
-                  margin: 0,
-                }}
-              >
-                {project.title}
-              </motion.h1>
-            </div>
+          <section id="approach" className={styles.chapter} data-case-chapter>
+            <h2 data-case-heading>Decisions behind the build.</h2>
+            <p className={styles.lead} data-case-copy>{project.approach}</p>
+            <div className={styles.decisions}>{project.approachPoints.map((point) => (
+              <div className={styles.decision} key={point.title} data-case-detail><h3>{point.title}</h3><p>{point.desc}</p></div>
+            ))}</div>
+          </section>
 
-            {/* Tagline */}
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: EASE, delay: 0.3 }}
-              style={{
-                fontSize: "clamp(0.9375rem, 1.8vw, 1.0625rem)",
-                color: "var(--fg-muted)",
-                lineHeight: 1.65,
-                maxWidth: "52ch",
-                margin: "0 0 1.5rem",
-              }}
-            >
-              {project.tagline}
-            </motion.p>
+          <section id="product" className={styles.chapter} data-case-chapter>
+            <div className={styles.galleryHeading}><h2 data-case-heading>A closer look.</h2><p>Select a screen to explore the interface.</p></div>
+            <div className={styles.gallery}>{project.screenshots.map((shot, index) => (
+              <figure className={`${styles.screen} ${shot.span ? styles.wideScreen : ""}`} key={shot.src} data-case-screen>
+                <button type="button" onClick={() => setSelectedShot(index + 1)} aria-label={`Inspect ${shot.alt}`}>
+                  <span className={styles.screenImage}><ProjectImage src={shot.src} alt={shot.alt} sizes={shot.span ? "(max-width: 900px) 90vw, 65vw" : "(max-width: 700px) 90vw, 35vw"} /></span>
+                  <span className={styles.screenAction}><Maximize2 size={18} aria-hidden="true" /></span>
+                </button>
+                <figcaption><span>{shot.alt}</span><span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span></figcaption>
+              </figure>
+            ))}</div>
+          </section>
 
-            <figure style={{ position: "relative", aspectRatio: "16 / 9", maxWidth: 900, margin: "1.75rem 0 0", borderRadius: "var(--radius-lg)", overflow: "hidden", border: "1px solid var(--border)" }}>
-              <Image src={project.coverImage} alt={`${project.title} interface preview`} fill priority sizes="(max-width: 900px) 100vw, 900px" style={{ objectFit: "cover" }} />
-            </figure>
-
-            {/* Stack pills */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: EASE, delay: 0.45 }}
-              style={{ display: "flex", flexWrap: "wrap", gap: "0.375rem" }}
-            >
-              {project.stack.map((tag) => (
-                <span
-                  key={tag}
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--type-meta-size)",
-                    /* ✅ FIX: use theme tag tokens instead of hardcoded dark colors */
-                    color: "var(--tag-text)",
-                    background: "var(--tag-bg)",
-                    border: "1px solid var(--accent-muted)",
-                    padding: "0.2rem 0.6rem",
-                    borderRadius: 9999,
-                    letterSpacing: "0.03em",
-                  }}
-                >
-                  {tag}
-                </span>
-              ))}
-            </motion.div>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* ── BODY CONTENT ───────────────────────────────────────────── */}
-      <div
-        style={{
-          maxWidth: 1200,
-          margin: "0 auto",
-          padding: "clamp(2.5rem, 7vw, 4.5rem) clamp(1rem, 4vw, 1.5rem)",
-        }}
-      >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns:
-              "repeat(auto-fit, minmax(min(100%, 680px), 1fr))",
-            gap: "clamp(2.5rem, 6vw, 5rem)",
-          }}
-        >
-          {/* ── Left column: main content ── */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "3.5rem" }}>
-
-            {/* The Problem */}
-            <Section>
-              <div
-                style={{
-                  padding: "2rem",
-                  borderRadius: "var(--radius-lg)",
-                  border: "1px solid var(--border)",
-                  background: "var(--bg-card)",
-                }}
-              >
-                <Eyebrow>The Problem</Eyebrow>
-                <p
-                  style={{
-                    fontSize: "1.0625rem",
-                    color: "var(--fg-muted)",
-                    lineHeight: 1.75,
-                    margin: "0 0 1.5rem",
-                  }}
-                >
-                  {project.problem}
-                </p>
-                <ul
-                  style={{
-                    listStyle: "none",
-                    margin: 0,
-                    padding: 0,
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.75rem",
-                  }}
-                >
-                  {project.problemPoints.map((point) => (
-                    <li
-                      key={point}
-                      style={{
-                        display: "flex",
-                        alignItems: "flex-start",
-                        gap: "0.75rem",
-                        fontSize: "0.9rem",
-                        color: "var(--fg-muted)",
-                        lineHeight: 1.6,
-                      }}
-                    >
-                      <span
-                        style={{
-                          width: 18,
-                          height: 18,
-                          borderRadius: "50%",
-                          border: "1px solid var(--border-strong)",
-                          background: "var(--bg-sub)",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          flexShrink: 0,
-                          marginTop: "2px",
-                          fontSize: "var(--type-meta-size)",
-                          color: "var(--fg-sub)",
-                        }}
-                      >
-                        ✕
-                      </span>
-                      {point}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Section>
-
-            {/* My Approach */}
-            <Section delay={0.05}>
-              <Eyebrow>My Approach</Eyebrow>
-              <p
-                style={{
-                  fontSize: "1.0625rem",
-                  color: "var(--fg-muted)",
-                  lineHeight: 1.75,
-                  margin: "0 0 2rem",
-                }}
-              >
-                {project.approach}
+          <section id="delivery" className={`${styles.chapter} ${styles.delivery}`} data-case-chapter>
+            <h2 data-case-heading>What was delivered.</h2>
+            <div data-case-delivery>
+              <p className={styles.outcome}>
+                <span className={styles.srOnly}>{project.outcome}</span>
+                <span aria-hidden="true">{project.outcome.split(" ").map((word, wordIndex) => (
+                  <span key={wordIndex}><span className={styles.outcomeWord}>{Array.from(word).map((letter, letterIndex) => <span data-case-letter key={letterIndex}>{letter}</span>)}</span>{" "}</span>
+                ))}</span>
               </p>
-
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1rem",
-                }}
-              >
-                {project.approachPoints.map(({ title, desc }, i) => (
-                  <motion.div
-                    key={title}
-                    initial={{ opacity: 0, x: -16 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: "-40px" }}
-                    transition={{ duration: 0.5, ease: EASE, delay: i * 0.08 }}
-                    style={{
-                      display: "flex",
-                      gap: "1rem",
-                      padding: "1.25rem",
-                      borderRadius: "var(--radius-md)",
-                      border: "1px solid var(--border)",
-                      background: "var(--bg-card)",
-                      alignItems: "flex-start",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: 32,
-                        height: 32,
-                        borderRadius: "var(--radius-md)",
-                        background: "var(--accent-muted)",
-                        border: "1px solid var(--accent-muted)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexShrink: 0,
-                      }}
-                    >
-                      <Check size={14} strokeWidth={2.5} color="var(--accent-ink)" />
-                    </div>
-                    <div>
-                      <p
-                        style={{
-                          fontSize: "0.9375rem",
-                          fontWeight: 500,
-                          color: "var(--fg)",
-                          margin: "0 0 0.3rem",
-                        }}
-                      >
-                        {title}
-                      </p>
-                      <p
-                        style={{
-                          fontSize: "0.875rem",
-                          color: "var(--fg-muted)",
-                          lineHeight: 1.65,
-                          margin: 0,
-                        }}
-                      >
-                        {desc}
-                      </p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </Section>
-
-            {/* ── Screenshots ── */}
-            <Section delay={0.05}>
-              <Eyebrow>Screenshots</Eyebrow>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns:
-                    "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
-                  gap: "0.75rem",
-                }}
-              >
-                {project.screenshots.map((shot, i) => (
-                  <ScreenshotTile
-                    key={shot.src}
-                    src={shot.src}
-                    alt={shot.alt}
-                    span={shot.span}
-                    projectHeroBg={project.heroBg}
-                    index={i}
-                  />
-                ))}
-              </div>
-            </Section>
-          </div>
-
-          {/* ── Right column: sidebar ── */}
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
-          >
-            {/* Delivered scope */}
-            <Section>
-              <div
-                style={{
-                  padding: "1.75rem",
-                  borderRadius: "var(--radius-lg)",
-                  border: "1px solid var(--border)",
-                  borderTop: "2px solid var(--brass)",
-                  background: "var(--brass-soft)",
-                }}
-              >
-                <Eyebrow tone="brass">What was delivered</Eyebrow>
-                <p
-                  style={{
-                    fontSize: "0.9375rem",
-                    color: "var(--fg-sub)",
-                    lineHeight: 1.7,
-                    margin: 0,
-                  }}
-                >
-                  {project.outcome}
-                </p>
-
-              </div>
-            </Section>
-
-            {/* Tech Stack */}
-            <Section delay={0.1}>
-              <div
-                style={{
-                  padding: "1.75rem",
-                  borderRadius: "var(--radius-lg)",
-                  border: "1px solid var(--border)",
-                  background: "var(--bg-card)",
-                }}
-              >
-                <Eyebrow>Tech Stack</Eyebrow>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-                  {project.stack.map((tech, i) => (
-                    <motion.span
-                      key={tech}
-                      initial={{ opacity: 0, scale: 0.85 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{
-                        duration: 0.35,
-                        ease: EASE,
-                        delay: i * 0.04,
-                      }}
-                      style={{
-                        display: "inline-flex",
-                        padding: "0.35rem 0.75rem",
-                        borderRadius: 9999,
-                        border: "1px solid var(--border-sub)",
-                        background: "var(--bg-sub)",
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "var(--type-meta-size)",
-                        color: "var(--fg-sub)",
-                        letterSpacing: "0.02em",
-                      }}
-                    >
-                      {tech}
-                    </motion.span>
-                  ))}
-                </div>
-              </div>
-            </Section>
-
-            {/* Project meta */}
-            <Section delay={0.15}>
-              <div
-                style={{
-                  padding: "1.75rem",
-                  borderRadius: "var(--radius-lg)",
-                  border: "1px solid var(--border)",
-                  background: "var(--bg-card)",
-                }}
-              >
-                <Eyebrow>Project Details</Eyebrow>
-                <dl style={{ margin: 0 }}>
-                  {[
-                    { t: "Year", v: project.year },
-                    { t: "Role", v: project.role },
-                    { t: "Categories", v: project.categories.join(", ") },
-                  ].map(({ t, v }) => (
-                    <div
-                      key={t}
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "flex-start",
-                        gap: "1rem",
-                        padding: "0.75rem 0",
-                        borderBottom: "1px solid var(--border)",
-                      }}
-                    >
-                      <dt
-                        style={{
-                          fontFamily: "var(--font-mono)",
-                          fontSize: "var(--type-meta-size)",
-                          color: "var(--fg-faint)",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.08em",
-                          flexShrink: 0,
-                        }}
-                      >
-                        {t}
-                      </dt>
-                      <dd
-                        style={{
-                          fontSize: "0.875rem",
-                          color: "var(--fg-sub)",
-                          margin: 0,
-                          textAlign: "right",
-                        }}
-                      >
-                        {v}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
-            </Section>
-
-            {/* CTA */}
-            <Section delay={0.2}>
-              <Link
-                href="/contact"
-                style={{ textDecoration: "none", display: "block" }}
-              >
-                <motion.div
-                  style={{
-                    padding: "1.5rem",
-                    borderRadius: "var(--radius-lg)",
-                    background: "var(--accent)",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: "1rem",
-                  }}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ duration: 0.2, ease: EASE }}
-                  className="hero-cta-btn"
-                >
-                  <div>
-                    <p
-                      style={{
-                        fontWeight: 600,
-                        fontSize: "0.9375rem",
-                        margin: "0 0 0.2rem",
-                        color: "var(--accent-text)",
-                      }}
-                    >
-                      Have a similar challenge?
-                    </p>
-                    <p style={{ fontSize: "0.8125rem", margin: 0, color: "var(--accent-text)" }}>
-                      Discuss your project
-                    </p>
-                  </div>
-                  <ArrowUpRight size={20} strokeWidth={2} color="var(--accent-text)" />
-                </motion.div>
-              </Link>
-            </Section>
-          </div>
+              <div className={styles.deliveryRule}><span data-case-rule /></div>
+            </div>
+            <div className={styles.tools}><h3>Tools behind the experience</h3><ul>{project.stack.map((tool) => <li key={tool}><Check size={14} aria-hidden="true" />{tool}</li>)}</ul></div>
+            <div className={styles.invitation}><p>Working through a similar challenge?</p><Link href="/contact" className={styles.textLink}><RollingLabel>Let’s discuss your project</RollingLabel><ArrowUpRight size={18} aria-hidden="true" /></Link></div>
+          </section>
         </div>
       </div>
 
-      {/* ── NEXT PROJECT NAV ───────────────────────────────────────── */}
-      <section
-        style={{
-          borderTop: "1px solid var(--border)",
-          background: "var(--bg-sub)",
-          padding: "clamp(2.5rem, 5vw, 4rem) clamp(1rem, 4vw, 1.5rem)",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: 1200,
-            margin: "0 auto",
-            display: "grid",
-            gridTemplateColumns:
-              adjacent.prev && adjacent.next ? "1fr 1fr" : "1fr",
-            gap: "1.25rem",
-          }}
-        >
-          {adjacent.prev && (
-            <Link
-              href={`/work/${adjacent.prev.slug}`}
-              style={{ textDecoration: "none" }}
-            >
-              <motion.div
-                className="adj-card"
-                style={{
-                  padding: "1.5rem",
-                  borderRadius: "var(--radius-lg)",
-                  border: "1px solid var(--border)",
-                  background: "var(--bg-card)",
-                  cursor: "pointer",
-                  transition: "border-color 0.3s ease, box-shadow 0.3s ease",
-                }}
-                whileHover={{ y: -4 }}
-                transition={{ duration: 0.3, ease: EASE }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                    marginBottom: "0.75rem",
-                  }}
-                >
-                  <ArrowLeft size={14} strokeWidth={2} color="var(--fg-faint)" />
-                  <span
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "var(--type-meta-size)",
-                      color: "var(--fg-faint)",
-                      letterSpacing: "0.08em",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Previous
-                  </span>
-                </div>
-                <p
-                  style={{
-                    fontSize: "1rem",
-                    fontWeight: 500,
-                    color: "var(--fg)",
-                    margin: "0 0 0.25rem",
-                    lineHeight: 1.3,
-                  }}
-                >
-                  {adjacent.prev.title}
-                </p>
-                <p
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--type-meta-size)",
-                    color: "var(--accent-ink)",
-                    margin: 0,
-                  }}
-                >
-                  {adjacent.prev.index}
-                </p>
-              </motion.div>
-            </Link>
-          )}
+      {continuation && <section className={`${styles.container} ${styles.continuation}`} aria-labelledby="continuation-title">
+        <h2 id="continuation-title">{adjacent.next ? "Next project" : "Previous project"}</h2>
+        <Link href={`/work/${continuation.slug}`} className={styles.nextProject}>
+          <div className={styles.nextCopy}><h3>{continuation.title}</h3><p>{continuation.shortDesc}</p><span className={styles.textLink}><RollingLabel>Explore case study</RollingLabel><ArrowUpRight size={18} aria-hidden="true" /></span></div>
+          <div className={styles.nextImage}><ProjectImage src={continuation.coverImage} alt={`${continuation.title} preview`} sizes="(max-width: 700px) 90vw, 40vw" /><span className={styles.nextArrow}><ArrowUpRight size={28} aria-hidden="true" /></span></div>
+        </Link>
+        {adjacent.prev && adjacent.next && <Link href={`/work/${adjacent.prev.slug}`} className={`${styles.textLink} ${styles.previous}`}><ArrowLeft size={18} aria-hidden="true" /><RollingLabel>{`Previous: ${adjacent.prev.title}`}</RollingLabel></Link>}
+      </section>}
 
-          {adjacent.next && (
-            <Link
-              href={`/work/${adjacent.next.slug}`}
-              style={{ textDecoration: "none" }}
-            >
-              <motion.div
-                className="adj-card"
-                style={{
-                  padding: "1.5rem",
-                  borderRadius: "var(--radius-lg)",
-                  border: "1px solid var(--border)",
-                  background: "var(--bg-card)",
-                  cursor: "pointer",
-                  textAlign: "right",
-                  transition: "border-color 0.3s ease, box-shadow 0.3s ease",
-                  gridColumn: !adjacent.prev ? "1 / -1" : undefined,
-                }}
-                whileHover={{ y: -4 }}
-                transition={{ duration: 0.3, ease: EASE }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                    gap: "0.5rem",
-                    marginBottom: "0.75rem",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "var(--type-meta-size)",
-                      color: "var(--fg-faint)",
-                      letterSpacing: "0.08em",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Next Project
-                  </span>
-                  <ArrowRight
-                    size={14}
-                    strokeWidth={2}
-                    color="var(--fg-faint)"
-                  />
-                </div>
-                <p
-                  style={{
-                    fontSize: "1rem",
-                    fontWeight: 500,
-                    color: "var(--fg)",
-                    margin: "0 0 0.25rem",
-                    lineHeight: 1.3,
-                  }}
-                >
-                  {adjacent.next.title}
-                </p>
-                <p
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--type-meta-size)",
-                    color: "var(--accent-ink)",
-                    margin: 0,
-                  }}
-                >
-                  {adjacent.next.index}
-                </p>
-              </motion.div>
-            </Link>
-          )}
-        </div>
-      </section>
-
-      <style>{`
-        /*
-          ✅ Hero height: 70vh on desktop, auto (content-fit) on mobile.
-          min-height: auto lets the content breathe without forcing scroll.
-        */
-        .case-hero {
-          min-height: clamp(0px, 60vh, 680px);
-        }
-        @media (max-width: 640px) {
-          .case-hero {
-            min-height: 0;
-          }
-        }
-
-        .adj-card:hover {
-          border-color: var(--border-strong);
-          box-shadow: var(--shadow-lg);
-        }
-        .hero-cta-btn {
-          transition: background-color 0.2s ease;
-        }
-        .hero-cta-btn:hover {
-          background-color: var(--accent-hover);
-        }
-      `}</style>
-    </div>
+      <dialog ref={dialogRef} className={styles.viewer} aria-labelledby="case-viewer-title" data-lenis-prevent
+        onClose={() => setSelectedShot(null)}
+        onClick={(event) => { if (event.target === event.currentTarget) setSelectedShot(null) }}
+        onKeyDown={(event) => {
+          if (event.key === "ArrowLeft") { event.preventDefault(); moveShot(-1) }
+          if (event.key === "ArrowRight") { event.preventDefault(); moveShot(1) }
+        }}>
+        <div className={styles.viewerHeader}><div><p>{project.title}</p><h2 id="case-viewer-title" aria-live="polite">{currentShot.alt}</h2></div><button type="button" autoFocus onClick={() => setSelectedShot(null)} aria-label="Close screenshot viewer"><X size={22} aria-hidden="true" /></button></div>
+        {viewerOpen && <div className={styles.viewerMedia}><ProjectImage key={currentShot.src} src={currentShot.src} alt={currentShot.alt} sizes="95vw" eager /></div>}
+        <div className={styles.viewerFooter}><a href={currentShot.src} target="_blank" rel="noopener noreferrer" className={styles.textLink}>Open original<ArrowUpRight size={16} aria-hidden="true" /></a><div><button type="button" onClick={() => moveShot(-1)} aria-label="Previous screenshot"><ArrowLeft size={20} aria-hidden="true" /></button><span aria-live="polite">{(selectedShot ?? 0) + 1} / {shots.length}</span><button type="button" onClick={() => moveShot(1)} aria-label="Next screenshot"><ArrowRight size={20} aria-hidden="true" /></button></div></div>
+      </dialog>
+    </CaseStudyMotion>
   )
 }
