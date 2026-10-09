@@ -16,8 +16,8 @@ export function Skills() {
     const media = gsap.matchMedia()
     media.add("(prefers-reduced-motion: no-preference)", () => {
       section.querySelectorAll<HTMLElement>("[data-technology-area]").forEach((row) => {
-        gsap.fromTo(row.querySelector("[data-technology-tools]"), { x: 24 }, {
-          x: 0, ease: "none",
+        gsap.fromTo(row.querySelectorAll("[data-technology-tools] li"), { y: 30, rotate: 3 }, {
+          y: 0, rotate: 0, stagger: 0.08, ease: "none",
           scrollTrigger: { trigger: row, start: "top 92%", end: "top 70%", scrub: 0.65 },
         })
       })

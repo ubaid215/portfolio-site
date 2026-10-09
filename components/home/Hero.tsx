@@ -7,9 +7,9 @@ import styles from "./Hero.module.css"
 
 export function Hero() {
   return (
-    <section className={styles.hero} aria-labelledby="hero-title">
+    <section className={styles.hero} aria-labelledby="hero-title" data-hero>
       <HeroAtmosphere />
-      <div className={styles.portraitStage} aria-hidden="true">
+      <div className={styles.portraitStage} aria-hidden="true" data-hero-portrait>
         <div className={styles.portraitMotion}>
           <Image
             src={portrait}
@@ -36,7 +36,7 @@ export function Hero() {
           </p>
 
           <div className={styles.actions}>
-            <Link className={styles.primaryAction} href="/work">
+            <Link className={styles.primaryAction} href="/work" data-magnetic>
               <span className={styles.actionLabel}>
                 <span>Explore my work</span>
                 <span aria-hidden="true">Explore my work</span>
@@ -53,7 +53,7 @@ export function Hero() {
           </div>
         </div>
 
-        <div className={styles.identity}>
+        <div className={styles.identity} data-hero-identity>
           <h1 id="hero-title" className={styles.headline} aria-label="Muhammad Ubaidullah">
             <span className={styles.nameMotion}>
               <span className={styles.givenName}>

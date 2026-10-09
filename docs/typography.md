@@ -10,9 +10,9 @@ The portfolio uses a sans-serif pairing. Space Grotesk carries the home identity
 | Case title | `type-case-title` | Longer project names | `--type-case-size` |
 | Section title | `type-section` | Section headings in Geist Semibold | `--type-section-size` |
 | Home services and work | Scoped CSS modules | Feature sections in Space Grotesk | 2.7–5.2rem, with responsive wrapping |
-| Home stack and stories | `Skills.module.css`, `Testimonials.module.css` | Section headings in Space Grotesk | 2.5–4.6rem, weight 500, line-height 1.07 |
+| Home stack and stories | `Skills.module.css`, `Testimonials.module.css` | Section headings in Space Grotesk | Stack: 2.5–4.6rem; stories: 2.75–5.3rem, weight 500 |
 | Stack area title | `Skills.module.css` | Capability categories in Space Grotesk | 1.35–1.7rem, weight 500, line-height 1.25 |
-| Story text | `Testimonials.module.css` | Testimonial drafts, samples, and creator's note in Space Grotesk | 1.5–2.35rem, weight 500, line-height 1.35; 2rem mobile cap |
+| Story text | `Testimonials.module.css` | Client project stories and the creator's note in Space Grotesk | 1.25–1.5rem, line-height 1.5; creator note 1rem in Geist |
 | Card title | `type-card-title` | Project and service names | `--type-card-size` |
 | Lead | `type-lead` | First explanatory paragraph | `--type-lead-size`, 58ch max |
 | Reading text | `type-body` | Descriptions and case narratives | 1rem, 68ch max |
@@ -22,4 +22,6 @@ The tokens and classes live in `app/globals.css`. Use a role class before adding
 
 The hero uses a scoped display scale to match the portrait references. Its name, offer, supporting paragraph, and primary action have distinct roles. On mobile the name follows the portrait, with the offer and actions underneath. The entrance starts after the site intro; reduced motion shows the composition directly. Pointer movement shifts the portrait and name by a few pixels, and link feedback uses rolling labels, arrow movement, and an extending underline.
 
-Skills and Testimonials continue the scoped display treatment used by the homepage feature sections. Their explanatory copy stays at 1rem in Geist. Tool labels use 0.9375rem; story statuses, selector context, and attribution details use 0.8125rem. Disclosures use 0.875rem and remain distinct from the larger story text.
+Skills and Testimonials continue the scoped display treatment used by the homepage feature sections. Their explanatory copy stays at 1rem in Geist. Tool labels use 0.9375rem; story card context and footer links use 0.8125rem.
+
+About uses a 2.5–4.6rem Space Grotesk heading and numbered principles. The contact invitation uses 3–6.8rem display type, reduced to 2.5–3.5rem on phones. All copy on a solid jade surface explicitly uses --accent-text, including story text and names.

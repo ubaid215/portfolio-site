@@ -375,6 +375,10 @@
   }
 }
 
+@media (min-width: 768px) {
+  .portraitStage { top: 0; }
+}
+
 @media (max-width: 1050px) and (min-width: 701px) {
   .portraitStage { width: 72%; right: -9%; }
   .opening { max-width: 21rem; }

@@ -25,14 +25,14 @@ export function FeaturedWork() {
     const media = gsap.matchMedia()
 
     media.add("(prefers-reduced-motion: no-preference)", () => {
-      gsap.fromTo("[data-work-heading]", { y: 28, opacity: 0.45 }, {
-        y: 0, opacity: 1, ease: "none",
+      gsap.fromTo("[data-work-heading]", { y: 50 }, {
+        y: 0, ease: "none",
         scrollTrigger: { trigger: section, start: "top 90%", end: "top 55%", scrub: 0.7 },
       })
 
-      section.querySelectorAll<HTMLElement>("[data-project-card]").forEach((card) => {
-        gsap.fromTo(card.querySelector("[data-project-link]"), { y: 48, opacity: 0.5 }, {
-          y: 0, opacity: 1, ease: "none",
+      section.querySelectorAll<HTMLElement>("[data-project-card]").forEach((card, index) => {
+        gsap.fromTo(card.querySelector("[data-project-link]"), { y: index % 2 ? 90 : 55, scale: 0.96 }, {
+          y: 0, scale: 1, ease: "none",
           scrollTrigger: { trigger: card, start: "top 95%", end: "top 60%", scrub: 0.65 },
         })
       })

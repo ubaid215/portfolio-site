@@ -6,6 +6,7 @@ import { About }        from "@/components/home/About"
 import { Skills }       from "@/components/home/Skills"
 import { Testimonials } from "@/components/home/Testimonials"
 import { ContactCTA }   from "@/components/home/ContactCTA"
+import { HomeMotion } from "@/components/home/HomeMotion"
 
 const description = "Websites, SaaS products, AI automation, generative AI, SEO and digital marketing. Explore Muhammad Ubaidullah's services and selected project work."
 
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <>
+    <HomeMotion>
       <Hero />
       <Services />
       <FeaturedWork />
@@ -26,6 +27,6 @@ export default function HomePage() {
       <Skills />
       <Testimonials />
       <ContactCTA />
-    </>
+    </HomeMotion>
   )
 }

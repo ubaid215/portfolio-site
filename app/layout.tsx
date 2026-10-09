@@ -6,6 +6,7 @@
  * - Space Grotesk via next/font/google
  * - ThemeProvider (next-themes)
  * - globals.css design system
+ * - SmoothScroll (Lenis, driven by the GSAP ticker)
  * - Navbar & Footer (persistent across all pages)
  * - suppressHydrationWarning (required for next-themes)
  */
@@ -16,6 +17,7 @@ import { GeistMono } from "geist/font/mono"
 import { Space_Grotesk } from "next/font/google"
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { Navbar } from "@/components/layout/Navbar"
+import { SmoothScroll } from "@/components/layout/SmoothScroll"
 import { Footer } from "@/components/layout/Footer"
 import { SiteIntro } from "@/components/layout/SiteIntro"
 import "./globals.css"
@@ -84,6 +86,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     >
       <body className="flex min-h-screen flex-col">
         <ThemeProvider>
+          <SmoothScroll />
           <SiteIntro />
           <Navbar />
           <main className="flex-1">{children}</main>

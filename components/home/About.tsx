@@ -1,336 +1,70 @@
 "use client"
 
-import { motion, useInView } from "motion/react"
-import { useRef } from "react"
-import { ClipboardList, Globe, Package } from "lucide-react"
+import { useEffect, useRef } from "react"
 import Image from "next/image"
-
-const EASE = [0.16, 1, 0.3, 1] as const
+import { ArrowUpRight } from "lucide-react"
+import Link from "next/link"
+import { gsap, ScrollTrigger } from "@/lib/scroll-motion"
+import styles from "./About.module.css"
 
 const VALUES = [
-  {
-    icon: Package,
-    title: "One person, from idea to launch",
-    desc: "Work directly with me on the decisions, design, and development that bring your project to life.",
-  },
-  {
-    icon: ClipboardList,
-    title: "Your priorities come first",
-    desc: "A clear scope puts time and budget into the features that matter most to your business.",
-  },
-  {
-    icon: Globe,
-    title: "Progress you can see",
-    desc: "Working demos and clear updates give your team a voice throughout the build.",
-  },
-]
-
-const BADGES = [
-  { label: "Open to projects", color: "var(--accent-ink)", bg: "var(--accent-muted)" },
-  { label: "Working worldwide", color: "var(--fg-sub)", bg: "var(--bg-card)" },
-  { label: "Faisalabad, Pakistan", color: "var(--fg-muted)", bg: "var(--bg-card)" },
+  { title: "One person, from idea to launch", desc: "Work directly with me on the decisions, design, and development that bring your project to life." },
+  { title: "Your priorities come first", desc: "A clear scope puts time and budget into the features that matter most to your business." },
+  { title: "Progress you can see", desc: "Working demos and clear updates give your team a voice throughout the build." },
 ]
 
 export function About() {
-  const ref = useRef<HTMLElement>(null)
-  const isInView = useInView(ref, { once: true, margin: "-80px" })
+  const sectionRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+    const media = gsap.matchMedia()
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      gsap.fromTo("[data-about-frame]", { clipPath: "inset(10% 7% 10% 7% round 1rem)" }, {
+        clipPath: "inset(0% 0% 0% 0% round 1rem)", ease: "none",
+        scrollTrigger: { trigger: section, start: "top 85%", end: "top 20%", scrub: 0.8 },
+      })
+      gsap.fromTo("[data-about-image]", { yPercent: -6, scale: 1.12 }, {
+        yPercent: 6, scale: 1.04, ease: "none",
+        scrollTrigger: { trigger: section, start: "top bottom", end: "bottom top", scrub: 1 },
+      })
+      gsap.fromTo("[data-about-value]", { x: 40 }, {
+        x: 0, stagger: 0.14, ease: "none",
+        scrollTrigger: { trigger: "[data-about-values]", start: "top 90%", end: "top 48%", scrub: 0.7 },
+      })
+    }, section)
+    let disposed = false
+    void document.fonts.ready.then(() => { if (!disposed) ScrollTrigger.refresh() })
+    return () => { disposed = true; media.revert() }
+  }, [])
 
   return (
-    <section
-      ref={ref}
-      id="about"
-      style={{
-        padding: "clamp(4rem, 10vw, 7rem) 1.5rem",
-        background: "var(--bg-sub)",
-        borderTop: "1px solid var(--border)",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 1200,
-          margin: "0 auto",
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 420px), 1fr))",
-          gap: "clamp(3rem, 6vw, 5rem)",
-          alignItems: "start",
-        }}
-      >
-        {/* Left: Visual block */}
-        <motion.div
-          initial={{ opacity: 0, x: -32 }}
-          animate={isInView ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 0.8, ease: EASE }}
-          style={{ position: "relative" }}
-        >
-          {/* Photo with teal glow frame */}
-          <div
-            style={{
-              position: "relative",
-              borderRadius: "var(--radius-xl)",
-              overflow: "hidden",
-              aspectRatio: "4 / 5",
-              background: "var(--bg-card)",
-              border: "1px solid var(--border-sub)",
-              boxShadow: "0 0 48px rgba(0,217,166,0.10), var(--shadow-xl)",
-            }}
-          >
-            {/* Accent corner accents */}
-            <div
-              aria-hidden
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: 60,
-                height: 60,
-                borderTop: "2px solid var(--accent)",
-                borderLeft: "2px solid var(--accent)",
-                borderRadius: "var(--radius-xl) 0 0 0",
-                zIndex: 2,
-              }}
-            />
-            <div
-              aria-hidden
-              style={{
-                position: "absolute",
-                bottom: 0,
-                right: 0,
-                width: 60,
-                height: 60,
-                borderBottom: "2px solid var(--accent)",
-                borderRight: "2px solid var(--accent)",
-                borderRadius: "0 0 var(--radius-xl) 0",
-                zIndex: 2,
-              }}
-            />
-
-            {/* Profile Image */}
-            <Image
-              src="/images/professional-img.png"
-              alt="Muhammad Ubaidullah - Full Stack Developer"
-              fill
-              priority
-              sizes="(max-width: 768px) 100vw, 50vw"
-              style={{
-                objectFit: "cover",
-                objectPosition: "center",
-              }}
-            />
-
-            {/* Subtle gradient overlay for better depth */}
-            <div
-              aria-hidden
-              style={{
-                position: "absolute",
-                inset: 0,
-                background: "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.2) 100%)",
-                pointerEvents: "none",
-                zIndex: 1,
-              }}
-            />
-
-            {/* Decorative mesh overlay */}
-            <div
-              aria-hidden
-              className="bg-dot-grid"
-              style={{
-                position: "absolute",
-                inset: 0,
-                opacity: 0.15,
-                pointerEvents: "none",
-                zIndex: 1,
-              }}
-            />
+    <section ref={sectionRef} id="about" className={styles.section} aria-labelledby="about-heading">
+      <div className={styles.layout}>
+        <div className={styles.visual}>
+          <div className={styles.photo} data-about-frame>
+            <div className={styles.image} data-about-image>
+              <Image src="/images/professional-img.png" alt="Muhammad Ubaidullah" fill sizes="(max-width: 800px) 90vw, 40vw" />
+            </div>
+            <div className={styles.caption}><span>Independent developer.</span><span>Invested in your next move.</span></div>
           </div>
-
-          {/* Floating badges */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: "-1.5rem",
-              left: "50%",
-              transform: "translateX(-50%)",
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              gap: "0.5rem",
-              width: "calc(100% + 2rem)",
-              zIndex: 3,
-            }}
-          >
-            {BADGES.map(({ label, color, bg }) => (
-              <span
-                key={label}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  padding: "0.35rem 0.75rem",
-                  borderRadius: 9999,
-                  border: "1px solid var(--border-sub)",
-                  background: bg,
-                  color,
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--type-meta-size)",
-                  fontWeight: 500,
-                  letterSpacing: "0.04em",
-                  whiteSpace: "nowrap",
-                  backdropFilter: "blur(8px)",
-                }}
-              >
-                {label}
-              </span>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Right: Copy */}
-        <div style={{ paddingTop: "0.5rem" }}>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, ease: EASE }}
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--type-meta-size)",
-              fontWeight: 500,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--accent-ink)",
-              marginBottom: "1rem",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.75rem",
-            }}
-          >
-            <span
-              style={{
-                display: "inline-block",
-                width: "2rem",
-                height: "1px",
-                background: "var(--accent)",
-              }}
-            />
-            The person behind the work
-          </motion.p>
-
-          <div style={{ overflow: "hidden", marginBottom: "1.5rem" }}>
-            <motion.h2
-              className="type-section"
-              initial={{ y: "110%" }}
-              animate={isInView ? { y: "0%" } : {}}
-              transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
-              style={{
-                color: "var(--fg)",
-                margin: 0,
-              }}
-            >
-              Your goals shape what I build.
-            </motion.h2>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease: EASE, delay: 0.25 }}
-          >
-            <p
-              style={{
-                fontSize: "var(--type-body-size)",
-                color: "var(--fg-muted)",
-                lineHeight: 1.75,
-                marginBottom: "1rem",
-              }}
-            >
-              Hi, I&apos;m{" "}
-              <span style={{ color: "var(--fg)", fontWeight: 500 }}>
-                Muhammad Ubaidullah
-              </span>{" "}
-              — an independent full stack developer. I help founders and teams
-              turn their next big idea into a website, a digital product, or a
-              practical AI solution.
-            </p>
-            <p
-              style={{
-                fontSize: "var(--type-body-size)",
-                color: "var(--fg-muted)",
-                lineHeight: 1.75,
-                marginBottom: "1rem",
-              }}
-            >
-              My projects span online stores, school platforms, restaurant
-              systems, and donor management. Each starts with the same question:
-              what would make this better for the people using it?
-            </p>
-            <p
-              style={{
-                fontSize: "var(--type-body-size)",
-                color: "var(--fg-sub)",
-                lineHeight: 1.75,
-                marginBottom: "2.5rem",
-                fontWeight: 500,
-              }}
-            >
-              Bring me in for a focused project or to build alongside your team.
-            </p>
-          </motion.div>
-
-          {/* Value props */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease: EASE, delay: 0.4 }}
-            style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}
-          >
-            {VALUES.map(({ icon: Icon, title, desc }) => (
-              <div
-                key={title}
-                style={{
-                  display: "flex",
-                  gap: "1rem",
-                  alignItems: "flex-start",
-                }}
-              >
-                <div
-                  style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: "var(--radius-md)",
-                    background: "var(--accent-muted)",
-                    border: "1px solid rgba(0,217,166,0.2)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "var(--accent-ink)",
-                    flexShrink: 0,
-                  }}
-                >
-                  <Icon size={16} strokeWidth={1.75} />
-                </div>
-                <div>
-                  <p
-                    style={{
-                      fontSize: "0.9375rem",
-                      fontWeight: 500,
-                      color: "var(--fg)",
-                      margin: "0 0 0.25rem",
-                    }}
-                  >
-                    {title}
-                  </p>
-                  <p
-                    style={{
-                      fontSize: "0.875rem",
-                      color: "var(--fg-muted)",
-                      lineHeight: 1.6,
-                      margin: 0,
-                    }}
-                  >
-                    {desc}
-                  </p>
-                </div>
+          <div className={styles.location}><span>Faisalabad, Pakistan</span><span>Working worldwide <ArrowUpRight size={15} aria-hidden="true" /></span></div>
+        </div>
+        <div className={styles.copy}>
+          <p className={styles.eyebrow}>The person behind the work</p>
+          <h2 id="about-heading" className={styles.heading}>Your goals shape<br />what I build.</h2>
+          <p className={styles.lead}>Hi, I&apos;m <strong>Muhammad Ubaidullah</strong>. I help founders and teams turn their next big idea into a website, a digital product, or a practical AI solution.</p>
+          <p className={styles.description}>From online stores to restaurant systems, every project starts with the same question: what would make this better for the people using it?</p>
+          <div className={styles.values} data-about-values>
+            {VALUES.map((value, index) => (
+              <div className={styles.value} key={value.title} data-about-value>
+                <span className={styles.number}>0{index + 1}</span>
+                <div><h3>{value.title}</h3><p>{value.desc}</p></div>
               </div>
             ))}
-          </motion.div>
+          </div>
+          <Link className={styles.link} href="/contact">A project partner. An extension of your team.<ArrowUpRight size={20} aria-hidden="true" /></Link>
         </div>
       </div>
     </section>

@@ -52,7 +52,7 @@
   gap: clamp(1rem, 2vw, 1.75rem);
 }
 
-.projectCard { grid-column: span 7; min-width: 0; }
+.projectCard { grid-column: span 7; min-width: 0; perspective: 1200px; }
 .projectCard:nth-child(4n + 2), .projectCard:nth-child(4n + 3) { grid-column: span 5; }
 
 .projectLink {

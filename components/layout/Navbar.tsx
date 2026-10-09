@@ -31,6 +31,15 @@ const NAV_LINKS: NavLink[] = [
   { label: "Contact",  href: "/contact"  },
 ]
 
+function AnimatedNavLabel({ label }: { label: string }) {
+  return (
+    <span className="navbar-link-label">
+      <span>{label}</span>
+      <span aria-hidden="true">{label}</span>
+    </span>
+  )
+}
+
 /* ── Animation variants ──────────────────────────────────────────────── */
 const EASE_LUXURY = [0.16, 1, 0.3, 1] as const
 
@@ -128,6 +137,8 @@ export function Navbar() {
         transition={{ duration: 0.5, ease: EASE_LUXURY }}
       >
         <motion.nav
+          className="site-navbar"
+          data-scrolled={scrolled}
           data-framer-motion
           aria-label="Main navigation"
           style={{
@@ -145,8 +156,8 @@ export function Navbar() {
           animate={{
             width:        scrolled ? "min(720px, calc(100vw - 3rem))" : "100%",
             borderRadius: scrolled ? 9999 : 0,
-            paddingLeft:  scrolled ? "1.25rem" : "1.5rem",
-            paddingRight: scrolled ? "1.25rem" : "1.5rem",
+            paddingLeft:  scrolled ? "1.25rem" : "var(--navbar-edge-padding, 1.5rem)",
+            paddingRight: scrolled ? "1.25rem" : "var(--navbar-edge-padding, 1.5rem)",
             paddingTop:   "0.875rem",
             paddingBottom:"0.875rem",
             boxShadow:    scrolled
@@ -188,24 +199,8 @@ export function Navbar() {
           >
             {NAV_LINKS.map(({ label, href }) => (
               <li key={href}>
-                <Link href={href}>
-                  <motion.span
-                    data-framer-motion
-                    style={{
-                      display: "block",
-                      padding: "0.375rem 0.875rem",
-                      borderRadius: 9999,
-                      fontSize: "0.9rem",
-                      fontWeight: 400,
-                      color: "var(--fg-muted)",
-                      cursor: "pointer",
-                      position: "relative",
-                    }}
-                    whileHover={{ color: "var(--fg)", backgroundColor: "var(--bg-card)" }}
-                    transition={{ duration: 0.2, ease: EASE_LUXURY }}
-                  >
-                    {label}
-                  </motion.span>
+                <Link href={href} className="navbar-link">
+                  <AnimatedNavLabel label={label} />
                 </Link>
               </li>
             ))}
@@ -327,6 +322,8 @@ export function Navbar() {
               initial="closed"
               animate="open"
               exit="closed"
+              // Let the panel scroll itself while smooth scrolling owns the page.
+              data-lenis-prevent
               style={{
                 position: "fixed",
                 inset: 0,
@@ -375,6 +372,7 @@ export function Navbar() {
                     <Link
                       href={href}
                       onClick={closeMenu}
+                      className="navbar-menu-link"
                       style={{ display: "block", textDecoration: "none" }}
                     >
                       <motion.div
@@ -397,7 +395,7 @@ export function Navbar() {
                           lineHeight: 1.1,
                           letterSpacing: "-0.02em",
                         }}>
-                          {label}
+                          <AnimatedNavLabel label={label} />
                         </span>
                         <span style={{
                           fontFamily: "var(--font-mono)",
@@ -465,8 +463,114 @@ export function Navbar() {
 
       {/* ── Scoped styles ─────────────────────────────────────────── */}
       <style>{`
+        .navbar-link,
+        .navbar-menu-link {
+          --nav-roll-ease: cubic-bezier(0.22, 0.68, 0.2, 1);
+          position: relative;
+        }
+
+        .navbar-link {
+          display: block;
+          padding: 0.375rem 0.875rem;
+          font-size: 0.9rem;
+          font-weight: 400;
+          color: var(--fg-muted);
+          text-decoration: none;
+          transition: color 500ms ease;
+        }
+
+        .navbar-link-label {
+          position: relative;
+          display: inline-block;
+          vertical-align: top;
+          height: 1.5em;
+          line-height: 1.5;
+          overflow: hidden;
+        }
+
+        .navbar-link-label > span {
+          display: block;
+          transition: transform 850ms var(--nav-roll-ease);
+        }
+
+        .navbar-link-label > span:last-child {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+        }
+
+        .navbar-link::after,
+        .navbar-menu-link::after {
+          content: "";
+          position: absolute;
+          left: 0.875rem;
+          right: 0.875rem;
+          bottom: 0.25rem;
+          height: 1px;
+          background: var(--accent-ink);
+          transform: scaleX(0);
+          transform-origin: right;
+          transition: transform 950ms var(--nav-roll-ease);
+          pointer-events: none;
+        }
+
+        .navbar-link:is(:hover, :focus-visible),
+        .navbar-menu-link:is(:hover, :focus-visible) {
+          color: var(--fg);
+        }
+
+        .navbar-link:is(:hover, :focus-visible) .navbar-link-label > span,
+        .navbar-menu-link:is(:hover, :focus-visible) .navbar-link-label > span {
+          transform: translateY(-100%);
+        }
+
+        .navbar-link:is(:hover, :focus-visible)::after,
+        .navbar-menu-link:is(:hover, :focus-visible)::after {
+          transform: scaleX(1);
+          transform-origin: left;
+        }
+
+        .navbar-menu-link .navbar-link-label {
+          height: 1.1em;
+          line-height: 1.1;
+        }
+
+        .navbar-menu-link::after {
+          left: 0;
+          right: 0;
+          bottom: 0;
+        }
+
+        .navbar-link:focus-visible,
+        .navbar-menu-link:focus-visible {
+          outline: 2px solid var(--accent-ink);
+          outline-offset: 4px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .navbar-link-label > span,
+          .navbar-link::after,
+          .navbar-menu-link::after {
+            transition: none;
+          }
+          .navbar-link:is(:hover, :focus-visible) .navbar-link-label > span,
+          .navbar-menu-link:is(:hover, :focus-visible) .navbar-link-label > span {
+            transform: none;
+          }
+        }
+
         /* Show desktop links on md+ */
         @media (min-width: 768px) {
+          .site-navbar {
+            --navbar-edge-padding: clamp(1.5rem, 5vw, 5rem);
+            max-width: 1600px;
+          }
+          .site-navbar[data-scrolled="false"] {
+            background: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+          }
           .desktop-nav-links {
             display: flex !important;
           }

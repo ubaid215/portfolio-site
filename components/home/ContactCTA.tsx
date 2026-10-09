@@ -1,247 +1,56 @@
 "use client"
 
-import { motion, useInView } from "motion/react"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import Link from "next/link"
-import { ArrowUpRight, Mail } from "lucide-react"
-import { FaGithub, FaLinkedin } from "react-icons/fa"
+import { ArrowUpRight } from "lucide-react"
 import { GITHUB_URL, LINKEDIN_URL } from "@/lib/site"
-
-const EASE = [0.16, 1, 0.3, 1] as const
-
-const SOCIAL = [
-  {
-    label: "LinkedIn",
-    href: LINKEDIN_URL,
-    icon: FaLinkedin,
-  },
-  {
-    label: "GitHub",
-    href: GITHUB_URL,
-    icon: FaGithub,
-  },
-]
+import { gsap, ScrollTrigger } from "@/lib/scroll-motion"
+import styles from "./ContactCTA.module.css"
 
 export function ContactCTA() {
-  const ref = useRef<HTMLElement>(null)
-  const isInView = useInView(ref, { once: true, margin: "-80px" })
+  const sectionRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+    const media = gsap.matchMedia()
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      // Plays once as the section arrives, on its own timeline. Scrub would tie
+      // the masked headline to the scrollbar, so stopping mid-reveal left the
+      // words cut in half.
+      gsap.fromTo("[data-contact-line]", { yPercent: 60 }, {
+        yPercent: 0, duration: 1.1, stagger: 0.12, ease: "expo.out",
+        scrollTrigger: { trigger: section, start: "top 85%", once: true },
+      })
+      gsap.fromTo("[data-contact-arrow]", { rotate: -45 }, {
+        rotate: 0, ease: "none",
+        scrollTrigger: { trigger: section, start: "top 90%", end: "top 20%", scrub: 0.8 },
+      })
+    }, section)
+    let disposed = false
+    void document.fonts.ready.then(() => { if (!disposed) ScrollTrigger.refresh() })
+    return () => { disposed = true; media.revert() }
+  }, [])
 
   return (
-    <section
-      ref={ref}
-      id="contact"
-      style={{
-        padding: "clamp(4rem, 10vw, 7rem) 1.5rem",
-        background: "var(--bg-sub)",
-        borderTop: "1px solid var(--border)",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      {/* Decorative glow */}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "60vw",
-          height: "60vw",
-          maxWidth: 700,
-          maxHeight: 700,
-          borderRadius: "50%",
-          background: "var(--accent-muted)",
-          filter: "blur(100px)",
-          opacity: 0.5,
-          pointerEvents: "none",
-        }}
-      />
-
-      <div
-        style={{
-          maxWidth: 800,
-          margin: "0 auto",
-          textAlign: "center",
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-        {/* Eyebrow */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, ease: EASE }}
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "var(--type-meta-size)",
-            fontWeight: 500,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            color: "var(--accent-ink)",
-            marginBottom: "1.5rem",
-          }}
-        >
-          Let&apos;s work together
-        </motion.p>
-
-        {/* Headline */}
-        <div style={{ overflow: "hidden", marginBottom: "1.25rem" }}>
-          <motion.h2
-            className="type-section"
-            initial={{ y: "110%" }}
-            animate={isInView ? { y: "0%" } : {}}
-            transition={{ duration: 0.85, ease: EASE, delay: 0.1 }}
-            style={{
-              color: "var(--fg)",
-              margin: 0,
-            }}
-          >
-            What could your business do next?
-          </motion.h2>
-        </div>
-
-        {/* Sub-copy */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, ease: EASE, delay: 0.25 }}
-          style={{
-            fontSize: "1rem",
-            color: "var(--fg-muted)",
-            lineHeight: 1.7,
-            maxWidth: "44ch",
-            margin: "0 auto 2.5rem",
-          }}
-        >
-          Whether you&apos;re planning a launch or improving what you already have,
-          let&apos;s turn your goal into a clear plan for the build.
-        </motion.p>
-
-        {/* CTA buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, ease: EASE, delay: 0.4 }}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexWrap: "wrap",
-            gap: "0.75rem",
-            marginBottom: "3rem",
-          }}
-        >
-          {/* Primary: Email */}
-          <Link href="/contact" style={{ textDecoration: "none" }}>
-            <motion.span
-              className="contact-primary"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.45rem",
-                padding: "0.875rem 2rem",
-                borderRadius: 9999,
-                background: "var(--accent)",
-                color: "var(--accent-text)",
-                fontSize: "0.9375rem",
-                fontWeight: 600,
-                cursor: "pointer",
-                whiteSpace: "nowrap",
-              }}
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ duration: 0.2, ease: EASE }}
-            >
-              <Mail size={16} strokeWidth={2} />
-              Discuss your project
-              <ArrowUpRight size={15} strokeWidth={2.5} />
-            </motion.span>
+    <section ref={sectionRef} id="contact" className={styles.section} aria-labelledby="contact-heading">
+      <div className={styles.container}>
+        <div className={styles.topline}><p>Let&apos;s work together</p><span><i aria-hidden="true" />Open to projects &amp; team opportunities</span></div>
+        <div className={styles.invitation}>
+          <h2 id="contact-heading" className={styles.heading}>
+            <span className={styles.line}><span data-contact-line>Your next chapter.</span></span>
+            <span className={styles.line}><span data-contact-line>Let&apos;s build it.</span></span>
+          </h2>
+          <Link href="/contact" className={styles.discuss} data-magnetic aria-label="Discuss your project">
+            <span className={styles.arrow} data-contact-arrow><ArrowUpRight strokeWidth={1.1} aria-hidden="true" /></span>
+            <span>Let&apos;s talk</span>
           </Link>
-
-          {/* Social links */}
-          {SOCIAL.map(({ label, href, icon: Icon }) => (
-            <Link
-              key={label}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ textDecoration: "none" }}
-            >
-              <motion.span
-                className="contact-social"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "0.45rem",
-                  padding: "0.875rem 1.5rem",
-                  borderRadius: 9999,
-                  border: "1px solid var(--border-sub)",
-                  background: "transparent",
-                  color: "var(--fg-sub)",
-                  fontSize: "0.9375rem",
-                  fontWeight: 500,
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                  transition: "border-color 0.2s ease, color 0.2s ease",
-                }}
-                whileHover={{ scale: 1.04, borderColor: "var(--border-strong)", color: "var(--fg)" }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ duration: 0.2, ease: EASE }}
-              >
-                <Icon size={16} />
-                {label}
-              </motion.span>
-            </Link>
-          ))}
-        </motion.div>
-
-        {/* Availability strip */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.6, ease: EASE, delay: 0.6 }}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            padding: "0.4rem 1rem",
-            borderRadius: 9999,
-            background: "var(--accent-muted)",
-            border: "1px solid rgba(0,217,166,0.2)",
-          }}
-        >
-          <span
-            style={{
-              width: 7,
-              height: 7,
-              borderRadius: "50%",
-              background: "var(--accent)",
-              display: "inline-block",
-              animation: "pulse 2s ease infinite",
-            }}
-          />
-          <span
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--type-meta-size)",
-              fontWeight: 500,
-              color: "var(--accent-ink)",
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-            }}
-          >
-            Currently available · PKT / GMT+5
-          </span>
-        </motion.div>
+        </div>
+        <div className={styles.bottom}>
+          <p>Whether you&apos;re planning a launch or improving what you already have, let&apos;s turn your goal into a clear plan for the build.</p>
+          <div className={styles.socials}><a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer">LinkedIn<ArrowUpRight size={17} aria-hidden="true" /></a><a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub<ArrowUpRight size={17} aria-hidden="true" /></a><span>PKT / GMT+5</span></div>
+        </div>
       </div>
-
-      <style>{`
-        .contact-primary { transition: background-color 0.2s cubic-bezier(0.16,1,0.3,1); }
-        .contact-primary:hover { background-color: var(--accent-hover); }
-        .contact-social { transition: background-color 0.2s cubic-bezier(0.16,1,0.3,1); }
-        .contact-social:hover { background-color: var(--bg-card); }
-      `}</style>
     </section>
   )
 }

@@ -32,9 +32,9 @@ export function HeroAtmosphere() {
       if (!width || !height) return
       const light = document.documentElement.getAttribute("data-theme") === "light"
       context.clearRect(0, 0, width, height)
-      hero.style.setProperty("--portrait-shift-x", `${(pointer.x - HOME_POINTER.x) * 16}px`)
-      hero.style.setProperty("--portrait-shift-y", `${(pointer.y - HOME_POINTER.y) * 10}px`)
-      hero.style.setProperty("--type-shift-x", `${(pointer.x - HOME_POINTER.x) * -5}px`)
+      hero.style.setProperty("--portrait-shift-x", `${(pointer.x - HOME_POINTER.x) * 28}px`)
+      hero.style.setProperty("--portrait-shift-y", `${(pointer.y - HOME_POINTER.y) * 18}px`)
+      hero.style.setProperty("--type-shift-x", `${(pointer.x - HOME_POINTER.x) * -9}px`)
 
       const glowX = width * (0.78 + (pointer.x - HOME_POINTER.x) * 0.08)
       const glowY = height * (0.5 + (pointer.y - HOME_POINTER.y) * 0.08)
@@ -60,7 +60,7 @@ export function HeroAtmosphere() {
         const place = index / (lineCount - 1)
         const baseX = fieldCenter + (place - 0.5) * fieldSpread
         const strong = Math.sin(Math.PI * place)
-        const alpha = (0.045 + strong * 0.14) * (light ? 0.75 : 1)
+        const alpha = (0.06 + strong * 0.2) * (light ? 0.85 : 1)
         const blueLine = index % 7 === 0
         const color = blueLine
           ? light ? "30, 100, 133" : "98, 175, 220"
@@ -79,7 +79,7 @@ export function HeroAtmosphere() {
         for (let step = 0; step <= 48; step++) {
           const progress = step / 48
           const y = (progress * 1.22 - 0.11) * height
-          const wave = Math.sin(progress * 3.5 + seconds * 0.22 + place * 3.4) * width * 0.04
+          const wave = Math.sin(progress * 3.5 + seconds * 0.32 + place * 3.4) * width * 0.05
             + Math.sin(progress * 8.1 - seconds * 0.15 + place * 5.2) * width * 0.008
           let x = baseX + wave + (pointer.x - HOME_POINTER.x) * width * 0.018
 

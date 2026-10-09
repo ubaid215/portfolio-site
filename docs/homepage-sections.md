@@ -38,33 +38,57 @@ stacks beneath its supporting sentence.
 
 ## Testimonials
 
-`lib/testimonials.ts` supplies seven stories. Hussnain Akbar, Raees Ali, and Usman
-have owner-supplied names and project contexts, with proposed wording visibly
-marked “Draft quote.” Three illustrative people and scenarios are marked
-“Sample quote.” Finaccont is presented as a “Creator's note” about the owner's
-accounting software. Each story retains its attribution and status disclosure.
+`lib/testimonials.ts` supplies four stories. Hussnain Akbar, Raees Ali, and Usman
+are owner-supplied client names with their project contexts; Finaccont is the
+owner's accounting software. Each story is written in the owner's voice about
+documented project work rather than attributed to a client, so no unapproved
+wording appears as a client quotation and no illustrative people are invented.
+See `docs/testimonials.md` for the content model.
 
-The first story appears initially. Visitors choose a story through buttons that
-show its name, context, and status, with the selected state exposed through
-`aria-pressed`. The story region announces changes politely. Desktop places the
-story beside the selector; at 760px and below, the story sits above a two-column
-selector. Reserved story space reduces layout movement between selections.
+One full-bleed marquee line carries the four stories, drifting left and looping
+without a seam. Both edges fade so cards dissolve rather than clip. Desktop shows
+three cards at a time; phones show one card with a glimpse of the next. Hovering
+or focusing the line pauses it, and a story link stays clickable while the rest of
+the page keeps its motion. The first card uses jade, the restaurant card uses ink,
+and Finaccont includes its real screenshot. See `docs/testimonials.md` for the
+marquee and reduced-motion details.
+
+## About and contact
+
+About uses a portrait with a scroll-driven opening mask, gentle image parallax,
+and numbered working principles. Its image becomes a shorter full-width frame
+on phones. The contact section is a solid jade invitation with large split-line
+type and a magnetic circular link. The shared footer omits its duplicate CTA on
+the homepage and keeps its navigation and contact details.
 
 ## Motion
 
-For Services and Selected work, GSAP ScrollTrigger drives heading and row reveals with scrub values of 0.5–0.7.
-Desktop screenshot movement uses scrub values of 0.9–1. Both sections use
-`gsap.matchMedia()` and revert their triggers and inline styles on unmount or when
-reduced motion is enabled. Mobile scrolling remains native. Content is visible
-in server-rendered HTML and without JavaScript.
+`SmoothScroll` runs one Lenis instance for the whole site, driven by the GSAP
+ticker so ScrollTrigger reads the smoothed position, and same-page hashes scroll to
+their target on that same curve while keeping each target's `scroll-margin-top`. It
+is skipped entirely under reduced motion, and the mobile menu panel opts out with
+`data-lenis-prevent` so it scrolls itself.
 
-Skills moves tool labels horizontally from 24px to their resting position with
-a scrub value of 0.65, keeping text at full opacity. Testimonials reveals its
-heading and rule with scrub values of 0.7 and 0.8. Both use `gsap.matchMedia()`
-and revert on unmount or when reduced motion is enabled. Story selection uses
-Motion's sequential exit and entrance, with a 0.35-second fade and small vertical
-movement. Reduced motion makes story changes immediate and removes link and
-selector arrow movement.
+`HomeMotion` coordinates the reading progress bar, desktop hero depth, magnetic
+links, and project pointer tilt. Each animation uses `gsap.matchMedia()` and
+cleans up on unmount or preference changes. The slower first-load intro and
+subsequent hero entrance keep their existing timing.
+
+- Services: staggered heading translation, rising content, and active accent rules.
+- Work: alternating card lift/scale, image parallax, and pointer tilt on fine pointers.
+- About: opening portrait mask, image parallax, and staggered numbered rows.
+- Skills: individual tool labels settle into their rows with a small rotation.
+- Testimonials: the story line drifts at a constant pixel speed, with a separate hover lift.
+- Contact: two headline lines rise into place once on their own timing as the section arrives, and the arrow rotates toward the link destination as you scroll.
+
+The contact headline is a one-shot reveal rather than a scrubbed one, so a stopped
+scroll can never leave it half-drawn; every other entrance stays scroll-linked.
+ScrollTrigger scrub values range from 0.25 to 1 second. Reading text stays at
+full opacity. No page scroll is hijacked or pinned. Reduced motion removes the
+new scroll choreography and pointer effects. The
+canvas pauses offscreen and in hidden tabs. Content remains available without
+JavaScript; the story line becomes a horizontally scrollable row without
+JavaScript or reduced motion.
 
 The homepage and services metadata describe the expanded offers. Metadata and
 service content do not imply guaranteed search rankings or traffic gains.

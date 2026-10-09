@@ -1,11 +1,13 @@
 "use client"
 
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { motion, useInView } from "motion/react"
 import { useRef } from "react"
 import { ArrowUpRight, Mail } from "lucide-react"
 import { FaGithub, FaLinkedin } from "react-icons/fa"
 import { CONTACT_EMAIL, GITHUB_URL, LINKEDIN_URL } from "@/lib/site"
+import styles from "./Footer.module.css"
 
 /* ── Data ─────────────────────────────────────────────────────────── */
 const FOOTER_LINKS = [
@@ -28,7 +30,7 @@ const EASE_LUXURY = [0.16, 1, 0.3, 1] as const
 // Hover-reveal underline link
 function FooterNavLink({ label, href }: { label: string; href: string }) {
   return (
-    <Link href={href}>
+    <Link href={href} className={styles.navLink}>
       <motion.span
         data-framer-motion
         style={{
@@ -93,8 +95,6 @@ function SocialButton({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        width: 40,
-        height: 40,
         borderRadius: "var(--radius-md)",
         background: "var(--bg-card)",
         border: "1px solid var(--border)",
@@ -103,15 +103,17 @@ function SocialButton({
         textDecoration: "none",
         flexShrink: 0,
       }}
-      className="social-btn"
+      className={`${styles.socialButton} social-btn`}
     >
-       <Icon size={16} />
+      <span className={styles.socialIcon} aria-hidden="true"><Icon size={16} /></span>
+      <span className={styles.socialLabel}>{label}</span>
     </motion.a>
   )
 }
 
 /* ── Main Footer ──────────────────────────────────────────────────── */
 export function Footer() {
+  const pathname = usePathname()
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { once: true, margin: "-80px" })
 
@@ -154,8 +156,8 @@ export function Footer() {
         }}
       >
 
-        {/* ── Top: CTA headline ──────────────────────────────────── */}
-        <div
+        {/* The homepage already ends with its own contact invitation. */}
+        {pathname !== "/" && <div
           style={{
             paddingTop: "clamp(3rem, 8vw, 5rem)",
             paddingBottom: "clamp(2rem, 5vw, 3.5rem)",
@@ -247,22 +249,12 @@ export function Footer() {
               </motion.span>
             </Link>
           </motion.div>
-        </div>
+        </div>}
 
         {/* ── Middle: Nav + Social ────────────────────────────────── */}
-        <div
-          style={{
-            paddingTop: "2.5rem",
-            paddingBottom: "2rem",
-            borderBottom: "1px solid var(--border)",
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: "2rem",
-            alignItems: "start",
-          }}
-        >
+        <div className={styles.footerGrid}>
           {/* Brand col */}
-          <div>
+          <div className={styles.brand}>
             <Link href="/" style={{ textDecoration: "none" }}>
               <motion.span
                 data-framer-motion
@@ -342,7 +334,7 @@ export function Footer() {
             }}>
               Navigation
             </p>
-            <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "0.625rem" }}>
+            <ul className={styles.navigationList}>
               {FOOTER_LINKS.map(({ label, href }) => (
                 <li key={href}>
                   <FooterNavLink label={label} href={href} />
@@ -364,7 +356,7 @@ export function Footer() {
             }}>
               Connect
             </p>
-            <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+            <div className={styles.socialList}>
               {SOCIAL_LINKS.map(({ label, href, icon: Icon }, i) => (
                 <SocialButton
                   key={label}
@@ -379,21 +371,12 @@ export function Footer() {
         </div>
 
         {/* ── Bottom: copyright row ───────────────────────────────── */}
-        <div
-          style={{
-            paddingTop: "1.25rem",
-            paddingBottom: "1.5rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "0.75rem",
-          }}
-        >
+        <div className={styles.bottomRow}>
           <p style={{
             fontSize: "0.8125rem",
             color: "var(--fg-faint)",
             margin: 0,
+            lineHeight: 1.6,
           }}>
             © {year} Muhammad Ubaidullah. All rights reserved.
           </p>
@@ -404,6 +387,7 @@ export function Footer() {
             color: "var(--fg-faint)",
             margin: 0,
             display: "flex",
+            flexWrap: "wrap",
             alignItems: "center",
             gap: "0.35rem",
           }}>

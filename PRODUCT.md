@@ -32,11 +32,11 @@ Sans-serif fonts only. Preserve the premium portfolio direction, smooth motion, 
 
 Existing projects and their screenshots are defined in lib/projects.ts. The owner supplied Hussnain Akbar (business online presence and SEO), Raees Ali (e-commerce), and Usman (restaurant system) as names and project contexts. Finaccont is the owner's accounting software.
 
-No verbatim testimonial quotes or approvals have been supplied. Written quotes for the named people are drafts. Three additional example names and quotes are samples. These statuses must be visible in the interface. Finaccont is presented as a creator's product note rather than independent customer feedback.
+No verbatim testimonial quotes or approvals have been supplied, so the homepage story cards are written in the owner's voice about documented project work and are not attributed to a client as quotations. The three client names and project contexts are owner-supplied; the project details come from lib/projects.ts. Finaccont is presented as a creator's product note rather than independent customer feedback. On 2026-10-09 the owner asked for the visible draft/sample labels to be removed; replacing a story with a client's own approved wording requires that client's approval.
 
 ## Product Principles
 
 - Explain how the work helps customers and the team using it.
 - Support claims with documented projects or explicit owner confirmation.
 - Make project and hiring enquiries easy to start.
-- Keep drafted feedback and illustrative scenarios clearly identified.
+- Write about client work from documented project facts, without putting unapproved wording in a client's mouth or inventing people, companies, or outcomes.

@@ -1,583 +1,244 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useEffect, useRef, useState, useCallback, type CSSProperties } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { motion, useInView, AnimatePresence } from "motion/react"
-import { ArrowUpRight } from "lucide-react"
-import { PROJECTS, type ProjectCategory } from "@/lib/projects"
+import { AnimatePresence, motion, useReducedMotion } from "motion/react"
+import { ArrowDown, ArrowUpRight } from "lucide-react"
+import { PROJECTS, type Project, type ProjectCategory } from "@/lib/projects"
+import { gsap, ScrollTrigger } from "@/lib/scroll-motion"
+import styles from "./page.module.css"
 
 const EASE = [0.16, 1, 0.3, 1] as const
+const FILTERS: ("All" | ProjectCategory)[] = ["All", "Full Stack", "Frontend", "SaaS", "Client Work"]
+const POINTER_MOTION = "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)"
 
-const FILTERS: ("All" | ProjectCategory)[] = [
-  "All",
-  "Full Stack",
-  "Frontend",
-  "SaaS",
-  "Client Work",
-]
+function attachPointerDepth(target: HTMLElement, surface: HTMLElement, travel: number, tilt: number) {
+  const options = { duration: 0.7, ease: "power3.out" }
+  const xTo = gsap.quickTo(surface, "x", options)
+  const yTo = gsap.quickTo(surface, "y", options)
+  const rotateXTo = gsap.quickTo(surface, "rotationX", options)
+  const rotateYTo = gsap.quickTo(surface, "rotationY", options)
+  gsap.set(surface, { transformPerspective: 1100 })
+  let bounds: DOMRect | null = null
+  let scrollPosition = 0
+  let viewportWidth = 0
 
-function ProjectCard({
-  project,
-  index,
-}: {
-  project: (typeof PROJECTS)[0]
-  index: number
-}) {
-  const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once: true, margin: "-60px" })
-  const [imgError, setImgError] = useState(false)
+  const move = (event: PointerEvent) => {
+    if (event.pointerType !== "mouse") return
+    if (!bounds || scrollPosition !== window.scrollY || viewportWidth !== window.innerWidth) {
+      bounds = target.getBoundingClientRect()
+      scrollPosition = window.scrollY
+      viewportWidth = window.innerWidth
+    }
+    const x = gsap.utils.clamp(-0.5, 0.5, (event.clientX - bounds.left) / bounds.width - 0.5)
+    const y = gsap.utils.clamp(-0.5, 0.5, (event.clientY - bounds.top) / bounds.height - 0.5)
+    xTo(x * travel)
+    yTo(y * travel)
+    rotateXTo(-y * tilt)
+    rotateYTo(x * tilt)
+  }
+  const reset = () => { bounds = null; xTo(0); yTo(0); rotateXTo(0); rotateYTo(0) }
+  target.addEventListener("pointermove", move, { passive: true })
+  target.addEventListener("pointerleave", reset)
+  target.addEventListener("pointercancel", reset)
+  target.addEventListener("focusin", reset)
+  return () => {
+    target.removeEventListener("pointermove", move)
+    target.removeEventListener("pointerleave", reset)
+    target.removeEventListener("pointercancel", reset)
+    target.removeEventListener("focusin", reset)
+    ;[xTo, yTo, rotateXTo, rotateYTo].forEach((to) => to.tween.kill())
+  }
+}
+
+function WorkPreview() {
+  const stageRef = useRef<HTMLDivElement>(null)
+  const [visible, setVisible] = useState(true)
+  const [hidden, setHidden] = useState(false)
+
+  useEffect(() => {
+    const stage = stageRef.current
+    if (!stage) return
+    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting))
+    const visibilityChange = () => setHidden(document.hidden)
+    observer.observe(stage)
+    visibilityChange()
+    document.addEventListener("visibilitychange", visibilityChange)
+    const media = gsap.matchMedia()
+    media.add(POINTER_MOTION, () => {
+      const composition = stage.parentElement
+      if (!composition) return
+      const cleanups = Array.from(stage.querySelectorAll<HTMLElement>("[data-preview-depth]")).map((surface, index) =>
+        attachPointerDepth(composition, surface, index === 0 ? 18 : -28, index === 0 ? 3 : -4)
+      )
+      return () => cleanups.forEach((cleanup) => cleanup())
+    }, stage)
+    return () => { observer.disconnect(); document.removeEventListener("visibilitychange", visibilityChange); media.revert() }
+  }, [])
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 40 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.65, ease: EASE, delay: index * 0.07 }}
-      layout
-    >
-      <Link
-        href={`/work/${project.slug}`}
-        style={{ textDecoration: "none", display: "block" }}
-      >
-        <motion.article
-          className="work-card"
-          style={{
-            position: "relative",
-            borderRadius: "var(--radius-lg)",
-            border: "1px solid var(--border)",
-            background: "var(--bg-card)",
-            overflow: "hidden",
-            cursor: "pointer",
-            transition:
-              "border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease",
-          }}
-          whileHover={{ y: -6 }}
-          transition={{ duration: 0.3, ease: EASE }}
-        >
-          {/* ── Hero / Cover Image area ── */}
-          <div
-            style={{
-              height: 220,
-              background: project.heroBg,
-              position: "relative",
-              overflow: "hidden",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {/* Cover image — shown when available and no load error */}
-            {!imgError ? (
-              <Image
-                src={project.coverImage}
-                alt={project.title}
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                style={{ objectFit: "cover", objectPosition: "top" }}
-                onError={() => setImgError(true)}
-                priority={index < 2}
-              />
-            ) : null}
-
-            {/* Overlay gradient — sits on top of image for readability */}
-            <div
-              aria-hidden
-              style={{
-                position: "absolute",
-                inset: 0,
-                background:
-                  "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 100%)",
-                zIndex: 1,
-              }}
-            />
-
-            {/* Dot grid overlay (subtle, only visible when no image) */}
-            {imgError && (
-              <div
-                aria-hidden
-                className="bg-dot-grid"
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  opacity: 0.18,
-                  pointerEvents: "none",
-                }}
-              />
-            )}
-
-            {/* Accent glow (fallback only) */}
-            {imgError && (
-              <div
-                aria-hidden
-                style={{
-                  position: "absolute",
-                  top: "30%",
-                  left: "20%",
-                  width: "60%",
-                  height: "60%",
-                  borderRadius: "50%",
-                  background: "var(--accent-muted)",
-                  filter: "blur(50px)",
-                  opacity: 0.6,
-                  pointerEvents: "none",
-                }}
-              />
-            )}
-
-            {/* Project index — large decorative (fallback) */}
-            {imgError && (
-              <span
-                aria-hidden
-                style={{
-                  position: "absolute",
-                  right: "1.5rem",
-                  bottom: "-0.5rem",
-                  fontFamily: "var(--font-display)",
-                  fontSize: "7rem",
-                  fontWeight: 500,
-                  lineHeight: 1,
-                  color: "rgba(0,217,166,0.06)",
-                  userSelect: "none",
-                  pointerEvents: "none",
-                }}
-              >
-                {project.index}
-              </span>
-            )}
-
-            {/* Arrow icon top-right */}
-            <div
-              className="work-card-arrow"
-              style={{
-                position: "absolute",
-                top: "1rem",
-                right: "1rem",
-                zIndex: 2,
-                width: 36,
-                height: 36,
-                borderRadius: "var(--radius-md)",
-                background: "rgba(10,14,26,0.86)",
-                border: "1px solid rgba(255,255,255,0.2)",
-                backdropFilter: "blur(8px)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "#FFFFFF",
-                transition:
-                  "color 0.2s ease, background 0.2s ease, border-color 0.2s ease",
-              }}
-            >
-              <ArrowUpRight size={16} strokeWidth={1.5} />
-            </div>
-
-            {/* Project index + year pill (bottom of hero, over image) */}
-            <div
-              style={{
-                position: "absolute",
-                bottom: "1rem",
-                left: "1rem",
-                zIndex: 2,
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                padding: "0.25rem 0.75rem",
-                borderRadius: 9999,
-                border: "1px solid rgba(255,255,255,0.2)",
-                background: "rgba(10,14,26,0.88)",
-                backdropFilter: "blur(8px)",
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--type-meta-size)",
-                  color: "var(--brass-image)",
-                  letterSpacing: "0.1em",
-                  fontWeight: 500,
-                }}
-              >
-                {project.index}
-              </span>
-              <span
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.9rem",
-                  color: "#FFFFFF",
-                }}
-              >
-                {project.year}
-              </span>
+      <div ref={stageRef} className={styles.previewStage} data-motion={hidden || !visible ? "paused" : "running"} aria-hidden="true">
+        {[PROJECTS[0], PROJECTS[2]].map((project) => (
+          <div className={styles.previewFrame} key={project.slug}>
+            <div className={styles.previewFloat}>
+              <div className={styles.previewDepth} data-preview-depth>
+                <div className={styles.previewScreen}>
+                  <Image src={project.coverImage} alt="" fill sizes="(max-width: 760px) 75vw, 42vw" loading="eager" />
+                </div>
+              </div>
             </div>
           </div>
+        ))}
+      </div>
+  )
+}
 
-          {/* ── Content ── */}
-          <div style={{ padding: "1.5rem" }}>
-            {/* Categories */}
-            <div
-              style={{
-                display: "flex",
-                gap: "0.375rem",
-                flexWrap: "wrap",
-                marginBottom: "0.875rem",
-              }}
-            >
-              {project.categories.map((cat) => (
-                <span
-                  key={cat}
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--type-meta-size)",
-                    color: "var(--fg-faint)",
-                    padding: "0.2rem 0.5rem",
-                    borderRadius: 9999,
-                    border: "1px solid var(--border)",
-                    background: "var(--bg-sub)",
-                    letterSpacing: "0.04em",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {cat}
-                </span>
-              ))}
-            </div>
+function ProjectStory({ project, featured }: { project: Project; featured: boolean }) {
+  const linkRef = useRef<HTMLAnchorElement>(null)
+  const [imageError, setImageError] = useState(false)
 
-            {/* Title */}
-            <h2
-              className="type-card-title"
-              style={{
-                color: "var(--fg)",
-                margin: "0 0 0.5rem",
-              }}
-            >
-              {project.title}
-            </h2>
+  useEffect(() => {
+    const link = linkRef.current
+    if (!link) return
+    const media = gsap.matchMedia()
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      gsap.fromTo("[data-work-mask]", { clipPath: "inset(7% 4% 7% 4% round 0.85rem)" }, {
+        clipPath: "inset(0% 0% 0% 0% round 0.85rem)", ease: "none",
+        scrollTrigger: { trigger: link, start: "top 93%", end: "top 38%", scrub: 0.8 },
+      })
+      gsap.fromTo("[data-work-copy]", { y: 30 }, {
+        y: 0, ease: "none",
+        scrollTrigger: { trigger: link, start: "top 88%", end: "top 48%", scrub: 0.7 },
+      })
+    }, link)
+    media.add("(min-width: 761px) and (prefers-reduced-motion: no-preference)", () => {
+      gsap.fromTo("[data-screen-depth]", { yPercent: 9, scale: 1.04 }, {
+        yPercent: -9, scale: 1, ease: "none",
+        scrollTrigger: { trigger: link, start: "top bottom", end: "bottom top", scrub: 1 },
+      })
+    }, link)
+    media.add(POINTER_MOTION, () => {
+      const target = link.querySelector<HTMLElement>("[data-work-surface]")
+      const surface = link.querySelector<HTMLElement>("[data-work-tilt]")
+      if (target && surface) return attachPointerDepth(target, surface, 8, 10)
+    }, link)
+    let disposed = false
+    void document.fonts.ready.then(() => { if (!disposed) ScrollTrigger.refresh() })
+    return () => { disposed = true; media.revert() }
+  }, [featured])
 
-            {/* Tagline */}
-            <p
-              style={{
-                fontSize: "0.9375rem",
-                color: "var(--fg-muted)",
-                lineHeight: 1.6,
-                margin: "0 0 1.25rem",
-              }}
-            >
-              {project.tagline}
-            </p>
-
-            {/* Divider */}
-            <div
-              style={{
-                height: "1px",
-                background: "var(--border)",
-                margin: "0 0 1.125rem",
-              }}
-            />
-
-            {/* Stack tags */}
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.375rem" }}>
-              {project.stack.slice(0, 5).map((tag) => (
-                <span
-                  key={tag}
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--type-meta-size)",
-                    color: "var(--accent-ink)",
-                    background: "var(--accent-muted)",
-                    border: "1px solid rgba(0,217,166,0.18)",
-                    padding: "0.2rem 0.55rem",
-                    borderRadius: 9999,
-                    letterSpacing: "0.03em",
-                  }}
-                >
-                  {tag}
-                </span>
-              ))}
-              {project.stack.length > 5 && (
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "var(--type-meta-size)",
-                    color: "var(--fg-faint)",
-                    padding: "0.2rem 0.55rem",
-                    letterSpacing: "0.03em",
-                  }}
-                >
-                  +{project.stack.length - 5} more
-                </span>
-              )}
+  return (
+    <Link href={`/work/${project.slug}`} ref={linkRef} className={styles.projectLink} aria-label={`View ${project.title} case study`}>
+      <div className={styles.media} data-work-surface style={{ "--project-surface": project.mockupColor } as CSSProperties}>
+        <div className={styles.mediaMask} data-work-mask>
+          <div className={styles.screenDepth} data-screen-depth>
+            <div className={styles.screenTilt} data-work-tilt>
+              <div className={styles.screen}>
+                {imageError ? <div className={styles.fallback}>{project.title}</div> : <Image src={project.coverImage} alt={`${project.title} interface`} fill sizes={featured ? "(max-width: 760px) 90vw, 58vw" : "(max-width: 760px) 90vw, 50vw"} onError={() => setImageError(true)} />}
+              </div>
             </div>
           </div>
-
-          {/* Left accent bar */}
-          <div
-            className="work-card-bar"
-            style={{
-              position: "absolute",
-              left: 0,
-              top: 0,
-              bottom: 0,
-              width: "3px",
-              background: "var(--accent)",
-              borderRadius: "var(--radius-lg) 0 0 var(--radius-lg)",
-              transform: "scaleY(0)",
-              transformOrigin: "bottom",
-              transition: "transform 0.4s cubic-bezier(0.16,1,0.3,1)",
-            }}
-          />
-        </motion.article>
-      </Link>
-    </motion.div>
+        </div>
+        <div className={styles.mediaNote} aria-hidden="true"><span>{project.categories.includes("SaaS") ? "Connected product" : project.categories.includes("Frontend") ? "Digital presence" : "Business application"}</span><span>{project.year}</span></div>
+      </div>
+      <div className={styles.copy} data-work-copy>
+        <div className={styles.details}><span>{project.index} / Case study</span><span>{project.categories.includes("Frontend") ? "Design & development" : "Full stack development"}</span></div>
+        <h2 className={styles.title}>{project.title}</h2>
+        <p className={styles.description}>{project.shortDesc}</p>
+        <p className={styles.stack}>{project.stack.slice(0, 3).join(" / ")}</p>
+        <div className={styles.caseAction} aria-hidden="true">
+          <span className={styles.actionText}><span>Explore the case study</span><span>See how it came together</span></span>
+          <span className={styles.caseArrow}><ArrowUpRight size={21} strokeWidth={1.5} /></span>
+        </div>
+      </div>
+    </Link>
   )
 }
 
 export default function WorkPage() {
   const [activeFilter, setActiveFilter] = useState<"All" | ProjectCategory>("All")
-  const headingRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(headingRef, { once: true, margin: "-80px" })
+  const rootRef = useRef<HTMLDivElement>(null)
+  const refreshFrame = useRef(0)
+  const reducedMotion = useReducedMotion()
+  const filtered = activeFilter === "All" ? PROJECTS : PROJECTS.filter((project) => project.categories.includes(activeFilter))
 
-  const filtered =
-    activeFilter === "All"
-      ? PROJECTS
-      : PROJECTS.filter((p) => p.categories.includes(activeFilter))
+  const scheduleRefresh = useCallback(() => {
+    cancelAnimationFrame(refreshFrame.current)
+    refreshFrame.current = requestAnimationFrame(() => ScrollTrigger.refresh())
+  }, [])
+
+  useEffect(() => {
+    scheduleRefresh()
+    return () => cancelAnimationFrame(refreshFrame.current)
+  }, [activeFilter, scheduleRefresh])
+
+  useEffect(() => {
+    const root = rootRef.current
+    if (!root) return
+    const media = gsap.matchMedia()
+    media.add("(min-width: 761px) and (prefers-reduced-motion: no-preference)", () => {
+      gsap.to("[data-work-hero-title]", { y: -60, ease: "none", scrollTrigger: { trigger: "[data-work-hero]", start: "top top", end: "bottom top", scrub: 0.9 } })
+    }, root)
+    return () => media.revert()
+  }, [])
 
   return (
-    <div
-      style={{
-        paddingTop: "7rem",
-        minHeight: "100vh",
-        background: "var(--bg)",
-      }}
-    >
-      {/* Header */}
-      <section
-        style={{
-          padding: "clamp(3rem, 8vw, 5rem) 1.5rem clamp(2rem, 5vw, 3rem)",
-          position: "relative",
-          overflow: "hidden",
-          borderBottom: "1px solid var(--border)",
-          background: "var(--bg-sub)",
-        }}
-      >
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            top: "-20%",
-            right: "-5%",
-            width: "40vw",
-            height: "40vw",
-            borderRadius: "50%",
-            background: "var(--accent-muted)",
-            filter: "blur(90px)",
-            opacity: 0.5,
-            pointerEvents: "none",
-          }}
-        />
-
-        <div
-          ref={headingRef}
-          style={{ maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 1 }}
-        >
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, ease: EASE }}
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--type-meta-size)",
-              fontWeight: 500,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--accent-ink)",
-              marginBottom: "1rem",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.75rem",
-            }}
-          >
-            <span
-              style={{
-                display: "inline-block",
-                width: "2rem",
-                height: "1px",
-                background: "var(--accent)",
-              }}
-            />
-            Portfolio
-          </motion.p>
-
-          <div style={{ overflow: "hidden", marginBottom: "1.25rem" }}>
-            <motion.h1
-              className="type-page"
-              initial={{ y: "110%" }}
-              animate={isInView ? { y: "0%" } : {}}
-              transition={{ duration: 0.85, ease: EASE, delay: 0.1 }}
-              style={{
-                color: "var(--fg)",
-                margin: 0,
-              }}
-            >
-              Selected Work
-            </motion.h1>
+    <div className={styles.page} ref={rootRef}>
+      <section className={`${styles.hero} ${styles.container}`} aria-labelledby="work-heading" data-work-hero>
+        <div className={styles.heroComposition}>
+          <div>
+            <h1 id="work-heading" className={styles.heading} data-work-hero-title aria-label="Selected Work">
+              <span className={`${styles.titleLine} ${styles.selected}`}><span>Selected</span></span>
+              <span className={`${styles.titleLine} ${styles.work}`}><span>Work.</span></span>
+            </h1>
+            <p className={styles.intro}>Built for the people using it.<br />Websites, products, and everyday business systems. Explore the thinking behind the interface.</p>
           </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, ease: EASE, delay: 0.25 }}
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              justifyContent: "space-between",
-              flexWrap: "wrap",
-              gap: "1.5rem",
-            }}
-          >
-            <p
-              style={{
-                fontSize: "1rem",
-                color: "var(--fg-muted)",
-                lineHeight: 1.7,
-                maxWidth: "48ch",
-                margin: 0,
-              }}
-            >
-              From online stores to the systems teams use every day. See what I built, why it was needed, and how it came together.
-            </p>
-
-          </motion.div>
+          <WorkPreview />
+        </div>
+        <div className={styles.heroRail}>
+          <div className={styles.collection}><span>{PROJECTS.length.toString().padStart(2, "0")} selected case studies</span><span>2025 — 2026</span></div>
+          <Link href="#projects" className={styles.explore}>Explore the projects<span className={styles.exploreIcon} aria-hidden="true"><ArrowDown size={17} strokeWidth={1.5} /><ArrowDown size={17} strokeWidth={1.5} /></span></Link>
         </div>
       </section>
 
-      {/* Filters + Grid */}
-      <section
-        style={{
-          padding: "clamp(3rem, 6vw, 4.5rem) 1.5rem",
-          maxWidth: 1200,
-          margin: "0 auto",
-        }}
-      >
-        {/* Filter tabs */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: EASE }}
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "0.5rem",
-            marginBottom: "2.5rem",
-          }}
-        >
-          {FILTERS.map((filter) => {
-            const active = filter === activeFilter
-            return (
-              <motion.button
-                key={filter}
-                onClick={() => setActiveFilter(filter)}
-                style={{
-                  padding: "0.5rem 1.125rem",
-                  borderRadius: 9999,
-                  border: active
-                    ? "1px solid var(--accent-ink)"
-                    : "1px solid var(--border)",
-                  background: active ? "var(--accent-muted)" : "transparent",
-                  color: active ? "var(--accent-ink)" : "var(--fg-muted)",
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "var(--type-meta-size)",
-                  fontWeight: 500,
-                  letterSpacing: "0.04em",
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                }}
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ duration: 0.15 }}
-              >
-                {filter}
-                {filter !== "All" && (
-                  <span
-                    style={{
-                      marginLeft: "0.375rem",
-                      color: active ? "var(--accent-ink)" : "var(--fg-faint)",
-                    }}
-                  >
-                    (
-                    {
-                      PROJECTS.filter((p) =>
-                        p.categories.includes(filter as ProjectCategory)
-                      ).length
-                    }
-                    )
-                  </span>
-                )}
-                {filter === "All" && (
-                  <span
-                    style={{
-                      marginLeft: "0.375rem",
-                      color: active ? "var(--accent-ink)" : "var(--fg-faint)",
-                    }}
-                  >
-                    ({PROJECTS.length})
-                  </span>
-                )}
-              </motion.button>
-            )
-          })}
-        </motion.div>
-
-        {/* Grid */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeFilter}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            style={{
-              display: "grid",
-              gridTemplateColumns:
-                "repeat(auto-fill, minmax(min(100%, 380px), 1fr))",
-              gap: "1.25rem",
-            }}
-          >
-            {filtered.map((project, i) => (
-              <ProjectCard key={project.slug} project={project} index={i} />
-            ))}
-          </motion.div>
-        </AnimatePresence>
-
-        {filtered.length === 0 && (
-          <div
-            style={{
-              textAlign: "center",
-              padding: "4rem 0",
-              color: "var(--fg-faint)",
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.875rem",
-            }}
-          >
-            No projects in this category yet.
+      <section id="projects" className={`${styles.gallery} ${styles.container}`} aria-label="Project collection">
+        <div className={styles.toolbar}>
+          <div className={styles.filters} role="group" aria-label="Filter projects">
+            {FILTERS.map((filter) => {
+              const active = activeFilter === filter
+              const count = filter === "All" ? PROJECTS.length : PROJECTS.filter((project) => project.categories.includes(filter)).length
+              return (
+                <button key={filter} type="button" className={styles.filter} aria-pressed={active} aria-controls="work-projects" onClick={() => setActiveFilter(filter)}>
+                  {active && <motion.span className={styles.activeFilter} data-framer-motion layoutId="work-active-filter" transition={{ duration: reducedMotion ? 0 : 0.6, ease: EASE }} />}
+                  <span>{filter}</span><span className={styles.filterCount}>{count.toString().padStart(2, "0")}</span>
+                </button>
+              )
+            })}
           </div>
-        )}
+          <p className={styles.results} role="status" aria-live="polite">{filtered.length} {filtered.length === 1 ? "project" : "projects"} in view</p>
+        </div>
+        <div id="work-projects" className={styles.grid}>
+          <AnimatePresence mode="popLayout" initial={false}>
+            {filtered.map((project, index) => (
+              <motion.article
+                key={project.slug}
+                className={`${styles.project} ${index === 0 ? styles.featured : ""}`}
+                layout={!reducedMotion}
+                initial={{ opacity: 1, y: reducedMotion ? 0 : 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: reducedMotion ? 1 : 0, y: reducedMotion ? 0 : -15 }}
+                transition={{ duration: reducedMotion ? 0 : 0.55, ease: EASE }}
+                onLayoutAnimationComplete={scheduleRefresh}
+              >
+                <ProjectStory project={project} featured={index === 0} />
+              </motion.article>
+            ))}
+          </AnimatePresence>
+        </div>
+        {filtered.length === 0 && <p className={styles.empty}>No projects in this category yet. Explore all projects to see the full collection.</p>}
+        <div className={styles.closing}><p>Your next project could start here.</p><Link href="/contact">Let&apos;s find the right approach<ArrowUpRight size={18} aria-hidden="true" /></Link></div>
       </section>
-
-      <style>{`
-        .work-card:hover {
-          border-color: var(--border-strong);
-          box-shadow: var(--shadow-lg);
-        }
-        .work-card:hover .work-card-bar {
-          transform: scaleY(1);
-        }
-        .work-card:hover .work-card-arrow {
-          color: #00D9A6 !important;
-          background: rgba(0,217,166,0.12) !important;
-          border-color: rgba(0,217,166,0.3) !important;
-        }
-      `}</style>
     </div>
   )
 }

@@ -19,14 +19,14 @@ export function Services({ standalone = false }: { standalone?: boolean }) {
 
     media.add("(prefers-reduced-motion: no-preference)", () => {
       const heading = section.querySelector("[data-service-heading]")
-      gsap.fromTo("[data-service-word]", { opacity: 0.3, y: 18 }, {
-        opacity: 1, y: 0, stagger: 0.15, ease: "none",
+      gsap.fromTo("[data-service-word]", { x: (index) => index * 28, y: 36 }, {
+        x: 0, y: 0, stagger: 0.12, ease: "none",
         scrollTrigger: { trigger: heading, start: "top 90%", end: "bottom 65%", scrub: 0.6 },
       })
 
       section.querySelectorAll<HTMLElement>("[data-service-row]").forEach((row) => {
-        gsap.fromTo(row.querySelector("[data-service-content]"), { y: 24, opacity: 0.5 }, {
-          y: 0, opacity: 1, ease: "none",
+        gsap.fromTo(row.querySelector("[data-service-content]"), { y: 45 }, {
+          y: 0, ease: "none",
           scrollTrigger: { trigger: row, start: "top 94%", end: "top 68%", scrub: 0.5 },
         })
         ScrollTrigger.create({
