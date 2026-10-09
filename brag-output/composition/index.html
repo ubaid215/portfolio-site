@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=1920,height=1080">
+<title>ubaid.dev — Build. Automate. Grow.</title>
+<script src="assets/gsap.min.js"></script><script src="assets/audio-energy.js"></script>
+<style>
+@font-face{font-family:'Space Grotesk';src:url('assets/SpaceGrotesk-500.ttf') format('truetype');font-weight:500;font-display:block}
+@font-face{font-family:'Space Grotesk';src:url('assets/SpaceGrotesk-600.ttf') format('truetype');font-weight:600;font-display:block}
+@font-face{font-family:'Space Grotesk';src:url('assets/SpaceGrotesk-700.ttf') format('truetype');font-weight:700;font-display:block}
+@font-face{font-family:Geist;src:url('assets/Geist.woff2') format('woff2');font-weight:100 900;font-display:block}
+@font-face{font-family:'Geist Mono';src:url('assets/GeistMono.woff2') format('woff2');font-weight:100 900;font-display:block}
+:root{--ink:#0A0E1A;--jade:#00D9A6;--paper:#F8F7F4;--mist:#9CA3AF}
+*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden}
+body{background:var(--ink);color:var(--paper);font-family:Geist,sans-serif}
+#root{position:relative;width:100%;height:100%;overflow:hidden;background:var(--ink)}
+h1,h2,h3,p{margin:0}h1,h2,h3{font-family:'Space Grotesk',sans-serif;font-weight:500;letter-spacing:-.055em}
+.clip,.scene-inner{position:absolute;inset:0}
+.atmosphere{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.halo{position:absolute;right:-100px;top:70px;width:1100px;height:960px;background:radial-gradient(ellipse,rgba(0,217,166,.19),rgba(0,217,166,.04) 45%,transparent 70%)}
+.edge-light{position:absolute;left:108px;bottom:131px;width:1700px;height:2px;background:var(--jade);box-shadow:0 0 30px rgba(0,217,166,.6);opacity:.35;transform-origin:left center}
+.header{position:absolute;left:110px;right:110px;top:68px;display:flex;justify-content:space-between;align-items:center;z-index:10}
+.wordmark{font-family:'Space Grotesk',sans-serif;font-size:40px;font-weight:700;letter-spacing:-.06em;color:var(--jade)}
+.header-scope{font-size:26px;color:#CAD1CF;letter-spacing:.015em}
+.footer{position:absolute;bottom:57px;left:110px;right:110px;z-index:10;display:flex;align-items:center;justify-content:space-between}
+.footer-label{font-size:24px;color:var(--mist)}
+.chapters{display:flex;gap:16px;align-items:center;font-size:22px;color:var(--mist)}
+.chapter{position:relative;display:flex;gap:13px;align-items:center}
+.chapter-line{width:70px;height:2px;background:#3D484A;overflow:hidden}.chapter-fill{width:100%;height:100%;background:var(--jade);transform-origin:left}
+.chapter-text{color:var(--mist)}
+.kicker{font-family:'Geist Mono',monospace;font-size:24px;letter-spacing:.1em;text-transform:uppercase;color:var(--jade);display:flex;gap:18px;align-items:center}
+.kicker::before{content:'';width:32px;height:2px;background:var(--jade)}
+.line-mask{overflow:hidden;position:relative;padding-bottom:10px;margin-bottom:-10px}.line{display:block}.accent{color:var(--jade)}
+.intro-art{position:absolute;left:780px;top:125px;width:1140px;height:830px;overflow:hidden}
+.intro-art img{width:100%;height:100%;object-fit:cover;object-position:61% center}
+.intro-veil{position:absolute;inset:0;background:linear-gradient(90deg,var(--ink),rgba(10,14,26,.65) 28%,transparent 68%)}
+.intro-copy{position:absolute;left:110px;top:320px;width:1570px;z-index:2}
+.intro-copy h1{font-size:106px;line-height:1.13;margin-top:47px}
+.intro-detail{margin-top:43px;font-size:30px;color:#CDD4D1;letter-spacing:-.02em}
+.build-copy{position:absolute;left:110px;top:256px;width:510px}
+.build-copy h2{font-size:82px;line-height:1.06;margin-top:32px}
+.build-support{margin-top:30px;font-size:28px;line-height:1.5;color:#CBD2CF;max-width:400px}
+.proof-stage{position:absolute;left:657px;top:244px;width:1153px;height:657px;perspective:2200px}
+.proof-card{height:100%;border:2px solid #3A4E49;border-radius:24px;background:#101A24;overflow:hidden;box-shadow:22px 30px 80px rgba(0,0,0,.35);transform-style:preserve-3d}
+.proof-top{height:73px;display:flex;justify-content:space-between;align-items:center;padding:0 28px;border-bottom:1px solid #32413F;font-size:25px;color:var(--paper)}
+.proof-dot{display:flex;align-items:center;gap:14px}.proof-dot::before{content:'';width:10px;height:10px;border-radius:50%;background:var(--jade)}
+.proof-type{font-size:21px;color:#CAD1CF}
+.proof-image{width:100%;height:501px;overflow:hidden;background:#F6F8FA}
+.proof-image img{width:100%;height:100%;object-fit:cover;object-position:top left}
+.proof-bottom{height:79px;padding:0 28px;display:flex;gap:34px;align-items:center;color:#DDE4E0;font-size:24px}
+.proof-feature{display:flex;align-items:center;gap:12px}.proof-feature::before{content:'+';color:var(--jade);font-size:25px}
+.auto-copy{position:absolute;left:110px;top:227px;width:1540px}
+.auto-copy h2{font-size:112px;line-height:1.07;margin-top:28px}
+.auto-scope{margin-top:31px;font-size:30px;color:#CCD5D2;display:flex;gap:24px;align-items:center}
+.auto-scope .dot{width:6px;height:6px;background:var(--jade);border-radius:50%}
+.workflow{position:absolute;left:110px;top:604px;width:1700px;height:269px}
+.workflow-svg{position:absolute;left:0;top:0;width:1700px;height:240px;overflow:visible}
+.connector-base{stroke:#334642;stroke-width:2;fill:none}.connector-live{stroke:var(--jade);stroke-width:3;fill:none;stroke-dasharray:350;stroke-dashoffset:350}
+.node{position:absolute;top:22px;width:354px;height:165px;background:#101B23;border:2px solid #405C54;border-radius:20px;padding:25px 27px;z-index:2}
+#node-one{left:0}#node-two{left:448px}#node-three{left:896px}#node-four{left:1344px}
+.node-meta{font-family:'Geist Mono',monospace;font-size:20px;color:var(--jade);margin-bottom:18px;letter-spacing:.045em}
+.node h3{font-size:40px;letter-spacing:-.045em}.node-final{background:#10271F;border-color:var(--jade)}
+.example{position:absolute;bottom:0;left:0;font-size:23px;color:#B8C4BE}
+.grow-copy{position:absolute;left:110px;top:225px;width:1230px}
+.grow-copy h2{font-size:112px;line-height:1.08;margin-top:29px}
+.grow-art{position:absolute;right:48px;top:270px;width:530px;height:610px;overflow:hidden}
+.grow-art img{width:100%;height:100%;object-fit:cover;object-position:61% center}
+.grow-art-veil{position:absolute;inset:0;background:linear-gradient(90deg,var(--ink),transparent 50%)}
+.service-rows{position:absolute;left:110px;top:604px;width:1190px}
+.service-row{height:119px;border-bottom:1px solid #3F4D4A;display:flex;align-items:center;justify-content:space-between;padding-right:20px}
+.service-name{font-family:'Space Grotesk',sans-serif;font-size:54px;font-weight:500;letter-spacing:-.035em}
+.service-note{font-size:25px;color:#BAC6C0}.service-arrow{color:var(--jade);font-size:49px;margin-left:24px}.service-right{display:flex;align-items:center}
+.close-art{position:absolute;left:800px;top:150px;width:1120px;height:810px;overflow:hidden}
+.close-art img{width:100%;height:100%;object-fit:cover;object-position:61% center}
+.close-veil{position:absolute;inset:0;background:linear-gradient(90deg,var(--ink),rgba(10,14,26,.28) 30%,transparent 70%)}
+.close-copy{position:absolute;left:110px;top:265px;width:1270px;z-index:2}
+.close-copy h2{font-size:177px;line-height:1.08;letter-spacing:-.085em;color:var(--jade);margin-top:30px}
+.close-message{font-family:'Space Grotesk',sans-serif;font-size:55px;line-height:1.19;letter-spacing:-.04em;margin-top:32px;width:840px}
+.cta{display:flex;align-items:center;justify-content:space-between;width:386px;height:80px;border:1px solid var(--jade);border-radius:99px;padding:0 29px;font-size:28px;background:var(--jade);color:var(--ink);margin-top:42px}
+.cta-arrow{font-size:39px;line-height:1}audio{display:none}
+</style>
+</head>
+<body>
+<div data-hf-id="hf-fxkj" id="root" data-composition-id="portfolio-launch" data-start="0" data-width="1920" data-height="1080" data-duration="22" data-fps="30">
+<div data-hf-id="hf-tb8h" class="atmosphere" data-layout-ignore=""><div data-hf-id="hf-d1uq" class="halo"></div><div data-hf-id="hf-05ik" class="edge-light"></div></div>
+<header data-hf-id="hf-hr6f" class="header"><div data-hf-id="hf-2wuf" class="wordmark">ubaid.dev</div><div data-hf-id="hf-n33y" class="header-scope">Websites &#160; / &#160; Products &#160; / &#160; AI</div></header>
+<section data-hf-id="hf-hncn" id="intro" class="clip" data-start="0" data-duration="3.27" data-track-index="1">
+<div data-hf-id="hf-97sb" class="scene-inner"><div data-hf-id="hf-3ldv" class="intro-art" data-layout-ignore=""><img data-hf-id="hf-q6r4" id="intro-image" src="assets/signature.webp" alt=""><div data-hf-id="hf-pklv" class="intro-veil"></div></div>
+<div data-hf-id="hf-3wp0" class="intro-copy"><div data-hf-id="hf-s037" class="kicker" id="intro-kicker">Built around your business</div>
+<h1 data-hf-id="hf-m3fm"><div data-hf-id="hf-jote" class="line-mask" data-layout-allow-overflow=""><span data-hf-id="hf-r9bz" class="line" id="hook-one">What people see.</span></div><div data-hf-id="hf-agjq" class="line-mask" data-layout-allow-overflow=""><span data-hf-id="hf-mvda" class="line" id="hook-two">How your business runs.</span></div></h1>
+<p data-hf-id="hf-h2nl" class="intro-detail" id="intro-detail">The first impression. And everything after.</p></div></div>
+</section>
+<section data-hf-id="hf-8y4y" id="build" class="clip" data-start="3.27" data-duration="5.47" data-track-index="2">
+<div data-hf-id="hf-skgb" class="scene-inner"><div data-hf-id="hf-bprm" class="build-copy"><div data-hf-id="hf-aye5" class="kicker" id="build-kicker">01 / Build</div>
+<h2 data-hf-id="hf-24l1" id="build-title"><div data-hf-id="hf-auur" class="line-mask" data-layout-allow-overflow=""><span data-hf-id="hf-yg59" class="line">Build what</span></div><div data-hf-id="hf-b95s" class="line-mask" data-layout-allow-overflow=""><span data-hf-id="hf-p7su" class="line">your business</span></div><div data-hf-id="hf-8h0l" class="line-mask" data-layout-allow-overflow=""><span data-hf-id="hf-77gt" class="line accent">needs next.</span></div></h2>
+<p data-hf-id="hf-a9xk" class="build-support" id="build-support">Websites, SaaS, and custom applications.</p></div>
+<div data-hf-id="hf-0m43" class="proof-stage"><div data-hf-id="hf-vgb5" class="proof-card" id="commerce-card"><div data-hf-id="hf-sm7k" class="proof-top"><div data-hf-id="hf-9xn8" class="proof-dot">E-Commerce Platform + CMS</div><div data-hf-id="hf-78cr" class="proof-type">Selected work</div></div>
+<div data-hf-id="hf-kjhe" class="proof-image"><img data-hf-id="hf-mz7b" src="assets/commerce.png" alt="Actual product inventory interface from the portfolio"></div>
+<div data-hf-id="hf-0xpu" class="proof-bottom"><span data-hf-id="hf-xtny" class="proof-feature" id="products">Products</span><span data-hf-id="hf-8n6q" class="proof-feature" id="stock">Stock</span><span data-hf-id="hf-7vt4" class="proof-feature" id="orders">Orders</span></div></div></div></div>
+</section>
+<section data-hf-id="hf-htok" id="automate" class="clip" data-start="8.74" data-duration="4.37" data-track-index="3">
+<div data-hf-id="hf-s65a" class="scene-inner"><div data-hf-id="hf-1imh" class="auto-copy"><div data-hf-id="hf-5yll" class="kicker" id="auto-kicker">02 / Automate</div><h2 data-hf-id="hf-983r" class="line-mask" data-layout-allow-overflow=""><span data-hf-id="hf-snja" id="auto-title" class="line">Less repetitive work.</span></h2>
+<div data-hf-id="hf-5oua" class="auto-scope" id="auto-scope"><span data-hf-id="hf-8pxa">AI automation</span><span data-hf-id="hf-9gry" class="dot"></span><span data-hf-id="hf-5cfv">Generative AI</span></div></div>
+<div data-hf-id="hf-kfi7" class="workflow"><svg data-hf-id="hf-ts92" class="workflow-svg" viewBox="0 0 1700 240" aria-hidden="true" data-layout-ignore=""><path data-hf-id="hf-ghap" class="connector-base" d="M177 105H1521" /><path data-hf-id="hf-9sx1" id="link-one" class="connector-live" d="M354 105H448" /><path data-hf-id="hf-bzi8" id="link-two" class="connector-live" d="M802 105H896" /><path data-hf-id="hf-unb3" id="link-three" class="connector-live" d="M1250 105H1344" /></svg>
+<div data-hf-id="hf-jeil" class="node" id="node-one"><div data-hf-id="hf-6yoc" class="node-meta">01 / INPUT</div><h3 data-hf-id="hf-0q29">Enquiry</h3></div>
+<div data-hf-id="hf-eioj" class="node" id="node-two"><div data-hf-id="hf-zz4i" class="node-meta">02 / CONTEXT</div><h3 data-hf-id="hf-v53b">Context</h3></div>
+<div data-hf-id="hf-qbtt" class="node" id="node-three"><div data-hf-id="hf-tyhh" class="node-meta">03 / ASSIST</div><h3 data-hf-id="hf-jhad">AI draft</h3></div>
+<div data-hf-id="hf-3ofy" class="node node-final" id="node-four"><div data-hf-id="hf-jbkp" class="node-meta">04 / REVIEW</div><h3 data-hf-id="hf-svv3">Human review</h3></div>
+<div data-hf-id="hf-a35x" class="example" id="example-label">Example workflow · people stay in control</div></div></div>
+</section>
+<section data-hf-id="hf-2g3w" id="grow" class="clip" data-start="13.11" data-duration="4.36" data-track-index="4">
+<div data-hf-id="hf-rru9" class="scene-inner"><div data-hf-id="hf-yfz4" class="grow-art" data-layout-ignore=""><img data-hf-id="hf-0f9t" id="grow-image" src="assets/signature.webp" alt=""><div data-hf-id="hf-nt7y" class="grow-art-veil"></div></div>
+<div data-hf-id="hf-peo5" class="grow-copy"><div data-hf-id="hf-hr69" class="kicker" id="grow-kicker">03 / Grow</div><h2 data-hf-id="hf-2l5r"><div data-hf-id="hf-8vbm" class="line-mask" data-layout-allow-overflow=""><span data-hf-id="hf-uawa" class="line" id="grow-title-one">Make discovery</span></div><div data-hf-id="hf-99mn" class="line-mask" data-layout-allow-overflow=""><span data-hf-id="hf-zphl" class="line accent" id="grow-title-two">easier.</span></div></h2></div>
+<div data-hf-id="hf-q6hx" class="service-rows"><div data-hf-id="hf-yblc" class="service-row" id="seo-row"><span data-hf-id="hf-zdbj" class="service-name">SEO</span><div data-hf-id="hf-csqo" class="service-right"><span data-hf-id="hf-niv4" class="service-note">Search engine optimization</span><span data-hf-id="hf-5eqf" class="service-arrow">↗</span></div></div>
+<div data-hf-id="hf-8e8f" class="service-row" id="marketing-row"><span data-hf-id="hf-59tu" class="service-name">Digital marketing</span><div data-hf-id="hf-vek8" class="service-right"><span data-hf-id="hf-7exe" class="service-note">Turn attention into action</span><span data-hf-id="hf-6evr" class="service-arrow">↗</span></div></div></div></div>
+</section>
+<section data-hf-id="hf-5zt1" id="conversation" class="clip" data-start="17.47" data-duration="4.53" data-track-index="5">
+<div data-hf-id="hf-rdj8" class="scene-inner"><div data-hf-id="hf-mpqp" class="close-art" data-layout-ignore=""><img data-hf-id="hf-p7pe" id="close-image" src="assets/signature.webp" alt=""><div data-hf-id="hf-p6lt" class="close-veil"></div></div>
+<div data-hf-id="hf-x4gu" class="close-copy"><div data-hf-id="hf-z4i6" class="kicker" id="close-kicker">Build. Automate. Grow.</div><div data-hf-id="hf-9nxo" class="line-mask" data-layout-allow-overflow=""><h2 data-hf-id="hf-zvqg" id="close-wordmark">ubaid.dev</h2></div>
+<p data-hf-id="hf-4fum" class="close-message" id="close-message">Good work starts<br data-hf-id="hf-x5px">with a conversation.</p><div data-hf-id="hf-xg69" class="cta" id="close-cta"><span data-hf-id="hf-3m2n">Start a conversation</span><span data-hf-id="hf-ap6g" class="cta-arrow" id="cta-arrow">↗</span></div></div></div>
+</section>
+<footer data-hf-id="hf-vadb" class="footer"><div data-hf-id="hf-854e" class="footer-label">Independent developer.</div><div data-hf-id="hf-qlza" class="chapters"><div data-hf-id="hf-p1of" class="chapter"><span data-hf-id="hf-j6sm" id="chapter-build" class="chapter-text">Build</span><div data-hf-id="hf-hb9i" class="chapter-line"><div data-hf-id="hf-nfjv" id="build-fill" class="chapter-fill"></div></div></div><div data-hf-id="hf-hr5r" class="chapter"><span data-hf-id="hf-vhpt" id="chapter-auto" class="chapter-text">Automate</span><div data-hf-id="hf-4jt6" class="chapter-line"><div data-hf-id="hf-3jvy" id="auto-fill" class="chapter-fill"></div></div></div><div data-hf-id="hf-hcuq" class="chapter"><span data-hf-id="hf-ripg" id="chapter-grow" class="chapter-text">Grow</span><div data-hf-id="hf-4y47" class="chapter-line"><div data-hf-id="hf-s62m" id="grow-fill" class="chapter-fill"></div></div></div></div></footer>
+<audio data-hf-id="hf-j4x6" id="music-bed" src="assets/music.mp3" data-start="0" data-duration="22" data-track-index="10" data-volume="0.34" data-automation="{&quot;version&quot;:1,&quot;lanes&quot;:[{&quot;target&quot;:&quot;volume&quot;,&quot;points&quot;:[{&quot;t&quot;:0,&quot;v&quot;:0},{&quot;t&quot;:0.4,&quot;v&quot;:0.34},{&quot;t&quot;:20.6,&quot;v&quot;:0.34},{&quot;t&quot;:22,&quot;v&quot;:0}]}]}"></audio>
+<audio data-hf-id="hf-zd4h" id="build-impact" src="assets/soft-impact.ogg" data-start="3.82" data-duration="0.18" data-track-index="11" data-volume="0.5"></audio>
+<audio data-hf-id="hf-d5qt" id="workflow-step-two" src="assets/step.ogg" data-start="9.83" data-duration="0.06" data-track-index="12" data-volume="0.38"></audio>
+<audio data-hf-id="hf-5v0p" id="workflow-step-four" src="assets/step.ogg" data-start="10.93" data-duration="0.06" data-track-index="13" data-volume="0.38"></audio>
+<audio data-hf-id="hf-wblr" id="brand-impact" src="assets/brand-impact.ogg" data-start="17.47" data-duration="0.15" data-track-index="14" data-volume="0.5"></audio>
+</div>
+<script>
+document.fonts.ready.then(() => {
+const tl = gsap.timeline({paused:true});
+const revealLine = (target,at,duration=.72) => tl.fromTo(target,{yPercent:112},{yPercent:0,duration,ease:'power4.out'},at);
+const arrive = (target,at,duration=.65,offset=30) => tl.fromTo(target,{opacity:0,y:offset},{opacity:1,y:0,duration,ease:'power3.out'},at);
+const depart = (target,at) => tl.to(target,{opacity:0,y:-14,duration:.2,ease:'power2.in'},at);
+tl.addLabel('first-impression',0).addLabel('build',3.27).addLabel('automate',8.74).addLabel('grow',13.11).addLabel('conversation',17.47);
+tl.fromTo('.halo',{scale:.9,x:0},{scale:1.06,x:-75,duration:22,ease:'sine.inOut'},0);
+tl.fromTo('.edge-light',{scaleX:.2},{scaleX:1,duration:2.2,ease:'power3.out'},0);
+tl.fromTo('#intro-image',{scale:1.07,x:30},{scale:1,x:0,duration:3.27,ease:'power2.out'},0);
+arrive('#intro-kicker',0,.4,8); revealLine('#hook-one',.08,.68); revealLine('#hook-two',.22,.72); arrive('#intro-detail',.52,.55,15); depart('#intro .scene-inner',3.07);
+arrive('#build-kicker',3.27,.4,10); revealLine('#build-title .line',3.35,.7); arrive('#build-support',3.63,.6,20);
+tl.fromTo('#commerce-card',{y:75,rotationY:-8,rotationX:3,scale:.94,opacity:0},{y:0,rotationY:0,rotationX:0,scale:1,opacity:1,duration:1.05,ease:'power4.out'},3.27);
+arrive('#products',4.39,.45,15); arrive('#stock',4.91,.45,15); arrive('#orders',5.34,.45,15); depart('#build .scene-inner',8.54);
+// Beat-locked transition at the bundled strong cue 8.74.
+arrive('#auto-kicker',8.74,.36,10); revealLine('#auto-title',8.79,.7); arrive('#auto-scope',9.05,.5,15);
+arrive('#node-one',9.29,.55,28); arrive('#node-two',9.83,.55,28); arrive('#node-three',10.37,.55,28); arrive('#node-four',10.93,.6,28);
+['#link-one','#link-two','#link-three'].forEach((s,i)=>tl.fromTo(s,{strokeDashoffset:350},{strokeDashoffset:0,duration:.46,ease:'power2.out'},9.68+i*.55));
+arrive('#example-label',10.95,.5,10); depart('#automate .scene-inner',12.91);
+arrive('#grow-kicker',13.11,.4,10); revealLine('#grow-title-one',13.16,.72); revealLine('#grow-title-two',13.30,.75);
+arrive('#seo-row',13.64,.65,22); arrive('#marketing-row',14.2,.65,22);
+tl.fromTo('#grow-image',{scale:1.06,y:25},{scale:1,y:0,duration:4.36,ease:'sine.out'},13.11); depart('#grow .scene-inner',17.27);
+// Beat-locked brand payoff at the bundled strong cue 17.47.
+arrive('#close-kicker',17.47,.42,10); revealLine('#close-wordmark',17.53,.78); arrive('#close-message',17.76,.65,24); arrive('#close-cta',18.02,.65,24);
+tl.fromTo('#close-image',{scale:1.07,x:35},{scale:1,x:0,duration:4.53,ease:'power2.out'},17.47);
+tl.fromTo('#cta-arrow',{x:-7,y:7},{x:0,y:0,duration:.7,ease:'power3.out'},18.15);
+tl.fromTo('.chapter-fill',{scaleX:0},{scaleX:0,duration:.01},0);
+tl.to('#chapter-build',{color:'#F8F7F4',duration:.3},3.27).to('#build-fill',{scaleX:1,duration:5.47,ease:'none'},3.27);
+tl.to('#chapter-auto',{color:'#F8F7F4',duration:.3},8.74).to('#auto-fill',{scaleX:1,duration:4.37,ease:'none'},8.74);
+tl.to('#chapter-grow',{color:'#F8F7F4',duration:.3},13.11).to('#grow-fill',{scaleX:1,duration:4.36,ease:'none'},13.11);
+// Precomputed bass affects only the architectural edge, never the text.
+const energy = window.PORTFOLIO_AUDIO_ENERGY || [];
+for(let f=0;f<Math.min(660,energy.length);f++){const alpha=.3+energy[f]*.48;tl.to('.edge-light',{opacity:alpha,duration:1/30,ease:'none'},f/30);}
+window.__timelines = window.__timelines || {};
+window.__timelines['portfolio-launch'] = tl;
+});
+</script>
+</body></html>

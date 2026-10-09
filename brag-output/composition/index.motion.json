@@ -1,0 +1,29 @@
+{
+  "duration": 22,
+  "assertions": [
+    {
+      "kind": "appearsBy",
+      "selector": "#hook-one",
+      "bySec": 0.9
+    },
+    {
+      "kind": "appearsBy",
+      "selector": "#commerce-card",
+      "bySec": 4.5
+    },
+    {
+      "kind": "before",
+      "a": "#node-one",
+      "b": "#node-four"
+    },
+    {
+      "kind": "appearsBy",
+      "selector": "#close-cta",
+      "bySec": 18.8
+    },
+    {
+      "kind": "staysInFrame",
+      "selector": "#close-cta"
+    }
+  ]
+}

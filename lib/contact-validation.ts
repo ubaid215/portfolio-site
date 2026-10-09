@@ -35,6 +35,9 @@ export function validateContactPayload(value: unknown): ContactValidation {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return { ok: false, error: "Enter a valid email address so I can reply." }
   }
+  if (/[\r\n\u0000]/.test(name + projectType + budget)) {
+    return { ok: false, error: "Use a single line for your name, service, and budget." }
+  }
 
   return { ok: true, data: { name, email, projectType, budget, message } }
 }

@@ -1,0 +1,427 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-09T17:09:25.262Z",
+  "title": "Design System: ubaid.dev",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#0A0E1A",
+        "tonalRamp": [
+          "oklch(15.00% 0.0262 269.37)",
+          "oklch(26.43% 0.0262 269.37)",
+          "oklch(37.86% 0.0262 269.37)",
+          "oklch(49.29% 0.0262 269.37)",
+          "oklch(60.71% 0.0262 269.37)",
+          "oklch(72.14% 0.0262 269.37)",
+          "oklch(83.57% 0.0262 269.37)",
+          "oklch(95.00% 0.0262 269.37)"
+        ]
+      },
+      "ink-surface": {
+        "role": "neutral",
+        "displayName": "Ink Surface",
+        "canonical": "#111827",
+        "tonalRamp": [
+          "oklch(15.00% 0.0318 264.66)",
+          "oklch(26.43% 0.0318 264.66)",
+          "oklch(37.86% 0.0318 264.66)",
+          "oklch(49.29% 0.0318 264.66)",
+          "oklch(60.71% 0.0318 264.66)",
+          "oklch(72.14% 0.0318 264.66)",
+          "oklch(83.57% 0.0318 264.66)",
+          "oklch(95.00% 0.0318 264.66)"
+        ]
+      },
+      "ink-card": {
+        "role": "neutral",
+        "displayName": "Ink Card",
+        "canonical": "#1C2333",
+        "tonalRamp": [
+          "oklch(15.00% 0.0320 265.97)",
+          "oklch(26.43% 0.0320 265.97)",
+          "oklch(37.86% 0.0320 265.97)",
+          "oklch(49.29% 0.0320 265.97)",
+          "oklch(60.71% 0.0320 265.97)",
+          "oklch(72.14% 0.0320 265.97)",
+          "oklch(83.57% 0.0320 265.97)",
+          "oklch(95.00% 0.0320 265.97)"
+        ]
+      },
+      "warm-stone": {
+        "role": "neutral",
+        "displayName": "Warm Stone",
+        "canonical": "#F8F7F4",
+        "tonalRamp": [
+          "oklch(15.00% 0.0041 91.45)",
+          "oklch(26.43% 0.0041 91.45)",
+          "oklch(37.86% 0.0041 91.45)",
+          "oklch(49.29% 0.0041 91.45)",
+          "oklch(60.71% 0.0041 91.45)",
+          "oklch(72.14% 0.0041 91.45)",
+          "oklch(83.57% 0.0041 91.45)",
+          "oklch(95.00% 0.0041 91.45)"
+        ]
+      },
+      "stone-surface": {
+        "role": "neutral",
+        "displayName": "Stone Surface",
+        "canonical": "#EEECEA",
+        "tonalRamp": [
+          "oklch(15.00% 0.0034 67.78)",
+          "oklch(26.43% 0.0034 67.78)",
+          "oklch(37.86% 0.0034 67.78)",
+          "oklch(49.29% 0.0034 67.78)",
+          "oklch(60.71% 0.0034 67.78)",
+          "oklch(72.14% 0.0034 67.78)",
+          "oklch(83.57% 0.0034 67.78)",
+          "oklch(95.00% 0.0034 67.78)"
+        ]
+      },
+      "stone-card": {
+        "role": "neutral",
+        "displayName": "Stone Card",
+        "canonical": "#E3DFD7",
+        "tonalRamp": [
+          "oklch(15.00% 0.0116 84.58)",
+          "oklch(26.43% 0.0116 84.58)",
+          "oklch(37.86% 0.0116 84.58)",
+          "oklch(49.29% 0.0116 84.58)",
+          "oklch(60.71% 0.0116 84.58)",
+          "oklch(72.14% 0.0116 84.58)",
+          "oklch(83.57% 0.0116 84.58)",
+          "oklch(95.00% 0.0116 84.58)"
+        ]
+      },
+      "jade-fill-dark": {
+        "role": "primary",
+        "displayName": "Jade Fill Dark",
+        "canonical": "#00D9A6",
+        "tonalRamp": [
+          "oklch(15.00% 0.1589 168.15)",
+          "oklch(26.43% 0.1589 168.15)",
+          "oklch(37.86% 0.1589 168.15)",
+          "oklch(49.29% 0.1589 168.15)",
+          "oklch(60.71% 0.1589 168.15)",
+          "oklch(72.14% 0.1589 168.15)",
+          "oklch(83.57% 0.1589 168.15)",
+          "oklch(95.00% 0.1589 168.15)"
+        ]
+      },
+      "jade-hover-dark": {
+        "role": "primary",
+        "displayName": "Jade Hover Dark",
+        "canonical": "#00F0B8",
+        "tonalRamp": [
+          "oklch(15.00% 0.1714 168.18)",
+          "oklch(26.43% 0.1714 168.18)",
+          "oklch(37.86% 0.1714 168.18)",
+          "oklch(49.29% 0.1714 168.18)",
+          "oklch(60.71% 0.1714 168.18)",
+          "oklch(72.14% 0.1714 168.18)",
+          "oklch(83.57% 0.1714 168.18)",
+          "oklch(95.00% 0.1714 168.18)"
+        ]
+      },
+      "jade-fill-light": {
+        "role": "primary",
+        "displayName": "Jade Fill Light",
+        "canonical": "#009B76",
+        "tonalRamp": [
+          "oklch(15.00% 0.1235 168.33)",
+          "oklch(26.43% 0.1235 168.33)",
+          "oklch(37.86% 0.1235 168.33)",
+          "oklch(49.29% 0.1235 168.33)",
+          "oklch(60.71% 0.1235 168.33)",
+          "oklch(72.14% 0.1235 168.33)",
+          "oklch(83.57% 0.1235 168.33)",
+          "oklch(95.00% 0.1235 168.33)"
+        ]
+      },
+      "jade-hover-light": {
+        "role": "primary",
+        "displayName": "Jade Hover Light",
+        "canonical": "#008F6B",
+        "tonalRamp": [
+          "oklch(15.00% 0.1178 167.35)",
+          "oklch(26.43% 0.1178 167.35)",
+          "oklch(37.86% 0.1178 167.35)",
+          "oklch(49.29% 0.1178 167.35)",
+          "oklch(60.71% 0.1178 167.35)",
+          "oklch(72.14% 0.1178 167.35)",
+          "oklch(83.57% 0.1178 167.35)",
+          "oklch(95.00% 0.1178 167.35)"
+        ]
+      },
+      "jade-ink-light": {
+        "role": "primary",
+        "displayName": "Jade Ink Light",
+        "canonical": "#005C49",
+        "tonalRamp": [
+          "oklch(15.00% 0.0817 172.36)",
+          "oklch(26.43% 0.0817 172.36)",
+          "oklch(37.86% 0.0817 172.36)",
+          "oklch(49.29% 0.0817 172.36)",
+          "oklch(60.71% 0.0817 172.36)",
+          "oklch(72.14% 0.0817 172.36)",
+          "oklch(83.57% 0.0817 172.36)",
+          "oklch(95.00% 0.0817 172.36)"
+        ]
+      },
+      "text-secondary-dark": {
+        "role": "neutral",
+        "displayName": "Text Secondary Dark",
+        "canonical": "#C9C5BC",
+        "tonalRamp": [
+          "oklch(15.00% 0.0132 86.84)",
+          "oklch(26.43% 0.0132 86.84)",
+          "oklch(37.86% 0.0132 86.84)",
+          "oklch(49.29% 0.0132 86.84)",
+          "oklch(60.71% 0.0132 86.84)",
+          "oklch(72.14% 0.0132 86.84)",
+          "oklch(83.57% 0.0132 86.84)",
+          "oklch(95.00% 0.0132 86.84)"
+        ]
+      },
+      "text-secondary-light": {
+        "role": "neutral",
+        "displayName": "Text Secondary Light",
+        "canonical": "#1F2937",
+        "tonalRamp": [
+          "oklch(15.00% 0.0296 256.85)",
+          "oklch(26.43% 0.0296 256.85)",
+          "oklch(37.86% 0.0296 256.85)",
+          "oklch(49.29% 0.0296 256.85)",
+          "oklch(60.71% 0.0296 256.85)",
+          "oklch(72.14% 0.0296 256.85)",
+          "oklch(83.57% 0.0296 256.85)",
+          "oklch(95.00% 0.0296 256.85)"
+        ]
+      },
+      "text-muted-dark": {
+        "role": "neutral",
+        "displayName": "Text Muted Dark",
+        "canonical": "#9CA3AF",
+        "tonalRamp": [
+          "oklch(15.00% 0.0192 261.32)",
+          "oklch(26.43% 0.0192 261.32)",
+          "oklch(37.86% 0.0192 261.32)",
+          "oklch(49.29% 0.0192 261.32)",
+          "oklch(60.71% 0.0192 261.32)",
+          "oklch(72.14% 0.0192 261.32)",
+          "oklch(83.57% 0.0192 261.32)",
+          "oklch(95.00% 0.0192 261.32)"
+        ]
+      },
+      "text-muted-light": {
+        "role": "neutral",
+        "displayName": "Text Muted Light",
+        "canonical": "#4B5563",
+        "tonalRamp": [
+          "oklch(15.00% 0.0263 256.80)",
+          "oklch(26.43% 0.0263 256.80)",
+          "oklch(37.86% 0.0263 256.80)",
+          "oklch(49.29% 0.0263 256.80)",
+          "oklch(60.71% 0.0263 256.80)",
+          "oklch(72.14% 0.0263 256.80)",
+          "oklch(83.57% 0.0263 256.80)",
+          "oklch(95.00% 0.0263 256.80)"
+        ]
+      },
+      "brass-light": {
+        "role": "secondary",
+        "displayName": "Brass Light",
+        "canonical": "#8C5A2B",
+        "tonalRamp": [
+          "oklch(15.00% 0.0906 61.59)",
+          "oklch(26.43% 0.0906 61.59)",
+          "oklch(37.86% 0.0906 61.59)",
+          "oklch(49.29% 0.0906 61.59)",
+          "oklch(60.71% 0.0906 61.59)",
+          "oklch(72.14% 0.0906 61.59)",
+          "oklch(83.57% 0.0906 61.59)",
+          "oklch(95.00% 0.0906 61.59)"
+        ]
+      },
+      "brass-dark": {
+        "role": "secondary",
+        "displayName": "Brass Dark",
+        "canonical": "#E6AE69",
+        "tonalRamp": [
+          "oklch(15.00% 0.1085 70.93)",
+          "oklch(26.43% 0.1085 70.93)",
+          "oklch(37.86% 0.1085 70.93)",
+          "oklch(49.29% 0.1085 70.93)",
+          "oklch(60.71% 0.1085 70.93)",
+          "oklch(72.14% 0.1085 70.93)",
+          "oklch(83.57% 0.1085 70.93)",
+          "oklch(95.00% 0.1085 70.93)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Verified contact display treatment; Space Grotesk."
+      },
+      "headline": {
+        "displayName": "Section heading",
+        "purpose": "Medium Space Grotesk hierarchy."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Open, readable Geist body copy."
+      },
+      "label": {
+        "displayName": "Field label",
+        "purpose": "Visible Geist interface labels."
+      }
+    },
+    "shadows": [
+      {
+        "name": "surface-lift",
+        "value": "0 8px 32px rgba(0,0,0,0.16)",
+        "purpose": "Existing offset surface shadow; not applied to the contact form panel."
+      }
+    ],
+    "motion": [
+      {
+        "name": "luxury-ease",
+        "value": "cubic-bezier(0.16,1,0.3,1)",
+        "purpose": "Observed exponential ease for navigation/contact."
+      },
+      {
+        "name": "rolling-link",
+        "value": "850ms",
+        "purpose": "Slow text/arrow micro interaction."
+      },
+      {
+        "name": "contact-heading",
+        "value": "1.4s; stagger 0.16s; expo.out",
+        "purpose": "Contact reveal waits for intro completion."
+      },
+      {
+        "name": "scroll-progress",
+        "value": "scrub: 0.8",
+        "purpose": "Contact next-step line."
+      },
+      {
+        "name": "ambient-connection",
+        "value": "9s linear infinite",
+        "purpose": "Contact vector trace; removed under reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      },
+      {
+        "name": "2xl",
+        "value": "1536px"
+      },
+      {
+        "name": "contact-mobile",
+        "value": "760px"
+      },
+      {
+        "name": "contact-field-stack",
+        "value": "1050px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary action",
+      "kind": "button",
+      "refersTo": "button-primary-dark",
+      "description": "Pill action used on About and Services; resolves live semantic colors.",
+      "html": "<button class=\"ds-button\"><span class=\"ds-roll\"><span>Discuss your project</span><span aria-hidden=\"true\">Discuss your project</span></span><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" aria-hidden=\"true\"><path d=\"M7 17 17 7M7 7h10v10\"/></svg></button>",
+      "css": ".ds-roll{position:relative;display:inline-block;overflow:hidden;height:1.5em;line-height:1.5}.ds-roll>span{display:block;transition:transform 850ms cubic-bezier(.16,1,.3,1)}.ds-roll>span:last-child{position:absolute;inset:100% 0 auto;white-space:nowrap}.ds-button{display:inline-flex;align-items:center;gap:.8rem;min-height:3.2rem;padding:.9rem 1.4rem;border:0;border-radius:999px;background:var(--accent);color:var(--accent-text);font:500 .9375rem var(--font-body);cursor:pointer;transition:background-color 500ms ease,transform 700ms cubic-bezier(.16,1,.3,1)}.ds-button:hover{background:var(--accent-hover)}.ds-button:active{transform:scale(.97)}.ds-button:focus-visible{outline:2px solid var(--accent-ink);outline-offset:5px}.ds-button:is(:hover,:focus-visible) .ds-roll>span{transform:translateY(-100%)}.ds-button svg{transition:transform 850ms cubic-bezier(.16,1,.3,1)}.ds-button:is(:hover,:focus-visible) svg{transform:rotate(45deg)}@media(prefers-reduced-motion:reduce){.ds-roll>span{transition:none}.ds-roll>span:last-child{display:none}.ds-button:is(:hover,:focus-visible) .ds-roll>span,.ds-link:is(:hover,:focus-visible) .ds-roll>span{transform:none}}"
+    },
+    {
+      "name": "Rolling text link",
+      "kind": "button",
+      "refersTo": "text-link",
+      "description": "Slow text flip with underline and arrow; keyboard focus mirrors hover.",
+      "html": "<a href=\"#enquiry\" class=\"ds-link\"><span class=\"ds-roll\"><span>Discuss your project</span><span aria-hidden=\"true\">Discuss your project</span></span><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" aria-hidden=\"true\"><path d=\"M7 17 17 7M7 7h10v10\"/></svg></a>",
+      "css": ".ds-roll{position:relative;display:inline-block;overflow:hidden;height:1.5em;line-height:1.5}.ds-roll>span{display:block;transition:transform 850ms cubic-bezier(.16,1,.3,1)}.ds-roll>span:last-child{position:absolute;inset:100% 0 auto;white-space:nowrap}.ds-link{position:relative;display:inline-flex;align-items:center;gap:1rem;min-height:44px;color:var(--fg);font:1rem var(--font-body);text-decoration:none}.ds-link::after{content:\"\";position:absolute;bottom:7px;left:0;right:2rem;height:1px;background:var(--accent-ink);transform:scaleX(0);transform-origin:right;transition:transform 850ms cubic-bezier(.16,1,.3,1)}.ds-link:is(:hover,:focus-visible)::after{transform:scaleX(1);transform-origin:left}.ds-link:is(:hover,:focus-visible) .ds-roll>span{transform:translateY(-100%)}.ds-link:focus-visible{outline:2px solid var(--accent-ink);outline-offset:5px}@media(prefers-reduced-motion:reduce){.ds-roll>span{transition:none}.ds-roll>span:last-child{display:none}.ds-button:is(:hover,:focus-visible) .ds-roll>span,.ds-link:is(:hover,:focus-visible) .ds-roll>span{transform:none}}"
+    },
+    {
+      "name": "Contact field",
+      "kind": "input",
+      "refersTo": "input-dark",
+      "description": "Visible label and 16px input with a clear offset focus outline.",
+      "html": "<label class=\"ds-field\" for=\"ds-contact-name\">Your name<input id=\"ds-contact-name\" type=\"text\" autocomplete=\"name\" placeholder=\"How should I address you?\"></label>",
+      "css": ".ds-field{display:grid;gap:.65rem;color:var(--fg);font:500 .875rem var(--font-body)}.ds-field input{min-height:52px;width:100%;padding:.9rem 1rem;border:1px solid var(--border-strong);border-radius:8px;background:var(--bg);color:var(--fg);font:1rem/1.5 var(--font-body);caret-color:var(--accent-ink);transition:border-color 500ms ease}.ds-field input::placeholder{color:var(--fg-muted);opacity:1}.ds-field input:focus-visible{border-color:var(--accent-ink);outline:2px solid var(--accent-ink);outline-offset:3px}.ds-field input:disabled{opacity:.65}"
+    },
+    {
+      "name": "Contact budget choice",
+      "kind": "chip",
+      "description": "Native radio choice with a semantic selected state and stable dimensions.",
+      "html": "<label class=\"ds-choice\"><input type=\"radio\" name=\"ds-budget\" checked><span>Not sure yet</span></label>",
+      "css": ".ds-choice{position:relative;display:inline-block;cursor:pointer}.ds-choice input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0}.ds-choice span{display:inline-flex;align-items:center;min-height:44px;padding:.65rem .85rem;border:1px solid var(--border-strong);border-radius:8px;color:var(--fg-sub);font:.8125rem var(--font-body);transition:border-color 500ms ease,color 500ms ease,background-color 500ms ease}.ds-choice input:checked+span{background:var(--tag-bg);color:var(--tag-text);border-color:var(--accent-ink)}.ds-choice:hover span{border-color:var(--accent-ink)}.ds-choice input:focus-visible+span{outline:2px solid var(--accent-ink);outline-offset:3px}"
+    },
+    {
+      "name": "Defined surface",
+      "kind": "card",
+      "refersTo": "form-panel-dark",
+      "description": "Contact panel: tonal surface and one thin boundary, without a shadow.",
+      "html": "<section class=\"ds-panel\"><h2>What’s on your mind?</h2><p>A few details are enough to get started.</p></section>",
+      "css": ".ds-panel{padding:clamp(1.5rem,3.1vw,3rem);background:var(--bg-sub);border:1px solid var(--border-strong);border-radius:16px;color:var(--fg)}.ds-panel h2{margin:0 0 .65rem;font:500 clamp(1.75rem,2.5vw,2.5rem)/1.2 var(--font-display);letter-spacing:-.03em}.ds-panel p{margin:0;color:var(--fg-sub);font:.875rem/1.7 var(--font-body)}"
+    },
+    {
+      "name": "Navigation label",
+      "kind": "nav",
+      "description": "Reusable rolling desktop navbar labels; its full overlay and scroll state remain in Navbar.tsx.",
+      "html": "<nav aria-label=\"Sample navigation\"><a class=\"ds-navlink\" href=\"/work\"><span class=\"ds-roll\"><span>Work</span><span aria-hidden=\"true\">Work</span></span></a></nav>",
+      "css": ".ds-roll{position:relative;display:inline-block;overflow:hidden;height:1.5em;line-height:1.5}.ds-roll>span{display:block;transition:transform 850ms cubic-bezier(.16,1,.3,1)}.ds-roll>span:last-child{position:absolute;inset:100% 0 auto;white-space:nowrap}.ds-navlink{position:relative;display:inline-flex;align-items:center;min-height:44px;color:var(--fg-sub);font:.875rem var(--font-body);text-decoration:none}.ds-navlink::after{content:\"\";height:1px;position:absolute;bottom:6px;left:0;right:0;background:var(--accent-ink);transform:scaleX(0);transform-origin:right;transition:transform 850ms cubic-bezier(.16,1,.3,1)}.ds-navlink:is(:hover,:focus-visible) .ds-roll>span{transform:translateY(-100%)}.ds-navlink:is(:hover,:focus-visible)::after{transform:scaleX(1);transform-origin:left}.ds-navlink:focus-visible{outline:2px solid var(--accent-ink);outline-offset:5px}@media(prefers-reduced-motion:reduce){.ds-navlink *{transition:none}.ds-navlink .ds-roll>span:last-child{display:none}.ds-navlink:is(:hover,:focus-visible) .ds-roll>span{transform:none}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Your goals shape what I build.",
+    "overview": "Clear language and large sans-serif type lead the portfolio. Jade identifies actions and personal availability; ink and warm stone provide the two theme grounds. Generous section spacing gives the work and the visitor's next action room to stand out.\n\nMotion follows the reading order and makes controls feel responsive. The interface combines thin dividers, defined surfaces, and rolling text links. The owner's explicit font preference is binding: use sans-serif combinations throughout.",
+    "keyCharacteristics": [
+      "Space Grotesk display with Geist body text.",
+      "Jade actions on ink or warm stone surfaces.",
+      "Spacious layouts, clear hierarchy and direct invitations.",
+      "Slow rolling links, restrained arrow motion and scroll reveals."
+    ],
+    "rules": [
+      {
+        "name": "The Semantic Theme Rule",
+        "body": "Use `--bg`, `--bg-sub`, `--fg`, and their related semantic variables in components. Use `--accent-ink` for jade text and focus, `--accent` for fills, and `--accent-text` for text on those fills.",
+        "section": "colors"
+      },
+      {
+        "name": "The Sans-Serif Rule",
+        "body": "Keep the owner's sans-serif preference across headings, body text, controls and email templates.",
+        "section": "typography"
+      }
+    ],
+    "dos": [
+      "Do use semantic runtime colors so both themes remain readable.",
+      "Do keep visible labels, keyboard focus and reduced-motion alternatives.",
+      "Do keep fields stable while visitors type.",
+      "Do preserve slow text-flip and arrow interactions across related surfaces."
+    ],
+    "donts": [
+      "Don't introduce serif fonts.",
+      "Don't invent project results, client quotes or service claims.",
+      "Don't promote page-specific imagery or scroll stories into mandatory global patterns."
+    ]
+  }
+}
