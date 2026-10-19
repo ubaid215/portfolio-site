@@ -2,6 +2,9 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowDown, ArrowRight, ArrowUpRight, Check, ChevronDown, FileText, Mail, Search, Sparkles, UserRound } from "lucide-react"
 import { ServicesMotion } from "@/components/services/ServicesMotion"
+import { JsonLd } from "@/components/seo/JsonLd"
+import { SERVICE_FAQS } from "@/lib/faqs"
+import { servicesPageSchema } from "@/lib/seo"
 import { SERVICE_OFFERINGS } from "@/lib/services"
 import { PROJECTS } from "@/lib/projects"
 import styles from "./page.module.css"
@@ -24,14 +27,6 @@ const BUDGETS = [
   { name: "Booking & operations systems", price: "From $1,200", timing: "4–8 weeks" },
   { name: "SaaS & product MVPs", price: "From $2,500", timing: "6–14 weeks" },
   { name: "Websites, AI & digital growth", price: "Quoted by scope", timing: "Agreed around the brief" },
-]
-
-const FAQS = [
-  { question: "What do I need before we start?", answer: "A goal, a challenge, or a rough idea is enough to start the conversation. I’ll help you work through the people using the product, the priorities, and what belongs in the first version." },
-  { question: "Can we start small and build from there?", answer: "Yes. We can agree on a focused first release, review what people need, and plan the next steps around what we learn. Scope and priorities stay part of the conversation as the product grows." },
-  { question: "How do you decide where AI belongs?", answer: "We look at the task, the information it needs, and what a useful result looks like. Before connecting a model, we discuss the data, providers, access, and the points where your team should review or take over." },
-  { question: "Can you work with our existing team or product?", answer: "I can collaborate on an existing product or take responsibility for a focused build. We’ll discuss the role, the codebase, and the way we’ll communicate before deciding how the work fits together." },
-  { question: "What happens after launch?", answer: "We agree on ownership, documentation, and any ongoing support before launch. For SEO, marketing, or an evolving product, we can also discuss a continued working arrangement around a clear set of priorities." },
 ]
 
 function RollingText({ text }: { text: string }) {
@@ -95,6 +90,7 @@ function GrowthVisual() {
 export default function ServicesPage() {
   return (
     <ServicesMotion className={styles.page}>
+      <JsonLd data={servicesPageSchema(SERVICE_FAQS)} />
       <section className={`${styles.container} ${styles.hero}`} aria-labelledby="services-heading">
         <div className={styles.heroCopy}>
           <p className={styles.heroNote}>A development partner for your next move.</p>
@@ -186,7 +182,7 @@ export default function ServicesPage() {
 
       <section className={`${styles.container} ${styles.faqSection}`} aria-labelledby="services-faq-heading">
         <div><p className={styles.sectionNote}>Before we begin</p><h2 id="services-faq-heading" className={styles.sectionHeading} aria-label="A little more clarity."><HeadingLine>A little more</HeadingLine><HeadingLine>clarity.</HeadingLine></h2></div>
-        <div className={styles.faqList}>{FAQS.map((faq) => <details key={faq.question} className={styles.faqDetail}><summary><span>{faq.question}</span><ChevronDown size={21} aria-hidden="true" /></summary><p>{faq.answer}</p></details>)}</div>
+        <div className={styles.faqList}>{SERVICE_FAQS.map((faq) => <details key={faq.question} className={styles.faqDetail}><summary><span>{faq.question}</span><ChevronDown size={21} aria-hidden="true" /></summary><p>{faq.answer}</p></details>)}</div>
       </section>
     </ServicesMotion>
   )

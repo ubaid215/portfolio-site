@@ -7,19 +7,15 @@ import { Skills }       from "@/components/home/Skills"
 import { Testimonials } from "@/components/home/Testimonials"
 import { ContactCTA }   from "@/components/home/ContactCTA"
 import { HomeMotion } from "@/components/home/HomeMotion"
+import { JsonLd } from "@/components/seo/JsonLd"
+import { createMetadata, homePageSchema, PAGE_SEO } from "@/lib/seo"
 
-const description = "Websites, SaaS products, AI automation, generative AI, SEO and digital marketing. Explore Muhammad Ubaidullah's services and selected project work."
-
-export const metadata: Metadata = {
-  title: { absolute: "Muhammad Ubaidullah | Web, SaaS & AI Development" },
-  description,
-  openGraph: { title: "Muhammad Ubaidullah | Web, SaaS & AI Development", description },
-  twitter: { title: "Muhammad Ubaidullah | Web, SaaS & AI Development", description },
-}
+export const metadata: Metadata = createMetadata(PAGE_SEO.home)
 
 export default function HomePage() {
   return (
     <HomeMotion>
+      <JsonLd data={homePageSchema} />
       <Hero />
       <About />
       <Services />

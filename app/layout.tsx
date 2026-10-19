@@ -11,7 +11,7 @@
  * - suppressHydrationWarning (required for next-themes)
  */
 
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import { Space_Grotesk } from "next/font/google"
@@ -20,6 +20,8 @@ import { Navbar } from "@/components/layout/Navbar"
 import { SmoothScroll } from "@/components/layout/SmoothScroll"
 import { Footer } from "@/components/layout/Footer"
 import { SiteIntro } from "@/components/layout/SiteIntro"
+import { JsonLd } from "@/components/seo/JsonLd"
+import { SITE_NAME, SITE_URL, siteSchema } from "@/lib/seo"
 import "./globals.css"
 
 // Space Grotesk — display font for headings and the wordmark
@@ -30,43 +32,74 @@ const spaceGrotesk = Space_Grotesk({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://ubaid.dev"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Muhammad Ubaidullah | Web, SaaS & AI Development",
+    default: "Muhammad Ubaidullah — Full Stack Developer",
     template: "%s | Muhammad Ubaidullah",
   },
   description:
-    "Independent full stack developer helping founders and teams build websites, SaaS products, and practical AI solutions. Explore the work and start a conversation.",
+    "Independent full stack developer building business websites, custom dashboards, AI automation and technical SEO for founders and growing teams worldwide.",
   keywords: [
-    "Full Stack Developer",
-    "Next.js Developer",
-    "React Developer",
-    "NestJS",
-    "MERN Stack",
-    "PERN Stack",
-    "Freelance Developer",
-    "Remote Developer",
-    "Pakistan Developer",
+    "full stack developer",
+    "freelance web developer",
+    "website development for small business",
+    "custom dashboard development",
+    "internal tool development",
+    "AI automation services",
+    "AI workflow automation",
+    "generative AI development",
+    "SEO services",
+    "technical SEO",
+    "SaaS development",
+    "Next.js developer",
+    "React developer",
+    "Node.js developer",
+    "remote developer",
   ],
-  authors: [{ name: "Muhammad Ubaidullah" }],
-  creator: "Muhammad Ubaidullah",
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  category: "Web Development",
+  applicationName: SITE_NAME,
+  formatDetection: { telephone: false, email: false, address: false },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://ubaid.dev",
-    siteName: "Muhammad Ubaidullah",
-    title: "Muhammad Ubaidullah | Web, SaaS & AI Development",
-    description: "Your goals shape what I build. Websites, SaaS products, and practical AI solutions for founders and teams.",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: "Muhammad Ubaidullah — Full Stack Developer",
+    description:
+      "Websites, custom dashboards, AI automation and technical SEO for founders and growing teams.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Muhammad Ubaidullah | Web, SaaS & AI Development",
-    description: "Your goals shape what I build. Websites, SaaS products, and practical AI solutions for founders and teams.",
+    title: "Muhammad Ubaidullah — Full Stack Developer",
+    description:
+      "Websites, custom dashboards, AI automation and technical SEO for founders and growing teams.",
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
+  icons: { icon: "/favicon.ico", shortcut: "/favicon.ico" },
+  referrer: "origin-when-cross-origin",
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  colorScheme: "light dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#F8F7F4" },
+    { media: "(prefers-color-scheme: dark)", color: "#0A0E1A" },
+  ],
 }
 
 interface RootLayoutProps {
@@ -86,6 +119,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       className={`${GeistSans.variable} ${GeistMono.variable} ${spaceGrotesk.variable}`}
     >
       <body className="flex min-h-screen flex-col">
+        <JsonLd data={siteSchema} />
         <ThemeProvider>
           <SmoothScroll />
           <SiteIntro />

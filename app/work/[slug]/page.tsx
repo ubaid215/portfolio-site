@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
+import { JsonLd } from "@/components/seo/JsonLd"
 import { PROJECTS, getProject, getAdjacentProjects } from "@/lib/projects"
+import { caseStudyMetadata, caseStudySchema } from "@/lib/seo"
 import { CaseStudyClient } from "./CaseStudyClient"
 
 interface Props {
@@ -13,13 +15,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const project = getProject(slug)
-  if (!project) return {}
-  return {
-    title: project.title,
-    description: project.shortDesc,
-    openGraph: { title: project.title, description: project.shortDesc, images: [{ url: project.coverImage }] },
-  }
+  return caseStudyMetadata(slug) ?? {}
 }
 
 export default async function CaseStudyPage({ params }: Props) {
@@ -28,6 +24,12 @@ export default async function CaseStudyPage({ params }: Props) {
   if (!project) notFound()
 
   const adjacent = getAdjacentProjects(slug)
+  const schema = caseStudySchema(slug)
 
-  return <CaseStudyClient key={project.slug} project={project} adjacent={adjacent} />
+  return (
+    <>
+      {schema && <JsonLd data={schema} />}
+      <CaseStudyClient key={project.slug} project={project} adjacent={adjacent} />
+    </>
+  )
 }

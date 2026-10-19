@@ -1,10 +1,14 @@
 import type { Metadata } from "next"
+import { JsonLd } from "@/components/seo/JsonLd"
+import { contactPageSchema, createMetadata, PAGE_SEO } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Contact",
-  description: "Have a project or a role in mind? Talk to Muhammad Ubaidullah about websites, SaaS products, AI solutions, or joining your team.",
-}
+export const metadata: Metadata = createMetadata(PAGE_SEO.contact)
 
 export default function ContactLayout({ children }: { children: React.ReactNode }) {
-  return children
+  return (
+    <>
+      <JsonLd data={contactPageSchema} />
+      {children}
+    </>
+  )
 }

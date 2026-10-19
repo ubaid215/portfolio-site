@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og"
 
-export const alt = "Muhammad Ubaidullah — websites, SaaS products, and practical AI solutions"
+export const alt = "Muhammad Ubaidullah — websites, dashboards, SEO, and AI automation"
 export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"
 
@@ -14,7 +14,7 @@ export default function OpenGraphImage() {
       <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
         <div style={{ fontSize: 82, lineHeight: 1.05, letterSpacing: -3, maxWidth: 1000 }}>Your goals shape what I build.</div>
         <div style={{ width: 130, height: 5, background: "#00D9A6" }} />
-        <div style={{ fontSize: 27, color: "#B9C2D1" }}>Websites · SaaS products · Practical AI solutions</div>
+        <div style={{ fontSize: 27, color: "#B9C2D1" }}>Websites · Dashboards · SEO · AI automation</div>
       </div>
       <div style={{ fontSize: 22, color: "#00D9A6" }}>ubaid.dev</div>
     </div>,

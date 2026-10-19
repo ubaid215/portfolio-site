@@ -3,13 +3,12 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowDown, ArrowUpRight, Download } from "lucide-react"
 import { AboutMotion } from "@/components/about/AboutMotion"
+import { JsonLd } from "@/components/seo/JsonLd"
 import { PROJECTS } from "@/lib/projects"
+import { aboutPageSchema, createMetadata, PAGE_SEO } from "@/lib/seo"
 import styles from "./page.module.css"
 
-export const metadata: Metadata = {
-  title: "About",
-  description: "Meet Muhammad Ubaidullah, an independent full stack developer in Faisalabad, Pakistan. Explore his approach, real project work, and capabilities in websites, SaaS, and practical AI solutions.",
-}
+export const metadata: Metadata = createMetadata(PAGE_SEO.about)
 
 const STATEMENT = "A good product makes the next step clear for customers, and the everyday work easier for the team behind it."
 
@@ -43,6 +42,7 @@ function HeadingLine({ children }: { children: string }) {
 export default function AboutPage() {
   return (
     <AboutMotion className={styles.page}>
+      <JsonLd data={aboutPageSchema} />
       <section className={`${styles.container} ${styles.hero}`} aria-labelledby="about-heading" data-about-hero>
         <div className={styles.heroLayout}>
           <div className={styles.heroCopy}>
