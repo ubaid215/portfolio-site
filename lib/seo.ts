@@ -42,7 +42,46 @@ export interface PageSeo {
  * service + outcome language a buyer actually types when they are ready to hire,
  * and the vertical language the work can honestly support.
  */
-export const PAGE_SEO: Record<"home" | "services" | "work" | "about" | "contact", PageSeo> = {
+export const PAGE_SEO: Record<"home" | "services" | "work" | "about" | "contact" | "restaurants" | "guides" | "book" | "privacy", PageSeo> = {
+  restaurants: {
+    title: "Custom Restaurant POS & Kitchen Display System | Fixed Price",
+    description:
+      "A restaurant POS, kitchen display, menu manager and sales dashboard built around how your restaurant works. Fixed price, no per-terminal fees, you own it.",
+    path: "/restaurants",
+    keywords: [
+      "custom restaurant POS",
+      "restaurant POS system development",
+      "kitchen display system",
+      "restaurant management system",
+      "restaurant ordering system",
+      "restaurant software developer",
+    ],
+  },
+  guides: {
+    title: "Guides — Restaurant Systems, Dashboards & Web Projects",
+    description:
+      "Practical guides for business owners deciding on a restaurant system, a custom dashboard or a new website: what to choose, what it costs, what to ask.",
+    path: "/guides",
+    keywords: [
+      "custom software guide",
+      "restaurant POS guide",
+      "custom dashboard cost",
+      "web app development cost",
+    ],
+  },
+  book: {
+    title: "Book a Free 20-Minute Call — Muhammad Ubaidullah",
+    description:
+      "Pick a time for a free 20-minute call about your website, dashboard, restaurant system or automation. You leave with a clear next step, whether or not we work together.",
+    path: "/book",
+    keywords: ["book a call with a developer", "free project consultation", "hire full stack developer"],
+  },
+  privacy: {
+    title: "Privacy Notice — Muhammad Ubaidullah",
+    description: "What this website collects through analytics, the contact form and call booking, and how that information is used.",
+    path: "/privacy",
+    keywords: [],
+  },
   home: {
     title: "Full Stack Developer: Websites, Dashboards & AI Automation",
     description:
@@ -339,7 +378,7 @@ const SEO_SERVICES: SeoService[] = [
     serviceType: "Website development",
     description:
       "Business websites, landing pages, and online stores with responsive layouts, content management, and the integrations your customer journey needs.",
-    url: "/services#website-development",
+    url: "/services/website-development",
     keywords: [
       "business website development",
       "small business website design",
@@ -355,7 +394,7 @@ const SEO_SERVICES: SeoService[] = [
     serviceType: "SaaS and web application development",
     description:
       "From a focused MVP to a custom application: user roles, subscription flows, dashboards, APIs, and a technical foundation that supports the next release.",
-    url: "/services#saas-development",
+    url: "/services/saas-development",
     keywords: [
       "SaaS development",
       "SaaS MVP development",
@@ -372,7 +411,7 @@ const SEO_SERVICES: SeoService[] = [
     serviceType: "Custom dashboard and internal tool development",
     description:
       "Custom dashboards and internal tools that bring orders, stock, donors, attendance and everyday operations into one view your team can actually use.",
-    url: "/services#service-scope",
+    url: "/services/saas-development#dashboards",
     keywords: [
       "custom dashboard development",
       "dashboard development services",
@@ -391,7 +430,7 @@ const SEO_SERVICES: SeoService[] = [
     serviceType: "AI workflow automation",
     description:
       "Automate lead routing, document processing, customer follow-ups, and internal handoffs, with clear review points and a way for your team to take over.",
-    url: "/services#ai-automation",
+    url: "/services/ai-automation",
     keywords: [
       "AI automation services",
       "AI workflow automation",
@@ -488,7 +527,7 @@ function serviceSchema(service: SeoService) {
               minPrice: service.minPrice,
             },
             availability: "https://schema.org/InStock",
-            url: `${SITE_URL}/services`,
+            url: `${SITE_URL}${service.url.split("#")[0]}`,
           },
         }
       : {}),
@@ -662,3 +701,141 @@ export const LLM_SERVICES = SEO_SERVICES.map(({ name, description, url }) => ({
   url: absoluteUrl(url.split("#")[0]),
 }))
 
+
+/* ------------------------------------------------------------------ */
+/* Acquisition pages: service landing pages, restaurants, guides       */
+/* ------------------------------------------------------------------ */
+
+export function breadcrumbSchema(items: { name: string; path: string }[]) {
+  return {
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: absoluteUrl(item.path),
+    })),
+  }
+}
+
+function faqSchema(id: string, faqs: readonly { question: string; answer: string }[]) {
+  return {
+    "@type": "FAQPage",
+    "@id": `${SITE_URL}${id}#faq`,
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: { "@type": "Answer", text: faq.answer },
+    })),
+  }
+}
+
+export function servicePageSchema(page: {
+  slug: string
+  name: string
+  seoDescription: string
+  keywords: string[]
+  included: string[]
+  faqs: { question: string; answer: string }[]
+}) {
+  const path = `/services/${page.slug}`
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Service",
+        "@id": `${SITE_URL}${path}`,
+        name: page.name,
+        description: page.seoDescription,
+        url: absoluteUrl(path),
+        provider: { "@id": PERSON_ID },
+        areaServed: "Worldwide",
+        keywords: page.keywords.join(", "),
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          name: `${page.name} deliverables`,
+          itemListElement: page.included.map((item) => ({
+            "@type": "Offer",
+            itemOffered: { "@type": "Service", name: item },
+          })),
+        },
+      },
+      breadcrumbSchema([
+        { name: "Home", path: "/" },
+        { name: "Services", path: "/services" },
+        { name: page.name, path },
+      ]),
+      faqSchema(path, page.faqs),
+    ],
+  }
+}
+
+export function restaurantPageSchema(
+  packages: readonly { name: string; price: number; description: string }[],
+  faqs: readonly { question: string; answer: string }[],
+) {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Service",
+        "@id": `${SITE_URL}/restaurants`,
+        name: "Custom restaurant POS and kitchen display system",
+        serviceType: "Restaurant management software development",
+        description: PAGE_SEO.restaurants.description,
+        url: absoluteUrl("/restaurants"),
+        provider: { "@id": PERSON_ID },
+        areaServed: "Worldwide",
+        audience: { "@type": "BusinessAudience", audienceType: "Restaurants, cafés and takeaways" },
+        offers: packages.map((item) => ({
+          "@type": "Offer",
+          name: item.name,
+          description: item.description,
+          priceCurrency: "USD",
+          priceSpecification: { "@type": "PriceSpecification", priceCurrency: "USD", minPrice: item.price },
+          url: absoluteUrl("/restaurants"),
+        })),
+      },
+      breadcrumbSchema([
+        { name: "Home", path: "/" },
+        { name: "Restaurants", path: "/restaurants" },
+      ]),
+      faqSchema("/restaurants", faqs),
+    ],
+  }
+}
+
+export function guideSchema(guide: {
+  slug: string
+  title: string
+  description: string
+  keywords: string[]
+  published: string
+  updated: string
+}) {
+  const path = `/guides/${guide.slug}`
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": `${SITE_URL}${path}#article`,
+        headline: guide.title,
+        description: guide.description,
+        url: absoluteUrl(path),
+        datePublished: guide.published,
+        dateModified: guide.updated,
+        author: { "@id": PERSON_ID },
+        publisher: { "@id": PERSON_ID },
+        isPartOf: { "@id": WEBSITE_ID },
+        keywords: guide.keywords.join(", "),
+        inLanguage: "en",
+      },
+      breadcrumbSchema([
+        { name: "Home", path: "/" },
+        { name: "Guides", path: "/guides" },
+        { name: guide.title, path },
+      ]),
+    ],
+  }
+}

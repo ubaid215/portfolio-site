@@ -14,7 +14,11 @@ const FOOTER_LINKS = [
   { label: "Work",     href: "/work"     },
   { label: "About",    href: "/about"    },
   { label: "Services", href: "/services" },
+  { label: "Restaurants", href: "/restaurants" },
+  { label: "Guides",   href: "/guides"   },
+  { label: "Book a call", href: "/book"  },
   { label: "Contact",  href: "/contact"  },
+  { label: "Privacy",  href: "/privacy"  },
 ]
 
 const SOCIAL_LINKS = [
@@ -220,7 +224,7 @@ export function Footer() {
               maxWidth: "36ch",
               margin: 0,
             }}>
-              Share your idea, your biggest challenge, or the role you&apos;re hiring for. Let&apos;s see where I can help.
+              Share your idea or your biggest challenge. Let&apos;s see where I can help.
             </p>
 
             <Link href="/contact" style={{ textDecoration: "none", flexShrink: 0 }}>
@@ -315,7 +319,7 @@ export function Footer() {
                 color: "var(--accent-ink)",
                 textTransform: "uppercase",
               }}>
-                Open to work
+                Booking projects
               </span>
             </div>
           </div>

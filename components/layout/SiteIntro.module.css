@@ -1,3 +1,6 @@
+/* Skipped by the gate in app/layout.tsx before the first paint. */
+:global(html[data-site-intro="done"]) .intro { display: none; }
+
 .intro {
   position: fixed;
   z-index: 500;

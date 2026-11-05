@@ -1,3 +1,4 @@
+import { GUIDES } from "@/lib/guides"
 import { PROJECTS } from "@/lib/projects"
 import { LLM_SERVICES, PAGE_SEO, SITE_URL } from "@/lib/seo"
 import { CONTACT_EMAIL } from "@/lib/site"
@@ -18,6 +19,8 @@ export function GET() {
     `Canonical site: ${SITE_URL}`,
     `Contact: ${CONTACT_EMAIL}`,
     `Services: ${SITE_URL}/services`,
+    `Restaurant systems (fixed-price packages): ${SITE_URL}/restaurants`,
+    `Book a free 20-minute call: ${SITE_URL}/book`,
     `Selected work: ${SITE_URL}/work`,
     `About: ${SITE_URL}/about`,
     "",
@@ -31,10 +34,15 @@ export function GET() {
       (project) => `- ${project.title} (${SITE_URL}/work/${project.slug}): ${project.shortDesc}`,
     ),
     "",
+    "## Guides",
+    "",
+    ...GUIDES.map((guide) => `- ${guide.title} (${SITE_URL}/guides/${guide.slug}): ${guide.description}`),
+    "",
     "## Page summaries",
     "",
     `- Home: ${PAGE_SEO.home.description}`,
     `- Services: ${PAGE_SEO.services.description}`,
+    `- Restaurants: ${PAGE_SEO.restaurants.description}`,
     `- Work: ${PAGE_SEO.work.description}`,
     `- About: ${PAGE_SEO.about.description}`,
     "",

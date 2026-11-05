@@ -28,6 +28,7 @@ const NAV_LINKS: NavLink[] = [
   { label: "Work",     href: "/work"     },
   { label: "About",    href: "/about"    },
   { label: "Services", href: "/services" },
+  { label: "Guides",   href: "/guides"   },
   { label: "Contact",  href: "/contact"  },
 ]
 
@@ -154,7 +155,7 @@ export function Navbar() {
             borderBottomColor: scrolled ? undefined : "var(--border)",
           }}
           animate={{
-            width:        scrolled ? "min(720px, calc(100vw - 3rem))" : "100%",
+            width:        scrolled ? "min(780px, calc(100vw - 3rem))" : "100%",
             borderRadius: scrolled ? 9999 : 0,
             paddingLeft:  scrolled ? "1.25rem" : "var(--navbar-edge-padding, 1.5rem)",
             paddingRight: scrolled ? "1.25rem" : "var(--navbar-edge-padding, 1.5rem)",
@@ -211,7 +212,7 @@ export function Navbar() {
             <ThemeToggle />
 
             {/* Desktop CTA */}
-            <Link href="/contact" className="desktop-cta">
+            <Link href="/book" className="desktop-cta" data-track="book_call_click" data-track-label="navbar">
               <motion.span
                 data-framer-motion
                 style={{
@@ -232,7 +233,7 @@ export function Navbar() {
                 whileTap={{ scale: 0.97 }}
                 transition={{ duration: 0.2, ease: EASE_LUXURY }}
               >
-                Start a Project
+                Book a call
                 <ArrowUpRight size={14} strokeWidth={2.5} />
               </motion.span>
             </Link>
@@ -432,7 +433,7 @@ export function Navbar() {
                   </span>
                 </div>
 
-                <Link href="/contact" onClick={closeMenu}>
+                <Link href="/book" onClick={closeMenu} data-track="book_call_click" data-track-label="mobile_menu">
                   <motion.span
                     data-framer-motion
                     style={{
@@ -451,7 +452,7 @@ export function Navbar() {
                     whileTap={{ scale: 0.97 }}
                     transition={{ duration: 0.2, ease: EASE_LUXURY }}
                   >
-                    Start a Project
+                    Book a call
                     <ArrowUpRight size={15} strokeWidth={2.5} />
                   </motion.span>
                 </Link>

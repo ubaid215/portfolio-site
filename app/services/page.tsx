@@ -6,6 +6,7 @@ import { JsonLd } from "@/components/seo/JsonLd"
 import { SERVICE_FAQS } from "@/lib/faqs"
 import { servicesPageSchema } from "@/lib/seo"
 import { SERVICE_OFFERINGS } from "@/lib/services"
+import { getServicePage } from "@/lib/service-pages"
 import { PROJECTS } from "@/lib/projects"
 import styles from "./page.module.css"
 
@@ -23,10 +24,12 @@ const PROCESS = [
 ]
 
 const BUDGETS = [
+  { name: "Restaurant POS & kitchen systems", price: "From $1,490", timing: "3–6 weeks" },
+  { name: "Business websites", price: "From $900", timing: "2–5 weeks" },
   { name: "Dashboards & internal tools", price: "From $900", timing: "3–7 weeks" },
   { name: "Booking & operations systems", price: "From $1,200", timing: "4–8 weeks" },
   { name: "SaaS & product MVPs", price: "From $2,500", timing: "6–14 weeks" },
-  { name: "Websites, AI & digital growth", price: "Quoted by scope", timing: "Agreed around the brief" },
+  { name: "AI automation & digital growth", price: "Quoted by scope", timing: "Agreed around the brief" },
 ]
 
 function RollingText({ text }: { text: string }) {
@@ -158,7 +161,7 @@ export default function ServicesPage() {
           {SERVICE_OFFERINGS.map((service) => (
             <details key={service.id} id={service.id} className={styles.scopeDetail}>
               <summary><span>{service.title}</span><ChevronDown size={22} aria-hidden="true" /></summary>
-              <div className={styles.scopeContent}><p className={styles.scopeDescription}>{service.description}</p><p>{service.detail}</p><ul>{service.deliverables.map((item) => <li key={item}>{item}</li>)}</ul><TextLink href="/contact" text={`Discuss ${service.title.toLowerCase().replace(/\bai\b/g, "AI").replace(/\bsaas\b/g, "SaaS")}`} /></div>
+              <div className={styles.scopeContent}><p className={styles.scopeDescription}>{service.description}</p><p>{service.detail}</p><ul>{service.deliverables.map((item) => <li key={item}>{item}</li>)}</ul>{getServicePage(service.id) && <TextLink href={`/services/${service.id}`} text="Prices, scope & examples" />}<TextLink href="/contact" text={`Discuss ${service.title.toLowerCase().replace(/\bai\b/g, "AI").replace(/\bsaas\b/g, "SaaS")}`} /></div>
             </details>
           ))}
         </div>
@@ -175,7 +178,7 @@ export default function ServicesPage() {
       <section className={`${styles.container} ${styles.budgetSection}`} aria-labelledby="services-budget-heading">
         <div className={styles.budgetIntro}>
           <p className={styles.sectionNote}>Budget guidance</p><h2 id="services-budget-heading" className={styles.sectionHeading} aria-label="A starting point for the conversation."><HeadingLine>A starting point</HeadingLine><HeadingLine>for the conversation.</HeadingLine></h2>
-          <p>The build should fit the goal and the budget. These starting estimates give us a place to begin; the final quote and timeline follow the agreed scope.</p><TextLink href="/contact" text="Discuss your budget" />
+          <p>The build should fit the goal and the budget. These starting estimates give us a place to begin; the final quote and timeline follow the agreed scope.</p><TextLink href="/restaurants" text="See the restaurant packages" /><TextLink href="/contact" text="Discuss your budget" />
         </div>
         <dl className={styles.budgetList}>{BUDGETS.map((budget) => <div key={budget.name}><dt>{budget.name}</dt><dd><strong>{budget.price}</strong><span>{budget.timing}</span></dd></div>)}</dl>
       </section>

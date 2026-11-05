@@ -11,18 +11,21 @@ export function SiteIntro() {
 
   const finish = useCallback(() => {
     document.documentElement.dataset.siteIntro = "done"
+    try { sessionStorage.setItem("site-intro-seen", "1") } catch {}
     setVisible(false)
   }, [])
 
   useEffect(() => {
     if (!visible) return
 
-    document.documentElement.dataset.siteIntro = "playing"
+    // The gate in app/layout.tsx already skipped the intro for this visit.
+    const skipped = document.documentElement.dataset.siteIntro === "done"
+    if (!skipped) document.documentElement.dataset.siteIntro = "playing"
     const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)")
     const frame = window.requestAnimationFrame(() => {
       const intro = introRef.current
       // CSS may have finished before hydration on a slow connection.
-      if (motionPreference.matches || (intro && getComputedStyle(intro).visibility === "hidden")) {
+      if (skipped || motionPreference.matches || (intro && getComputedStyle(intro).visibility === "hidden")) {
         finish()
       }
     })

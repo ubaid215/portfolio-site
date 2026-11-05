@@ -1,15 +1,16 @@
 "use client"
 
 import { useEffect, useRef, useState, type FormEvent } from "react"
-import { ArrowDown, ArrowUpRight, Check, CheckCircle2, ChevronDown, Copy, LoaderCircle, Mail, MapPin } from "lucide-react"
+import { ArrowDown, ArrowUpRight, CalendarDays, Check, CheckCircle2, ChevronDown, Copy, LoaderCircle, Mail, MapPin } from "lucide-react"
 import { FaGithub, FaLinkedin, FaWhatsapp } from "react-icons/fa"
 import { ContactMotion } from "@/components/contact/ContactMotion"
 import { validateContactPayload } from "@/lib/contact-validation"
+import { trackEvent } from "@/lib/analytics"
 import { CONTACT_EMAIL, GITHUB_URL, LINKEDIN_URL, WHATSAPP_URL } from "@/lib/site"
 import styles from "./page.module.css"
 
 const PROJECT_TYPES = [
-  "Website / Frontend", "SaaS / Product MVP", "Operations System", "Internal Dashboard",
+  "Restaurant system", "Website / Frontend", "SaaS / Product MVP", "Operations System", "Internal Dashboard",
   "AI Automation", "Generative AI", "SEO", "Digital Marketing",
   "Team / Hiring opportunity", "Other / Not sure yet",
 ]
@@ -59,8 +60,10 @@ export default function ContactPage() {
       if (!response.ok || result?.success !== true) {
         throw new Error(result?.error || `Your message could not be sent. Please email ${CONTACT_EMAIL} directly.`)
       }
+      trackEvent("generate_lead", { project_type: validation.data.projectType, budget: validation.data.budget || "unspecified" })
       setSubmitted(true)
     } catch (error) {
+      trackEvent("contact_submit_error", { project_type: validation.data.projectType })
       setFormError(error instanceof Error ? error.message : `Please email ${CONTACT_EMAIL} directly.`)
     } finally { setLoading(false); submitLock.current = false }
   }
@@ -89,7 +92,7 @@ export default function ContactPage() {
           <span className={styles.connectionSignature}>u.</span>
         </div>
         <div className={styles.heroRail}>
-          <span className={styles.availability}><span className={styles.statusDot} />Open to projects & hiring conversations</span>
+          <span className={styles.availability}><span className={styles.statusDot} />Booking new projects</span>
           <span><MapPin size={15} aria-hidden="true" />Pakistan · Working worldwide</span>
         </div>
       </section>
@@ -104,7 +107,8 @@ export default function ContactPage() {
             <span role="status" className={styles.copyStatus}>{copyStatus === "copied" ? "Email copied" : copyStatus === "failed" ? "Select the email address to copy it." : ""}</span>
           </div>
           <div className={styles.directLinks}>
-            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.channel}><FaWhatsapp size={20} aria-hidden="true" /><RollingText>Chat on WhatsApp</RollingText><ArrowUpRight size={18} aria-hidden="true" /></a>
+            <a href="/book" className={styles.channel} data-track="book_call_click" data-track-label="contact_aside"><CalendarDays size={20} aria-hidden="true" /><RollingText>Book a free 20-min call</RollingText><ArrowUpRight size={18} aria-hidden="true" /></a>
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.channel} data-track="contact_method_click" data-track-label="whatsapp"><FaWhatsapp size={20} aria-hidden="true" /><RollingText>Chat on WhatsApp</RollingText><ArrowUpRight size={18} aria-hidden="true" /></a>
             <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" className={styles.channel}><FaLinkedin size={19} aria-hidden="true" /><RollingText>Connect on LinkedIn</RollingText><ArrowUpRight size={18} aria-hidden="true" /></a>
             <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={styles.channel}><FaGithub size={20} aria-hidden="true" /><RollingText>Explore my GitHub</RollingText><ArrowUpRight size={18} aria-hidden="true" /></a>
           </div>
@@ -120,7 +124,7 @@ export default function ContactPage() {
               <CheckCircle2 size={46} strokeWidth={1.25} aria-hidden="true" />
               <h2>Thanks for the introduction.</h2>
               <p>Your message has been sent. I’ll review what you shared and aim to reply to <strong>{form.email}</strong> within two business days.</p>
-              <a href={`mailto:${CONTACT_EMAIL}`} className={styles.textLink}><RollingText>Continue by email</RollingText><ArrowUpRight size={18} aria-hidden="true" /></a>
+              <a href="/book" className={styles.textLink} data-track="book_call_click" data-track-label="contact_success"><RollingText>Skip the wait: book a call</RollingText><ArrowUpRight size={18} aria-hidden="true" /></a>
               <button type="button" className={styles.resetButton} onClick={() => { setSubmitted(false); setForm(EMPTY_FORM) }}>Send another message</button>
             </div>
           ) : (

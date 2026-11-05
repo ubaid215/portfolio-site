@@ -35,7 +35,7 @@ export function ContactCTA() {
   return (
     <section ref={sectionRef} id="contact" className={styles.section} aria-labelledby="contact-heading">
       <div className={styles.container}>
-        <div className={styles.topline}><p>Let&apos;s work together</p><span><i aria-hidden="true" />Open to projects &amp; team opportunities</span></div>
+        <div className={styles.topline}><p>Let&apos;s work together</p><span><i aria-hidden="true" />Booking new projects</span></div>
         <div className={styles.invitation}>
           <h2 id="contact-heading" className={styles.heading}>
             <span className={styles.line}><span data-contact-line>Your next chapter.</span></span>

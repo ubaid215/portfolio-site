@@ -146,3 +146,9 @@
   .page *, .page *::before, .page *::after { animation: none !important; transition: none !important; }
   .rollInner, .nextImage img, .nextArrow, .screenAction, .textLink svg, .chapterNav svg { transform: none !important; }
 }
+
+/* Client-confirmed results, shown only when lib/projects.ts supplies them */
+.results { display: grid; grid-template-columns: repeat(auto-fit,minmax(12rem,1fr)); gap: 1.5rem; margin: 2.75rem 0 0; }
+.results > div { display: flex; flex-direction: column-reverse; gap: 0.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border-strong); }
+.results dd { margin: 0; color: var(--accent-ink); font-family: var(--font-display); font-size: clamp(2.2rem,4vw,3.2rem); font-weight: 500; letter-spacing: -0.04em; line-height: 1; }
+.results dt { color: var(--fg-sub); font-size: 0.9375rem; line-height: 1.6; }

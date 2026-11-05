@@ -22,7 +22,9 @@ function StoryCard({ story, variant, duplicate }: { story: Testimonial; variant:
             <Image src="/images/projects/finaccont/cover.png" alt="Finaccont accounting software interface" fill sizes="(max-width: 600px) 80vw, 400px" draggable={false} />
           </div>
         )}
-        <p className={story.product ? styles.productNote : styles.story}>{story.story}</p>
+        {story.quote
+          ? <blockquote className={`${styles.story} ${styles.quote}`}>{story.quote}</blockquote>
+          : <p className={story.product ? styles.productNote : styles.story}>{story.story}</p>}
         <div className={styles.person}>
           <span className={styles.avatar} aria-hidden="true">{story.name.split(" ").map((word) => word[0]).slice(0, 2).join("")}</span>
           <div><h3 id={duplicate ? undefined : `story-${story.id}`}>{story.name}</h3><p>{story.context}</p></div>

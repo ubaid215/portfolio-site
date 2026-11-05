@@ -122,6 +122,10 @@ export function FeaturedWork() {
         </div>
 
         <div className={styles.closing}>
+          <Link href="/restaurants">
+            Run a restaurant? See the fixed-price packages
+            <ArrowUpRight size={18} strokeWidth={1.6} aria-hidden="true" />
+          </Link>
           <p>Have a different challenge in mind?</p>
           <Link href="/contact">
             Let&apos;s find the right approach

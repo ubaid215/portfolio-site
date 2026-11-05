@@ -5,6 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowUpRight, ArrowRight } from "lucide-react"
 import { SERVICE_OFFERINGS } from "@/lib/services"
+import { getServicePage } from "@/lib/service-pages"
 import { gsap, ScrollTrigger } from "@/lib/scroll-motion"
 import styles from "./Services.module.css"
 
@@ -108,7 +109,7 @@ export function Services({ standalone = false }: { standalone?: boolean }) {
             >
               <div data-service-content>
                 <Link
-                  href={standalone ? "/contact" : `/services#${service.id}`}
+                  href={standalone ? "/contact" : getServicePage(service.id) ? `/services/${service.id}` : `/services#${service.id}`}
                   className={styles.serviceLink}
                   aria-label={`${standalone ? "Discuss" : "Explore"} ${service.title}`}
                 >

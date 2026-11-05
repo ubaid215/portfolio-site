@@ -3,6 +3,9 @@ export interface Testimonial {
   name: string
   context: string
   story: string
+  // The client's own words, published only with their written approval. When
+  // present it replaces the story and the card shows it as a quotation.
+  quote?: string
   product?: boolean
   link?: { label: string; href: string }
 }
@@ -11,6 +14,7 @@ export interface Testimonial {
 // no wording is put in a client's mouth. The three client names and project
 // contexts were supplied by the owner; the project details come from
 // lib/projects.ts. Finaccont is his own product rather than customer feedback.
+// To add an approved quote, see docs/client-proof-request.md.
 export const TESTIMONIALS: Testimonial[] = [
   {
     id: "hussnain-akbar",

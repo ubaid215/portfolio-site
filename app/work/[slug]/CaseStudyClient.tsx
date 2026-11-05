@@ -148,6 +148,7 @@ export function CaseStudyClient({ project, adjacent }: Props) {
               </p>
               <div className={styles.deliveryRule}><span data-case-rule /></div>
             </div>
+            {project.results && project.results.length > 0 && <dl className={styles.results}>{project.results.map((result) => <div key={result.label}><dt>{result.label}</dt><dd>{result.value}</dd></div>)}</dl>}
             <div className={styles.tools}><h3>Tools behind the experience</h3><ul>{project.stack.map((tool) => <li key={tool}><Check size={14} aria-hidden="true" />{tool}</li>)}</ul></div>
             <div className={styles.invitation}><p>Working through a similar challenge?</p><Link href="/contact" className={styles.textLink}><RollingLabel>Let’s discuss your project</RollingLabel><ArrowUpRight size={18} aria-hidden="true" /></Link></div>
           </section>

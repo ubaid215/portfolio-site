@@ -9,6 +9,7 @@
  * - SmoothScroll (Lenis, driven by the GSAP ticker)
  * - Navbar & Footer (persistent across all pages)
  * - suppressHydrationWarning (required for next-themes)
+ * - GA4 (only when NEXT_PUBLIC_GA_ID is set)
  */
 
 import type { Metadata, Viewport } from "next"
@@ -21,8 +22,13 @@ import { SmoothScroll } from "@/components/layout/SmoothScroll"
 import { Footer } from "@/components/layout/Footer"
 import { SiteIntro } from "@/components/layout/SiteIntro"
 import { JsonLd } from "@/components/seo/JsonLd"
+import { Analytics } from "@/components/analytics/Analytics"
 import { SITE_NAME, SITE_URL, siteSchema } from "@/lib/seo"
 import "./globals.css"
+
+// The intro curtain plays once per visit, and only on the homepage. A visitor
+// arriving from search on a service page or guide sees the content at once.
+const INTRO_GATE = `try{if(location.pathname!=="/"||sessionStorage.getItem("site-intro-seen"))document.documentElement.dataset.siteIntro="done"}catch(e){}`
 
 // Space Grotesk — display font for headings and the wordmark
 const spaceGrotesk = Space_Grotesk({
@@ -118,6 +124,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
       suppressHydrationWarning
       className={`${GeistSans.variable} ${GeistMono.variable} ${spaceGrotesk.variable}`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: INTRO_GATE }} />
+      </head>
       <body className="flex min-h-screen flex-col">
         <JsonLd data={siteSchema} />
         <ThemeProvider>
@@ -127,6 +136,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <main className="flex-1">{children}</main>
           <Footer />
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   )

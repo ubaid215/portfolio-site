@@ -19,6 +19,9 @@ export interface Project {
   approach: string
   approachPoints: { title: string; desc: string }[]
   outcome: string
+  // Measured results confirmed by the client, e.g. { value: "0", label: "missed kitchen orders in the first month" }.
+  // Leave unset until a client supplies the number; nothing is estimated.
+  results?: { value: string; label: string }[]
   // Visuals
   heroBg: string          // gradient or color for hero
   accentColor: string     // per-project accent override
